@@ -36,7 +36,8 @@ export default function Page() {
             </p>
           </div>
         </div>
-        <div className="w-[90svw] sm:w-[90%] lg:w-1/2 border-tl border-bl lg:rounded-tl-none lg:rounded-bl-none rounded-lg lg:rounded-3xl h-full bg-white flex justify-center relative items-center py-5 lg:py-0">
+
+        <div className="w-[90svw] sm:w-[90%] lg:w-1/2 h-full lg:h-full border-tl border-bl lg:rounded-tl-none lg:rounded-bl-none rounded-lg lg:rounded-3xl bg-transparent lg:bg-white flex justify-center relative items-center py-0 lg:py-0">
           {!toggle ? (
             <LoginForm setToggle={setToggle} />
           ) : (

@@ -43,7 +43,7 @@ export const Signup = ({ setToggle }) => {
     console.log(form.getValues());
   }
   return (
-    <div className=" shadow-shadow relative lg:shadow-none w-full h-1/2 max-h-[400px] flex flex-col justify-center items-center gap-4">
+    <div className=" bg-white rounded-lg lg:rounded-none lg:bg-none relative lg:shadow-none w-full h-full max-h-[550px] flex flex-col justify-center items-center gap-4">
       <div className="w-full text-center">
         <h1 className="text-2xl lg:text-4xl font-noto_serif_display font-medium noto">
           Create Your Account
