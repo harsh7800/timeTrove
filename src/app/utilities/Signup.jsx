@@ -16,8 +16,11 @@ import { Input } from "@/components/ui/input";
 
 export const Signup = ({ setToggle }) => {
   const formSchema = z.object({
-    email: z.string().min(4, {
+    username: z.string().min(4, {
       message: "Username must be at least 4 characters.",
+    }),
+    email: z.string().min(4, {
+      message: "email must be a valid one.",
     }),
     password: z.string().min(8, {
       message: "Password must be at least 8 characters.",
@@ -30,17 +33,42 @@ export const Signup = ({ setToggle }) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      username: "",
       email: "",
       password: "",
       confirm_password: "",
     },
   });
-  let email = form.getValues().email;
+  let values = form.getValues();
 
-  function onSubmit(values) {
+  async function onSubmit(e) {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_HOST}/api/auth/signup`,
+        {
+          method: "POST", // or 'PUT'
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: values.username,
+            email: values.email,
+            password: values.password,
+            role: "user",
+          }),
+        }
+      );
+
+      if (response.ok) {
+        console.log(response);
+      }
+      let data = response.json();
+    } catch (error) {
+      console.log(error);
+    }
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(form.getValues());
   }
   return (
     <div className=" bg-white rounded-lg lg:rounded-none lg:bg-none relative lg:shadow-none w-full h-full max-h-[550px] flex flex-col justify-center items-center gap-4">
@@ -49,13 +77,30 @@ export const Signup = ({ setToggle }) => {
           Create Your Account
         </h1>
         <p className="capitalize font-semibold text-xs lg:text-sm mt-3 opacity-80">
-          enter your email and password to create a new account
+          enter your detail below to create a new account
         </p>
       </div>
 
       <div className="w-[80svw] sm:w-2/3 min-w-[150px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>username</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="placeholder:font-medium opacity-80 placeholder-shown:font-medium"
+                      placeholder="Enter Your Name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"
@@ -121,7 +166,7 @@ export const Signup = ({ setToggle }) => {
           Sign Up{" "}
         </button>
       </div>
-      <p className="text-lg font-bold mt-[-10px]">OR</p>
+      <p className="text-xs font-bold mt-[-10px]">or</p>
 
       <button
         className="w-[80svw] font-bold border sm:w-2/3 min-w-[150px] py-2 rounded-md hover:opacity-70 mt-[-10px]"

@@ -14,8 +14,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import ForgotPass from "../utilities/forgotPass";
-
+import { verifyJWT } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 export const LoginForm = ({ setToggle }) => {
+  const router = useRouter();
   const formSchema = z.object({
     email: z.string().min(4, {
       message: "Username must be at least 4 characters.",
@@ -33,15 +35,48 @@ export const LoginForm = ({ setToggle }) => {
     defaultValues: {
       email: "",
       password: "",
-      remember_me: "",
+      remember_me: false,
     },
   });
-  let email = form.getValues().username;
+  let email = form.getValues().email;
+  async function onSubmit(e) {
+    e.preventDefault();
 
-  function onSubmit(values) {
+    try {
+      console.log("isvalid", form.formState.isValid);
+      console.log("isloading", form.formState.isLoading);
+      console.log("isSubmmited", form.formState.isSubmitSuccessful);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_HOST}/api/auth/login`,
+        {
+          method: "POST", // or 'PUT'
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form.getValues()),
+        }
+      );
+      const data = await response.json();
+
+      if (response.ok) {
+        // router.push("/");
+        console.log("isvalid", form.formState.isValid);
+        console.log("isloading", form.formState.isLoading);
+        console.log("isSubmmited", form.formState.isSubmitSuccessful);
+        // let verifiedData = await verifyJWT(
+        //   data.token,
+        //   process.env.NEXT_PUBLIC_JWT_SECRET_KEY
+        // );
+        // if (verifiedData.success) {
+        //   router.push("/");
+        // }
+        // console.log(verifiedData.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(form.getValues());
   }
   return (
     <div className=" bg-white rounded-lg lg:rounded-none lg:bg-transparent relative lg:shadow-none w-full h-full max-h-[550px] flex flex-col justify-center items-center gap-4">
@@ -123,6 +158,7 @@ export const LoginForm = ({ setToggle }) => {
       </div>
       <div className="w-full flex flex-col justify-center items-center font-poppins gap-2 font-medium">
         <button
+          disabled={!form.formState.isValid}
           className="w-[80svw] sm:w-2/3 min-w-[150px] py-2 rounded-lg bg-black text-white hover:opacity-70"
           onClick={onSubmit}
           type="submit"

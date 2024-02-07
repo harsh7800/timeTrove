@@ -6,10 +6,14 @@ import {
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import illustrationBG from "../../../public/vector-purple-landscape-illustration.png";
 import tLogo from "../../../public/t-logo.png";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LoginForm } from "../utilities/LoginForm";
 import { useState } from "react";
 import { Signup } from "../utilities/Signup";
+import dynamic from "next/dynamic";
+
+// Client Components:
+// const LoginForm = dynamic(() => import("../utilities/LoginForm"));
+// const Signup = dynamic(() => import("../utilities/Signup"));
 
 export default function Page() {
   const [toggle, setToggle] = useState(false);

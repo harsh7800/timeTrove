@@ -1,56 +1,66 @@
 import connectDb from "@/middleware/mongoose";
 import User from "@/app/models/User";
 import CryptoJS from "crypto-js";
-import { Jwt } from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
+import { NextResponse, userAgent } from "next/server";
 
-const handler = async (req, res) => {
+export async function POST(request) {
+  await connectDb();
   try {
-    if (req.method == "POST") {
-      try {
-        let user = await User.findOne({
-          email: JSON.parse(req.body).email,
-        });
+    const { email, password } = await request.json();
+    // Searching the User based on details given
+    let user = await User.findOne({ email });
 
-        if (user) {
-          let bytes = CryptoJS.AES.decrypt(
-            user.password,
-            process.env.AES_SECRET_KEY,
-            {
-              expiredIn: "2d",
-            }
-          );
+    if (user && user.email === email.trim()) {
+      // Decrypting Password
+      let bytes = CryptoJS.AES.decrypt(
+        user.password,
+        process.env.AES_SECRET_KEY
+      );
 
-          let decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+      let decryptedData = bytes.toString(CryptoJS.enc.Utf8);
 
-          if (
-            req.body.password == decryptedData &&
-            req.body.email == user.email
-          ) {
-            let token = Jwt.sign(
-              { email: user.email, name: user.name },
-              process.env.JWT_SECRET_kEY
-            );
+      if (password === decryptedData) {
+        let email = user.email;
+        let username = user.username;
+        let token = jwt.sign(
+          { email, username },
+          process.env.NEXT_PUBLIC_JWT_SECRET_KEY
+        );
 
-            res.status(200).json({
-              success: "true",
-              token: token,
-              email: user.email,
-              role: user.role,
-            });
-          }
-        }
-      } catch (error) {
-        console.log(error);
-        res.status(404).json({
-          success: "false",
-          message: "Sorry No User Found With Given Credentials",
-        });
+        return NextResponse.json(
+          {
+            message: "Logged Successfully",
+            token: token,
+            success: true,
+          },
+          { status: 200 }
+        );
+      } else {
+        return NextResponse.json(
+          {
+            message: "Incorrect Password",
+            success: false,
+          },
+          { status: 401 }
+        );
       }
+    } else {
+      return NextResponse.json(
+        {
+          message: "Sorry, No User Found With Given Email",
+          success: false,
+        },
+        { status: 404 }
+      );
     }
   } catch (error) {
-    console.log(error);
-    res
-      .status(400)
-      .json({ success: "false", message: "Something Went Wrong, Try Again" });
+    return NextResponse.json(
+      {
+        message: "Internal Server Error",
+        success: false,
+      },
+      { status: 500 }
+    );
   }
-};
+}
