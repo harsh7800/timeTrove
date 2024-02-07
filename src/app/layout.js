@@ -2,7 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { noto_serif_display, poppins } from "@/lib/fonts";
 import Head from "next/head";
-
+import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -21,6 +21,7 @@ export default function RootLayout({ children }) {
       </Head>
       <body className={`${poppins} ${noto_serif_display}`}>
         <main>{children}</main>
+        <Toaster />
       </body>
     </html>
   );

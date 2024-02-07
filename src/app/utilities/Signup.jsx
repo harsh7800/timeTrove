@@ -2,6 +2,7 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useToast } from "@/components/ui/use-toast";
 
 import {
   Form,
@@ -13,21 +14,44 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import { FaCircleCheck } from "react-icons/fa6";
+import { IoMdCloseCircle } from "react-icons/io";
 
 export const Signup = ({ setToggle }) => {
+  const { toast } = useToast();
+  const router = useRouter();
+
   const formSchema = z.object({
     username: z.string().min(4, {
       message: "Username must be at least 4 characters.",
     }),
-    email: z.string().min(4, {
-      message: "email must be a valid one.",
-    }),
+    email: z
+      .string()
+      .min(4, {
+        message: "email must be a valid one.",
+      })
+      .refine(
+        (data) =>
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+            data
+          ),
+        {
+          message: "Invalid email address.",
+        }
+      ),
     password: z.string().min(8, {
       message: "Password must be at least 8 characters.",
     }),
-    remember_me: z.boolean({
-      message: "Remember me must be a boolean value.",
-    }),
+    confirm_password: z
+      .string()
+      .min(8, {
+        message: "Confirm password must be at least 8 characters.",
+      })
+      .refine((data) => {
+        let { password, confirm_password } = form.getValues();
+        return password == confirm_password;
+      }),
   });
 
   const form = useForm({
@@ -39,6 +63,7 @@ export const Signup = ({ setToggle }) => {
       confirm_password: "",
     },
   });
+
   let values = form.getValues();
 
   async function onSubmit(e) {
@@ -52,7 +77,7 @@ export const Signup = ({ setToggle }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            name: values.username,
+            username: values.username,
             email: values.email,
             password: values.password,
             role: "user",
@@ -60,10 +85,35 @@ export const Signup = ({ setToggle }) => {
         }
       );
 
+      let data = await response.json();
       if (response.ok) {
-        console.log(response);
+        toast({
+          title: (
+            <div className="flex items-center gap-2">
+              <FaCircleCheck size={15} color="#2eb82e" /> {data.message}
+            </div>
+          ),
+          duration: "3000",
+          className: "bg-white",
+          variant: "success",
+          onSwipeEnd: () => {
+            router.push("/");
+          },
+        });
+        setTimeout(() => {
+          router.push("/");
+        }, 3000);
+      } else {
+        toast({
+          title: (
+            <div className="flex items-center gap-2">
+              <IoMdCloseCircle color="#ff1a1a" /> {data.message}
+            </div>
+          ),
+          duration: "3000",
+          className: "bg-white",
+        });
       }
-      let data = response.json();
     } catch (error) {
       console.log(error);
     }
@@ -159,7 +209,10 @@ export const Signup = ({ setToggle }) => {
       </div>
       <div className="w-full flex flex-col justify-center items-center font-poppins gap-2 font-medium space-y-1 mt-2">
         <button
-          className="w-[80svw] sm:w-2/3 min-w-[150px] py-2 rounded-md bg-black text-white hover:opacity-70"
+          disabled={!form.formState.isValid}
+          className={`w-[80svw] sm:w-2/3 min-w-[150px] py-2 rounded-lg bg-black ${
+            !form.formState.isValid ? "opacity-50" : "opacity-100"
+          } text-white hover:opacity-70`}
           onClick={onSubmit}
           type="submit"
         >

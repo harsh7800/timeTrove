@@ -5,11 +5,9 @@ import {
   LoginLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import illustrationBG from "../../../public/vector-purple-landscape-illustration.png";
-import tLogo from "../../../public/t-logo.png";
 import { LoginForm } from "../utilities/LoginForm";
 import { useState } from "react";
 import { Signup } from "../utilities/Signup";
-import dynamic from "next/dynamic";
 
 // Client Components:
 // const LoginForm = dynamic(() => import("../utilities/LoginForm"));
