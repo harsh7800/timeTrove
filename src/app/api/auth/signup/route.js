@@ -9,7 +9,9 @@ export async function POST(request) {
   try {
     const { username, email, password } = await request.json();
     //checking if the user exists
-    const userExist = await User.findOne({ $or: [{ email }] });
+    const userExist = await User.findOne({
+      $or: [{ email: email.toLowerCase() }],
+    });
     if (!userExist) {
       //hashing the Password
       const encryptedPassword = CryptoJS.AES.encrypt(
