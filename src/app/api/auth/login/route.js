@@ -23,10 +23,7 @@ export async function POST(request) {
       if (password === decryptedData) {
         let email = user.email;
         let username = user.username;
-        let token = jwt.sign(
-          { email, username },
-          process.env.JWT_SECRET_KEY
-        );
+        let token = jwt.sign({ email, username }, process.env.JWT_SECRET_KEY);
 
         return NextResponse.json(
           {
