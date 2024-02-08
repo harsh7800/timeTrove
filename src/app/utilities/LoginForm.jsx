@@ -43,7 +43,7 @@ export const LoginForm = ({ setToggle }) => {
     password: z.string().min(8, {
       message: "Password must be at least 8 characters.",
     }),
-    remember_me: z.boolean().refine((value) => value, {
+    remember_me: z.boolean({
       message: "Remember me must be a boolean value.",
     }),
   });
