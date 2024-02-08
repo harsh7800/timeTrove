@@ -10,7 +10,7 @@ export async function POST(request) {
     const { username, email, password } = await request.json();
     //checking if the user exists
     const userExist = await User.findOne({
-      $or: [{ email: email.toLowerCase() }],
+      $or: [{ email }],
     });
     if (!userExist) {
       //hashing the Password
@@ -25,7 +25,7 @@ export async function POST(request) {
 
       await User.create({
         username: username,
-        email: email.toLowerCase(),
+        email: email,
         password: encryptedPassword,
       });
 

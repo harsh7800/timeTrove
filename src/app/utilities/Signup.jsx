@@ -89,7 +89,7 @@ export const Signup = ({ setToggle }) => {
           },
           body: JSON.stringify({
             username: values.username,
-            email: values.email,
+            email: values.email.toLowerCase(),
             password: values.password,
             role: "user",
           }),
