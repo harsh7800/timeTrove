@@ -77,7 +77,7 @@ export const LoginForm = ({ setToggle }) => {
         toast({
           title: (
             <div className="flex items-center gap-2">
-              <FaCircleCheck size={30} color="#2eb82e" /> {data.message}
+              <FaCircleCheck size={15} color="#2eb82e" /> {data.message}
             </div>
           ),
           duration: "3000",
@@ -103,11 +103,18 @@ export const LoginForm = ({ setToggle }) => {
         toast({
           title: (
             <div className="flex items-center gap-2">
-              <IoMdCloseCircle color="#ff1a1a" /> {data.message}
+              <IoMdCloseCircle size={15} color="#ff1a1a" /> {data.message}
             </div>
           ),
           duration: "3000",
           className: "bg-white",
+          onSwipeEnd: () => {
+            if (data.message.includes("Password")) {
+              form.resetField("password");
+            } else if (data.message.includes("No User Found")) {
+              form.reset();
+            } else null;
+          },
         });
       }
     } catch (error) {
