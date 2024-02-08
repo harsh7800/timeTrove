@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
+import { Loader2 } from "lucide-react";
 
 export const Signup = ({ setToggle }) => {
   const { toast } = useToast();
@@ -68,6 +69,16 @@ export const Signup = ({ setToggle }) => {
 
   async function onSubmit(e) {
     e.preventDefault();
+    toast({
+      title: (
+        <div className="flex items-center gap-3 text-black text-md">
+          <Loader2 className="animate-spin" />
+          <p>Loading..</p>
+        </div>
+      ),
+      duration: 3000, // Adjust the duration as needed
+      className: "bg-white",
+    });
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_HOST}/api/auth/signup`,

@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import ForgotPass from "../utilities/forgotPass";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 export const LoginForm = ({ setToggle }) => {
   const [togglePassword, setTogglePassword] = useState(false);
   const router = useRouter();
@@ -60,6 +61,16 @@ export const LoginForm = ({ setToggle }) => {
   let email = form.getValues().email;
   async function onSubmit(e) {
     e.preventDefault();
+    toast({
+      title: (
+        <div className="flex items-center gap-3 text-black text-md">
+          <Loader2 className="animate-spin" />
+          <p>Loading..</p>
+        </div>
+      ),
+      duration: 3000, // Adjust the duration as needed
+      className: "bg-white",
+    });
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_HOST}/api/auth/login`,
@@ -119,6 +130,11 @@ export const LoginForm = ({ setToggle }) => {
       }
     } catch (error) {
       console.log(error);
+      toast({
+        title: "An error occurred.",
+        duration: 3000,
+        className: "bg-white",
+      });
     }
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
