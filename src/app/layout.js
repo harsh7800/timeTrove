@@ -1,4 +1,5 @@
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { noto_serif_display, poppins } from "@/lib/fonts";
@@ -24,6 +25,7 @@ export default function RootLayout({ children }) {
         <main>{children}</main>
         <Toaster />
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );

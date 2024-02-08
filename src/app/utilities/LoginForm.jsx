@@ -62,7 +62,7 @@ export const LoginForm = ({ setToggle }) => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_PRODUCTION_URL}/api/auth/login`,
+        `${process.env.NEXT_PUBLIC_HOST}/api/auth/login`,
         {
           method: "POST", // or 'PUT'
           headers: {
