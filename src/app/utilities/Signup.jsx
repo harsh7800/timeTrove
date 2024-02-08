@@ -70,7 +70,7 @@ export const Signup = ({ setToggle }) => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_HOST}/api/auth/signup`,
+        `${process.env.PRODUCTION_URL}/api/auth/signup`,
         {
           method: "POST", // or 'PUT'
           headers: {
