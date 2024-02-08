@@ -25,7 +25,7 @@ export async function POST(request) {
 
       await User.create({
         username: username,
-        email: email,
+        email: email.toLowerCase(),
         password: encryptedPassword,
       });
 
