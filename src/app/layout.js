@@ -1,3 +1,4 @@
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { noto_serif_display, poppins } from "@/lib/fonts";
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
       <body className={`${poppins} ${noto_serif_display}`}>
         <main>{children}</main>
         <Toaster />
+        <SpeedInsights />
       </body>
     </html>
   );

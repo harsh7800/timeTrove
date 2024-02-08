@@ -25,7 +25,7 @@ export async function POST(request) {
         let username = user.username;
         let token = jwt.sign(
           { email, username },
-          process.env.NEXT_PUBLIC_JWT_SECRET_KEY
+          process.env.JWT_SECRET_KEY
         );
 
         return NextResponse.json(

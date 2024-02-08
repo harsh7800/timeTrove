@@ -93,7 +93,7 @@ export const LoginForm = ({ setToggle }) => {
         // router.push("/");
         // let verifiedData = await verifyJWT(
         //   data.token,
-        //   process.env.NEXT_PUBLIC_JWT_SECRET_KEY
+        //   process.env.JWT_SECRET_KEY
         // );
         // if (verifiedData.success) {
         //   router.push("/");
