@@ -22,6 +22,7 @@ import ForgotPass from "../utilities/forgotPass";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import Cookies from "js-cookie";
 export const LoginForm = ({ setToggle }) => {
   const [togglePassword, setTogglePassword] = useState(false);
   const router = useRouter();
@@ -68,7 +69,7 @@ export const LoginForm = ({ setToggle }) => {
           <p>Loading..</p>
         </div>
       ),
-      duration: 3000, // Adjust the duration as needed
+      duration: 10000, // Adjust the duration as needed
       className: "bg-white",
     });
     try {
@@ -85,6 +86,7 @@ export const LoginForm = ({ setToggle }) => {
       const data = await response.json();
 
       if (response.ok) {
+        Cookies.set("token", data.token);
         toast({
           title: (
             <div className="flex items-center gap-2">

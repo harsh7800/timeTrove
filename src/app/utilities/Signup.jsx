@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,12 +17,11 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
-import { Loader2 } from "lucide-react";
+import { Check, Loader2, X } from "lucide-react";
 
 export const Signup = ({ setToggle }) => {
   const { toast } = useToast();
   const router = useRouter();
-
   const formSchema = z.object({
     username: z.string().min(4, {
       message: "Username must be at least 4 characters.",
@@ -76,7 +75,7 @@ export const Signup = ({ setToggle }) => {
           <p>Loading..</p>
         </div>
       ),
-      duration: 3000, // Adjust the duration as needed
+      duration: 10000, // Adjust the duration as needed
       className: "bg-white",
     });
     try {
@@ -132,7 +131,7 @@ export const Signup = ({ setToggle }) => {
     // ✅ This will be type-safe and validated.
   }
   return (
-    <div className=" bg-white rounded-lg lg:rounded-none lg:bg-none relative lg:shadow-none w-full h-full max-h-[550px] flex flex-col justify-center items-center gap-4">
+    <div className=" bg-white rounded-lg lg:rounded-none lg:bg-none relative lg:shadow-none w-full h-full max-h-[650px] flex flex-col justify-center items-center gap-4">
       <div className="w-full text-center">
         <h1 className="text-2xl lg:text-4xl font-noto_serif_display font-medium noto">
           Create Your Account
@@ -183,7 +182,7 @@ export const Signup = ({ setToggle }) => {
               control={form.control}
               name="password"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className=" relative">
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
@@ -193,6 +192,10 @@ export const Signup = ({ setToggle }) => {
                       {...field}
                     />
                   </FormControl>
+                  <FormDescription className="text-xs">
+                    Min 8 letters required
+                  </FormDescription>
+
                   <FormMessage />
                 </FormItem>
               )}
