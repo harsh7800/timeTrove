@@ -5,6 +5,8 @@ import "./globals.css";
 import { noto_serif_display, poppins } from "@/lib/fonts";
 import Head from "next/head";
 import { Toaster } from "@/components/ui/toaster";
+import { AsideNav } from "./common/asideNav";
+import { TopNav } from "./common/topNav";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -22,7 +24,13 @@ export default function RootLayout({ children }) {
         ></link>
       </Head>
       <body className={`${poppins} ${noto_serif_display}`}>
-        <main>{children}</main>
+        <main className="w-full h-[100vh] flex">
+          <AsideNav />
+          <div className="w-[85%]">
+            <TopNav />
+            {children}
+          </div>
+        </main>
         <Toaster />
         <SpeedInsights />
         <Analytics />
