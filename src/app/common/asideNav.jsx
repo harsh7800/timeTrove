@@ -3,10 +3,16 @@ import { LogOut, TrendingUp, Zap } from "lucide-react";
 import { PiHoodie, PiSneaker } from "react-icons/pi";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 export const AsideNav = () => {
   const router = useRouter();
+  const path = usePathname();
   const handleRedirect = (path) => {
     router.push(`/${path}`);
   };
@@ -21,25 +27,44 @@ export const AsideNav = () => {
 
       <div className="capitalize space-y-4 text-lg font-semibold w-[80%]">
         <h3
-          className="py-3 px-4 rounded-2xl flex items-center gap-3 hover:bg-[#bf00ff] hover:text-white transition-colors cursor-pointer"
+          className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
+            path == "/popular-products"
+              ? "bg-[#bf00ff] text-white"
+              : "hover:bg-[#bf00ff] hover:text-white"
+          } transition-colors cursor-pointer`}
           onClick={() => handleRedirect("popular-products")}
         >
           <TrendingUp /> popular products
         </h3>
+
         <h3
-          className="py-3 px-4 rounded-2xl flex items-center gap-3 hover:bg-[#bf00ff] hover:text-white transition-colors cursor-pointer"
+          className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
+            path == "/winterwears"
+              ? "bg-[#bf00ff] text-white"
+              : "hover:bg-[#bf00ff] hover:text-white"
+          } transition-colors cursor-pointer`}
           onClick={() => handleRedirect("winterwears")}
         >
           <PiHoodie size={25} /> Wintewears
         </h3>
+
         <h3
-          className="py-3 px-4 rounded-2xl flex items-center gap-3 hover:bg-[#bf00ff] hover:text-white transition-colors cursor-pointer"
+          className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
+            path == "/footwears"
+              ? "bg-[#bf00ff] text-white"
+              : "hover:bg-[#bf00ff] hover:text-white"
+          } transition-colors cursor-pointer`}
           onClick={() => handleRedirect("footwears")}
         >
           <PiSneaker size={25} /> Footwears
         </h3>
+
         <h3
-          className="py-3 px-4 rounded-2xl flex items-center gap-3 hover:bg-[#bf00ff] hover:text-white transition-colors cursor-pointer"
+          className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
+            path == "/anime"
+              ? "bg-[#bf00ff] text-white"
+              : "hover:bg-[#bf00ff] hover:text-white"
+          } transition-colors cursor-pointer`}
           onClick={() => handleRedirect("anime")}
         >
           <img
@@ -50,8 +75,13 @@ export const AsideNav = () => {
           />
           anime
         </h3>
+
         <h3
-          className="py-3 px-4 rounded-2xl flex items-center gap-3 hover:bg-[#bf00ff] hover:text-white transition-colors cursor-pointer"
+          className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
+            path == "/new-arrivals"
+              ? "bg-[#bf00ff] text-white"
+              : "hover:bg-[#bf00ff] hover:text-white"
+          } transition-colors cursor-pointer`}
           onClick={() => handleRedirect("new-arrivals")}
         >
           <Zap /> new arrivals
@@ -62,18 +92,9 @@ export const AsideNav = () => {
         <h4 className="text-lg font-semibold opacity-80 w-full text-left">
           Total orders <span className="font-bold pop">14</span>
         </h4>
-        <div className="flex gap-2 items-center w-[90%]">
-          <div className="w-7 h-7 border-black border-2 rounded-lg"></div>
-          <p className="font-semibold truncate ">Nike Shoes</p>
-        </div>
-        <div className="flex gap-2 items-center w-[90%]">
-          <div className="w-7 h-7 border-black border-2 rounded-lg"></div>
-          <p className="font-semibold truncate ">Nike Shoes</p>
-        </div>
-        <div className="flex gap-2 items-center w-[90%]">
-          <div className="w-7 h-7 border-black border-2 rounded-lg"></div>
-          <p className="font-semibold truncate ">Nike Shoes</p>
-        </div>
+        <HoverCardOrder order="Nike Shoes" />
+        <HoverCardOrder order="Nike Shoes" />
+        <HoverCardOrder order="Nike Shoes" />
       </div>
 
       <div className="w-[80%]">
@@ -84,3 +105,22 @@ export const AsideNav = () => {
     </aside>
   );
 };
+
+export function HoverCardOrder({ order }) {
+  return (
+    <HoverCard>
+      <HoverCardTrigger asChild>
+        <div className="flex gap-2 items-center w-[90%]">
+          <div className="w-7 h-7 border-black border-2 rounded-lg"></div>
+          <p className="font-semibold truncate ">Nike Shoes</p>
+        </div>
+      </HoverCardTrigger>
+      <HoverCardContent className="bg-white w-80">
+        <div className="flex gap-2 items-center w-[90%]">
+          <div className="w-7 h-7 border-black border-2 rounded-lg"></div>
+          <p className="font-semibold truncate ">Nike Shoes</p>
+        </div>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}
