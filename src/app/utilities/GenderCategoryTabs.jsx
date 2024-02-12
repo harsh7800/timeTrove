@@ -38,7 +38,7 @@ export const GenderCategoryTabs = ({
             value="all"
             className={`${
               tabValue == "all"
-                ? "bg-black text-white"
+                ? "bg-purple text-white"
                 : "bg-grey hover:bg-grey.200"
             }  transition-colors h-10 rounded-2xl px-5`}
           >
@@ -50,7 +50,7 @@ export const GenderCategoryTabs = ({
             value="men"
             className={`${
               tabValue == "men"
-                ? "bg-black text-white"
+                ? "bg-purple text-white"
                 : "bg-grey hover:bg-grey.200"
             }  transition-colors h-10 rounded-2xl px-4`}
           >
@@ -62,7 +62,7 @@ export const GenderCategoryTabs = ({
             value="women"
             className={`${
               tabValue == "women"
-                ? "bg-black text-white"
+                ? "bg-purple text-white"
                 : "bg-grey hover:bg-grey.200"
             }  transition-colors h-10 rounded-2xl px-3`}
           >

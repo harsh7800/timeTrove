@@ -6,8 +6,12 @@ const ProductCard = ({ category, title, price, img }) => {
   const [isThere, setIsThere] = useState(false);
   return (
     <div className="border max-w-[300px] h-fit px-2 py-4 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5">
-      <div className="w-full border h-[250px] rounded-lg">
-        <img src={img} alt="product" className="w-full h-full" />
+      <div className="w-full border h-[250px] rounded-lg select-none">
+        <img
+          src={img}
+          alt="product"
+          className="w-[230px] object-contain h-full"
+        />
       </div>
       <h3 className="font-semibold opacity-60">{category}</h3>
       <h3 className="font-semibold ">{title}</h3>

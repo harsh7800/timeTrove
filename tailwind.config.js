@@ -36,7 +36,7 @@ module.exports = {
       colors: {
         grey: "#f2f2f2",
         "grey.200": "#e6e6e6",
-        purple: "#bf00ff",
+        purple: "#c44dff",
       },
 
       // fontFamily: {

@@ -17,20 +17,23 @@ export const AsideNav = () => {
     router.push(`/${path}`);
   };
   return (
-    <aside className="border-r border-2 min-w-[350px] flex flex-col items-center max-w-[400px] justify-around">
-      <div className="w-[80%] relative">
+    <aside className="border-r border-2 min-w-[350px] flex flex-col items-center max-w-[400px] justify-between py-5">
+      <div
+        className="w-[80%] relative cursor-pointer"
+        onClick={() => router.push("/")}
+      >
         <h1 className="font-mono capitalize font-semibold text-3xl ">
           TimeTrove
         </h1>
-        <div className="absolute left-[20%] bg-[#bf00ff] rounded-xl w-[15%] h-[4px]"></div>
+        <div className="absolute left-[20%] bg-purple rounded-xl w-[15%] h-[4px]"></div>
       </div>
 
       <div className="capitalize space-y-4 text-lg font-semibold w-[80%]">
         <h3
           className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
             path == "/popular-products"
-              ? "bg-[#bf00ff] text-white"
-              : "hover:bg-[#bf00ff] hover:text-white"
+              ? "bg-purple text-white"
+              : "hover:bg-purple hover:text-white"
           } transition-colors cursor-pointer`}
           onClick={() => handleRedirect("popular-products")}
         >
@@ -40,8 +43,8 @@ export const AsideNav = () => {
         <h3
           className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
             path == "/winterwears"
-              ? "bg-[#bf00ff] text-white"
-              : "hover:bg-[#bf00ff] hover:text-white"
+              ? "bg-purple text-white"
+              : "hover:bg-purple hover:text-white"
           } transition-colors cursor-pointer`}
           onClick={() => handleRedirect("winterwears")}
         >
@@ -51,8 +54,8 @@ export const AsideNav = () => {
         <h3
           className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
             path == "/footwears"
-              ? "bg-[#bf00ff] text-white"
-              : "hover:bg-[#bf00ff] hover:text-white"
+              ? "bg-purple text-white"
+              : "hover:bg-purple hover:text-white"
           } transition-colors cursor-pointer`}
           onClick={() => handleRedirect("footwears")}
         >
@@ -62,8 +65,8 @@ export const AsideNav = () => {
         <h3
           className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
             path == "/anime"
-              ? "bg-[#bf00ff] text-white"
-              : "hover:bg-[#bf00ff] hover:text-white"
+              ? "bg-purple text-white"
+              : "hover:bg-purple hover:text-white"
           } transition-colors cursor-pointer`}
           onClick={() => handleRedirect("anime")}
         >
@@ -79,8 +82,8 @@ export const AsideNav = () => {
         <h3
           className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
             path == "/new-arrivals"
-              ? "bg-[#bf00ff] text-white"
-              : "hover:bg-[#bf00ff] hover:text-white"
+              ? "bg-purple text-white"
+              : "hover:bg-purple hover:text-white"
           } transition-colors cursor-pointer`}
           onClick={() => handleRedirect("new-arrivals")}
         >

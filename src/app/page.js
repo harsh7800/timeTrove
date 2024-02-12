@@ -33,12 +33,6 @@ const AllData = () => {
       title: "Nike Air-Jordna",
     },
     {
-      category: "Winterwears",
-      imag: "https://sneakernews.com/wp-content/uploads/2020/10/jordan-1-black-mocha-555088-105-2.jpghttps://i5.walmartimages.com/asr/c004a989-d7b2-40cd-bad6-774a6f2a2b12_1.cc81b5382e3dc0232a2215f05997780b.jpeg",
-      price: "499",
-      title: "Nike Air-Jordna",
-    },
-    {
       category: "Tshirts",
       imag: "https://blackberrys.com/cdn/shop/files/textured-polo-t-shirt-in-black-heka-blackberrys-clothing-1.jpg?v=1685958627",
       price: "499",
