@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
         ></link>
       </Head>
       <body className={`${poppins} ${noto_serif_display}`}>
-        <main className="w-full h-[100vh] flex">
+        <main className="w-full h-[100vh] min-h-[750px] flex">
           <AsideNav />
           <div className="w-[85%]">
             <TopNav />

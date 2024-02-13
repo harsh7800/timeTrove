@@ -3,20 +3,20 @@ import Product from "@/app/models/Product";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const gender = searchParams.get("productFor");
+  const category = searchParams.get("category");
   await connectDb();
-  const searchParams = request.nextUrl.searchParams;
-  console.log(searchParams.entries());
   try {
     let products;
-
-    // Check if there are queries in the URL
-    if (searchParams.toString().length === 0) {
-      // No queries, return all products
-      products = await Product.find({});
+    // Check if a specific category is provided in the query
+    // Filter products based on the specified category
+    // products = await Product.find({ Category: "Footwear" });
+    // No specific category provided, return all products
+    if (gender || category) {
+      products = await Product.find({ category: category, productFor: gender });
     } else {
-      // Queries present, convert searchParams to an object and filter products based on queries
-      const query = Object.fromEntries(searchParams.entries());
-      products = await Product.find(query);
+      products = await Product.find({});
     }
 
     return NextResponse.json(products);

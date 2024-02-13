@@ -2,19 +2,20 @@
 import { FaHeart } from "react-icons/fa";
 import React, { useState } from "react";
 
-const ProductCard = ({ category, title, price, img }) => {
+const ProductCard = ({ category, title, price, ImageURL }) => {
   const [isThere, setIsThere] = useState(false);
   return (
-    <div className="border max-w-[300px] h-fit px-2 py-4 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5">
+    <div className="border w-[250px] h-[350px] px-2 py-4 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5">
       <div className="w-full border h-[250px] rounded-lg select-none">
         <img
-          src={img}
+          src={ImageURL}
+          // src="http://assets.myntassets.com/v1/images/style/properties/828d3baf1dfd59dc8e4da0a0a2280231_images.jpg"
           alt="product"
-          className="w-[230px] object-contain h-full"
+          className="w-full object-cover h-full"
         />
       </div>
       <h3 className="font-semibold opacity-60">{category}</h3>
-      <h3 className="font-semibold ">{title}</h3>
+      <h3 className="font-semibold truncate w-5/6">{title}</h3>
       {/* <div className="flex items-center gap-2">
         <h3 className="font-semibold ">XS</h3>
         <h3 className="font-semibold ">S</h3>
@@ -37,7 +38,7 @@ const ProductCard = ({ category, title, price, img }) => {
         onClick={() => setIsThere(!isThere)}
         size={25}
         className={`cursor-pointer ${
-          isThere ? "text-[#e60073]" : "text-white"
+          isThere ? "text-[#e60073]" : "text-grey.200"
         } absolute top-5 right-5 `}
       />
       {/* </div> */}

@@ -6,7 +6,9 @@ export async function POST(request) {
   await connectDb();
   try {
     const data = await request.json();
-    let checkProduct = await Product.findOne({ title: data.title });
+    let checkProduct = await Product.findOne({
+      title: data.title,
+    });
     if (!checkProduct) {
       await Product.create(data);
       return NextResponse.json(

@@ -74,14 +74,20 @@ export const GenderCategoryTabs = ({
       </TabsList>
       <TabsContent
         value="all"
-        className="w-full px-5 pt-4 flex gap-5 flex-wrap items-center"
+        className="w-full px-5 pt-2 flex gap-5 flex-wrap items-center "
       >
         {allData}
       </TabsContent>
-      <TabsContent value="men" className="w-full px-5">
+      <TabsContent
+        value="men"
+        className="w-full pt-0 px-5 flex gap-5 flex-wrap items-center"
+      >
         {menData}
       </TabsContent>
-      <TabsContent value="women" className="w-full px-5">
+      <TabsContent
+        value="women"
+        className="w-full px-5 pt-0 flex gap-5 flex-wrap items-center"
+      >
         {womenData}
       </TabsContent>
     </Tabs>
