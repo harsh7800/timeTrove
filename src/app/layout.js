@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { AsideNav } from "./common/asideNav";
 import { TopNav } from "./common/topNav";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
+import { Suspense } from "react";
 
 export default function RootLayout({ children }) {
   return (
@@ -19,25 +20,27 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         ></link>
       </Head>
-      <body className={`${poppins} ${noto_serif_display}`}>
-        <ProgressBar
-          height="4px"
-          color="#b800e6"
-          options={{ showSpinner: true }}
-          delay={600}
-          shallowRouting
-        />
-        <main className="w-full h-[100vh] min-h-[750px] flex">
-          <AsideNav />
-          <div className="w-[85%]">
-            <TopNav />
-            {children}
-          </div>
-        </main>
-        <Toaster />
-        <SpeedInsights />
-        <Analytics />
-      </body>
+      <Suspense>
+        <body className={`${poppins} ${noto_serif_display}`}>
+          <ProgressBar
+            height="4px"
+            color="#b800e6"
+            options={{ showSpinner: true }}
+            delay={600}
+            shallowRouting
+          />
+          <main className="w-full h-[100vh] min-h-[750px] flex">
+            <AsideNav />
+            <div className="w-[85%]">
+              <TopNav />
+              {children}
+            </div>
+          </main>
+          <Toaster />
+          <SpeedInsights />
+          <Analytics />
+        </body>
+      </Suspense>
     </html>
   );
 }

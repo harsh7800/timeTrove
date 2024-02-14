@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { MdBoy, MdGirl } from "react-icons/md";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Layers, ShoppingCart, SlidersHorizontal } from "lucide-react";
+import { Layers, SlidersHorizontal } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
