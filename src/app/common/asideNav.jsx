@@ -20,7 +20,7 @@ export const AsideNav = () => {
   };
   return (
     <Suspense fallback={<AsideNavLoader />}>
-      <aside className="border-r border-2 min-w-[350px] flex flex-col items-center max-w-[400px] justify-between py-5">
+      <aside className="border-r border-2 min-w-[300px] flex flex-col items-center max-w-[400px] justify-between py-5">
         <div
           className="w-[80%] relative cursor-pointer"
           onClick={() => router.push("/")}
