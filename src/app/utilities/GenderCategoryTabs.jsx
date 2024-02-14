@@ -28,6 +28,7 @@ export const GenderCategoryTabs = ({
   womenData,
 }) => {
   const [tabValue, setTabValue] = useState("all");
+
   return (
     <Tabs defaultValue="all" className="w-full">
       <TabsList className="flex w-full gap-2 justify-between border-b-2 h-20 rounded-none px-5">
@@ -67,7 +68,7 @@ export const GenderCategoryTabs = ({
             }  transition-colors h-10 rounded-2xl px-3`}
           >
             <MdGirl size={25} />
-            &nbsp;Women&nbsp;
+            Women&nbsp;
           </TabsTrigger>
         </div>
         <PopOverFilter />

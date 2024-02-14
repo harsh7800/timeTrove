@@ -4,12 +4,14 @@ import ProductCard from "../utilities/productCard";
 
 const Page = () => {
   return (
-    <GenderCategoryTabs
-      section="Winterwears"
-      allData={<AllData />}
-      menData={<MenData />}
-      womenData={<WomenData />}
-    />
+    <>
+      <GenderCategoryTabs
+        section="Winterwears"
+        allData={<AllData />}
+        menData={<MenData />}
+        womenData={<WomenData />}
+      />
+    </>
   );
 };
 

@@ -3,7 +3,8 @@ import { LogOut, TrendingUp, Zap } from "lucide-react";
 import { PiHoodie, PiSneaker } from "react-icons/pi";
 import React, { Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import {
   HoverCard,
   HoverCardContent,
