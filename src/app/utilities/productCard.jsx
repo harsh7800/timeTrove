@@ -5,7 +5,7 @@ import React, { useState } from "react";
 const ProductCard = ({ category, title, price, ImageURL }) => {
   const [isThere, setIsThere] = useState(false);
   return (
-    <div className="border w-[210px] h-[350px] px-2 py-4 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5">
+    <div className="border w-[230px] h-[350px] px-2 py-4 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5">
       <div className="w-full border h-[250px] rounded-lg select-none">
         <img
           src={ImageURL}
