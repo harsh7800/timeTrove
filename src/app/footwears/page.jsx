@@ -17,7 +17,6 @@ export default Page;
 
 const AllData = async () => {
   let Data = await getData("footwear");
-  console.log(Data);
   return (
     <>
       {Data?.map((data, index) => {
@@ -73,7 +72,7 @@ const WomenData = async () => {
 
 async function getData(category = "", productFor = "") {
   const res = await fetch(
-    `http://localhost:3000/api/products/getProduct?productFor=${productFor}&category=${category}`,
+    `${process.env.NEXT_PUBLIC_HOST}/api/products/getProduct?productFor=${productFor}&category=${category}`,
     { cache: "no-cache" }
   );
   if (!res.ok) {

@@ -8,16 +8,20 @@ export async function GET(request) {
   const category = searchParams.get("category");
   await connectDb();
   try {
-    let products;
-    // Check if a specific category is provided in the query
-    // Filter products based on the specified category
-    // products = await Product.find({ Category: "Footwear" });
-    // No specific category provided, return all products
-    if (gender || category) {
-      products = await Product.find({ category: category, productFor: gender });
-    } else {
-      products = await Product.find({});
+    let query = {};
+
+    // Check if a specific gender is provided in the query
+    if (gender) {
+      query.productFor = gender;
     }
+
+    // Check if a specific category is provided in the query
+    if (category) {
+      query.category = category;
+    }
+
+    // Fetch products based on the combined query
+    const products = await Product.find(query);
 
     return NextResponse.json(products);
   } catch (error) {

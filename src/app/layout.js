@@ -7,7 +7,6 @@ import Head from "next/head";
 import { Toaster } from "@/components/ui/toaster";
 import { AsideNav } from "./common/asideNav";
 import { TopNav } from "./common/topNav";
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "TimeTrove",
