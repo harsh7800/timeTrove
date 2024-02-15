@@ -14,7 +14,7 @@ import AsideNavLoader from "./AsideNavLoader";
 import { logout } from "../store/loginAuth";
 import { useDispatch } from "react-redux";
 
-export const AsideNav = () => {
+export const AsideNav = ({ mobile }) => {
   const router = useRouter();
   const path = usePathname();
   const dispatch = useDispatch();
@@ -23,7 +23,11 @@ export const AsideNav = () => {
   };
   return (
     <Suspense fallback={<AsideNavLoader />}>
-      <aside className="border-r border-2 min-w-[300px] flex flex-col items-center max-w-[400px] justify-between py-5">
+      <aside
+        className={`flex ${
+          mobile ? "border-none" : "border-2"
+        } min-w-[300px] flex-col items-center max-w-[400px] justify-between h-full py-5`}
+      >
         <div
           className="w-[80%] relative cursor-pointer"
           onClick={() => router.push("/")}

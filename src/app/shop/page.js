@@ -3,12 +3,14 @@ import ProductCard from "../utilities/productCard";
 
 export default function ShopPage() {
   return (
-    <GenderCategoryTabs
-      section=""
-      allData={<AllData />}
-      menData={<MenData />}
-      womenData={<WomenData />}
-    />
+    <div className="w-full">
+      <GenderCategoryTabs
+        section=""
+        allData={<AllData />}
+        menData={<MenData />}
+        womenData={<WomenData />}
+      />
+    </div>
   );
 }
 

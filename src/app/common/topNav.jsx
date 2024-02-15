@@ -1,12 +1,21 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, ShoppingCart, User } from "lucide-react";
+import { Menu, Search, ShoppingCart, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import React, { Suspense, useEffect } from "react";
 import TopNavLoader from "./TopNavLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { ChangeColorToBlack } from "../store/slice";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { AsideNav } from "./asideNav";
 
 export const TopNav = () => {
   const state = useSelector((state) => state.LoginAuth.user);
@@ -14,15 +23,16 @@ export const TopNav = () => {
 
   return (
     <Suspense fallback={<TopNavLoader />}>
-      <div className="w-full px-5 py-5 space-y-5">
+      <div className="w-full px-2 md:px-5 py-5 space-y-5">
         <div className=" flex justify-between items-center">
-          <div className="w-[50%] flex items-center gap-3">
+          <SideSheet />
+          <div className="w-[60%] lg:w-[50%] flex items-center gap-0">
             <Input placeholder="Search the Product" className="outline-none" />
             <Button className="bg-white hover:bg-white">
               <Search className="text-black" />
             </Button>
           </div>
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2">
             <Button
               className={`bg-[${state}] font-semibold rounded-xl hover:bg-grey.200 text-black`}
               onClick={() => disPatch(ChangeColorToBlack("#9900ff"))}
@@ -33,7 +43,6 @@ export const TopNav = () => {
                   3
                 </p>
               </span>
-              &nbsp;&nbsp; Cart
             </Button>
             {localStorage.getItem("user") ? (
               <div className="flex items-center gap-2">
@@ -43,7 +52,7 @@ export const TopNav = () => {
                     <User />
                   </AvatarFallback>
                 </Avatar>
-                <p className="font-bold">
+                <p className="font-bold hidden md:block">
                   {localStorage.getItem("user").username || state.username}
                 </p>
               </div>
@@ -56,5 +65,21 @@ export const TopNav = () => {
         </div>
       </div>
     </Suspense>
+  );
+};
+
+const SideSheet = () => {
+  return (
+    <Sheet>
+      <SheetTrigger className="lg:hidden">
+        <Menu />
+      </SheetTrigger>
+      <SheetContent
+        side="left"
+        className="bg-white w-[300px] h-[100vh] min-h-[750px]"
+      >
+        <AsideNav mobile={true} />
+      </SheetContent>
+    </Sheet>
   );
 };

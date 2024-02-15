@@ -33,7 +33,42 @@ export const GenderCategoryTabs = ({
     <Tabs defaultValue="all" className="w-full">
       <TabsList className="flex w-full gap-2 justify-between border-b-2 h-20 rounded-none px-5">
         <h1 className="font-semibold text-3xl">{section}</h1>
-        <div className="flex items-center gap-2">
+        <div className="flex md:hidden items-center gap-2">
+          <TabsTrigger
+            onClick={() => setTabValue("all")}
+            value="all"
+            className={`${
+              tabValue == "all"
+                ? "bg-purple text-white"
+                : "bg-grey hover:bg-grey.200"
+            }  transition-colors h-10 rounded-2xl px-5`}
+          >
+            <Layers size={15} />
+          </TabsTrigger>
+          <TabsTrigger
+            onClick={() => setTabValue("men")}
+            value="men"
+            className={`${
+              tabValue == "men"
+                ? "bg-purple text-white"
+                : "bg-grey hover:bg-grey.200"
+            }  transition-colors h-10 rounded-2xl px-4`}
+          >
+            <MdBoy size={25} />
+          </TabsTrigger>
+          <TabsTrigger
+            onClick={() => setTabValue("women")}
+            value="women"
+            className={`${
+              tabValue == "women"
+                ? "bg-purple text-white"
+                : "bg-grey hover:bg-grey.200"
+            }  transition-colors h-10 rounded-2xl px-3`}
+          >
+            <MdGirl size={25} />
+          </TabsTrigger>
+        </div>
+        <div className="hidden md:flex items-center gap-2">
           <TabsTrigger
             onClick={() => setTabValue("all")}
             value="all"
@@ -75,19 +110,19 @@ export const GenderCategoryTabs = ({
       </TabsList>
       <TabsContent
         value="all"
-        className="w-full px-5 pt-2 flex gap-5 flex-wrap items-center "
+        className="w-full px-5 pt-2 flex gap-2 flex-wrap justify-center lg:justify-normal items-center "
       >
         {allData}
       </TabsContent>
       <TabsContent
         value="men"
-        className="w-full pt-0 px-5 flex gap-5 flex-wrap items-center"
+        className="w-full pt-0 px-5 flex gap-2 flex-wrap items-center"
       >
         {menData}
       </TabsContent>
       <TabsContent
         value="women"
-        className="w-full px-5 pt-0 flex gap-5 flex-wrap items-center"
+        className="w-full px-5 pt-0 flex gap-2 flex-wrap items-center"
       >
         {womenData}
       </TabsContent>

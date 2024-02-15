@@ -1,11 +1,22 @@
 "use client";
 import { FaHeart } from "react-icons/fa";
 import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 const ProductCard = ({ category, title, price, ImageURL }) => {
   const [isThere, setIsThere] = useState(false);
   return (
-    <div className="border w-[230px] h-[350px] px-2 py-4 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5">
+    <div className="border w-[230px] h-[400px] px-2 py-4 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5">
       <div className="w-full border h-[250px] rounded-lg select-none">
         <img
           src={ImageURL}
@@ -33,6 +44,10 @@ const ProductCard = ({ category, title, price, ImageURL }) => {
         <div className="w-5 bg-[#fff] h-5 rounded-full border-grey.200 border-[3px]"></div>
       </div> */}
       <h3 className="font-semibold">Rs {price}</h3>
+      <div className="flex justify-between items-center">
+        <BuyNowDrawer />
+        <Button>Go to Cart</Button>
+      </div>
       {/* <div className="bg-purple absolute top-5 right-5 p-1 rounded-full"> */}
       <FaHeart
         onClick={() => setIsThere(!isThere)}
@@ -47,3 +62,26 @@ const ProductCard = ({ category, title, price, ImageURL }) => {
 };
 
 export default ProductCard;
+
+const BuyNowDrawer = ({ data }) => {
+  return (
+    <Drawer>
+      <DrawerTrigger asChild>
+        <Button variant="outline">Edit Profile</Button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader className="text-left">
+          <DrawerTitle>Edit profile</DrawerTitle>
+          <DrawerDescription>
+            Make changes to your profile here. Click save when you&apos;re done.
+          </DrawerDescription>
+        </DrawerHeader>
+        <DrawerFooter className="pt-2">
+          <DrawerClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  );
+};

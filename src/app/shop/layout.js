@@ -7,8 +7,10 @@ export default function ShopLayout({
   return (
     <section>
       <main className="w-full h-[100vh] min-h-[750px] flex">
-        <AsideNav />
-        <div className="w-[85%]">
+        <div className="w-fit hidden lg:flex">
+          <AsideNav />
+        </div>
+        <div className="w-[100%] lg:w-[85%]">
           <TopNav />
           {children}
         </div>
