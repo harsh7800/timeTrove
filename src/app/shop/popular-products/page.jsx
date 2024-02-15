@@ -1,5 +1,5 @@
 import React from "react";
-import { GenderCategoryTabs } from "../utilities/GenderCategoryTabs";
+import { GenderCategoryTabs } from "../../utilities/GenderCategoryTabs";
 
 const Page = () => {
   return (

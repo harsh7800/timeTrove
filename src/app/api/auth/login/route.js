@@ -29,6 +29,8 @@ export async function POST(request) {
           {
             message: "Logged Successfully",
             token: token,
+            email: user.email,
+            username: user.username,
             success: true,
           },
           { status: 200 }

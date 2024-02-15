@@ -23,8 +23,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../store/loginAuth";
 export const LoginForm = ({ setToggle }) => {
   const [togglePassword, setTogglePassword] = useState(false);
+  const state = useSelector((state) => state.LoginAuth.user);
+  const dispatch = useDispatch();
+  console.log(state);
   const router = useRouter();
   const { toast } = useToast();
   const formSchema = z.object({
@@ -86,7 +91,14 @@ export const LoginForm = ({ setToggle }) => {
       const data = await response.json();
 
       if (response.ok) {
-        Cookies.set("token", data.token);
+        console.log(data);
+        dispatch(
+          login({
+            user: data,
+          })
+        );
+        localStorage.setItem("user", JSON.stringify(data));
+        console.log(2);
         toast({
           title: (
             <div className="flex items-center gap-2">
@@ -97,11 +109,11 @@ export const LoginForm = ({ setToggle }) => {
           className: "bg-white",
           variant: "success",
           onSwipeEnd: () => {
-            router.push("/");
+            router.push("/shop");
           },
         });
         setTimeout(() => {
-          router.push("/");
+          router.push("/shop");
         }, 3000);
         // router.push("/");
         // let verifiedData = await verifyJWT(

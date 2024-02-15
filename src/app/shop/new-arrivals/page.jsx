@@ -1,6 +1,6 @@
 import React from "react";
-import { GenderCategoryTabs } from "../utilities/GenderCategoryTabs";
-import ProductCard from "../utilities/productCard";
+import { GenderCategoryTabs } from "../../utilities/GenderCategoryTabs";
+import ProductCard from "../../utilities/productCard";
 
 const Page = () => {
   return (

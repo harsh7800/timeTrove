@@ -11,12 +11,15 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import AsideNavLoader from "./AsideNavLoader";
+import { logout } from "../store/loginAuth";
+import { useDispatch } from "react-redux";
 
 export const AsideNav = () => {
   const router = useRouter();
   const path = usePathname();
+  const dispatch = useDispatch();
   const handleRedirect = (path) => {
-    router.push(`/${path}`);
+    router.push(`/shop/${path}`);
   };
   return (
     <Suspense fallback={<AsideNavLoader />}>
@@ -104,7 +107,13 @@ export const AsideNav = () => {
         </div>
 
         <div className="w-[80%]">
-          <Button className="w-30 bg-white text-black text-lg hover:bg-white">
+          <Button
+            onClick={() => {
+              dispatch(logout());
+              router.push("/authentication");
+            }}
+            className="w-30 bg-white text-black text-lg hover:bg-white"
+          >
             <LogOut /> &nbsp;&nbsp; Log Out
           </Button>
         </div>

@@ -1,11 +1,11 @@
 import React from "react";
-import { GenderCategoryTabs } from "../utilities/GenderCategoryTabs";
-import ProductCard from "../utilities/productCard";
+import { GenderCategoryTabs } from "../../utilities/GenderCategoryTabs";
+import ProductCard from "../../utilities/productCard";
 
 const Page = () => {
   return (
     <GenderCategoryTabs
-      section="Footwears"
+      section="Anime"
       allData={<AllData />}
       menData={<MenData />}
       womenData={<WomenData />}
@@ -16,7 +16,7 @@ const Page = () => {
 export default Page;
 
 const AllData = async () => {
-  let Data = await getData("footwear");
+  let Data = await getData("anime");
   return (
     <>
       {Data?.map((data, index) => {
@@ -34,7 +34,7 @@ const AllData = async () => {
   );
 };
 const MenData = async () => {
-  let Data = await getData("footwear", "men");
+  let Data = await getData("anime", "men");
   return (
     <>
       {Data?.map((data, index) => {
@@ -52,7 +52,7 @@ const MenData = async () => {
   );
 };
 const WomenData = async () => {
-  let Data = await getData("footwear", "women");
+  let Data = await getData("anime", "women");
   return (
     <>
       {Data?.map((data, index) => {
