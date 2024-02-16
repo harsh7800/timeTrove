@@ -112,7 +112,7 @@ export const Signup = ({ setToggle }) => {
         });
         setTimeout(() => {
           router.push("/");
-        }, 3000);
+        }, 1500);
       } else {
         toast({
           title: (

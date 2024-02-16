@@ -3,19 +3,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Menu, Search, ShoppingCart, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import TopNavLoader from "./TopNavLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { ChangeColorToBlack } from "../store/slice";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { AsideNav } from "./asideNav";
+import { useRouter } from "next-nprogress-bar";
 
 export const TopNav = () => {
   const state = useSelector((state) => state.LoginAuth.user);
@@ -46,12 +48,7 @@ export const TopNav = () => {
             </Button>
             {localStorage.getItem("user") ? (
               <div className="flex items-center gap-2">
-                <Avatar className="bg-[#f2f2f2] hover:bg-grey.200 text-black font-bold cursor-pointer select-none transition-colors">
-                  <AvatarImage src="" alt="@shadcn" />
-                  <AvatarFallback className="uppercase">
-                    <User />
-                  </AvatarFallback>
-                </Avatar>
+                <DropDownMenu />
                 <p className="font-bold hidden md:block">
                   {localStorage.getItem("user").username || state.username}
                 </p>
@@ -81,5 +78,37 @@ const SideSheet = () => {
         <AsideNav mobile={true} />
       </SheetContent>
     </Sheet>
+  );
+};
+
+export const DropDownMenu = () => {
+  const router = useRouter();
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Avatar className="bg-[#f2f2f2] hover:bg-grey.200 text-black font-bold cursor-pointer select-none transition-colors">
+          <AvatarImage src="" alt="@shadcn" />
+          <AvatarFallback className="uppercase">
+            <User />
+          </AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="bg-white">
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          className="cursor-pointer hover:bg-grey transition-all"
+          onClick={() => router.push("/shop/profile")}
+        >
+          Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer hover:bg-grey transition-all">
+          Billing
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer hover:bg-grey transition-all">
+          Order Status
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

@@ -43,7 +43,8 @@ export const GenderCategoryTabs = ({
                 : "bg-grey hover:bg-grey.200"
             }  transition-colors h-10 rounded-2xl px-5`}
           >
-            <Layers size={15} />
+            {/* <Layers size={15} /> */}
+            All
           </TabsTrigger>
           <TabsTrigger
             onClick={() => setTabValue("men")}
@@ -54,7 +55,8 @@ export const GenderCategoryTabs = ({
                 : "bg-grey hover:bg-grey.200"
             }  transition-colors h-10 rounded-2xl px-4`}
           >
-            <MdBoy size={25} />
+            {/* <MdBoy size={25} /> */}
+            Men
           </TabsTrigger>
           <TabsTrigger
             onClick={() => setTabValue("women")}
@@ -65,7 +67,8 @@ export const GenderCategoryTabs = ({
                 : "bg-grey hover:bg-grey.200"
             }  transition-colors h-10 rounded-2xl px-3`}
           >
-            <MdGirl size={25} />
+            {/* <MdGirl size={25} /> */}
+            Women
           </TabsTrigger>
         </div>
         <div className="hidden md:flex items-center gap-2">
@@ -110,19 +113,19 @@ export const GenderCategoryTabs = ({
       </TabsList>
       <TabsContent
         value="all"
-        className="w-full px-5 pt-2 flex gap-2 flex-wrap justify-center lg:justify-normal items-center "
+        className="w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
       >
         {allData}
       </TabsContent>
       <TabsContent
         value="men"
-        className="w-full pt-0 px-5 flex gap-2 flex-wrap items-center"
+        className="w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
       >
         {menData}
       </TabsContent>
       <TabsContent
         value="women"
-        className="w-full px-5 pt-0 flex gap-2 flex-wrap items-center"
+        className="w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
       >
         {womenData}
       </TabsContent>
@@ -137,7 +140,7 @@ const PopOverFilter = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button className="bg-grey text-lg rounded-xl hover:bg-grey.200 text-black">
+        <Button className="bg-white text-lg rounded-xl hover:bg-grey.200 text-black">
           <SlidersHorizontal />
         </Button>
       </PopoverTrigger>

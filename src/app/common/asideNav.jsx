@@ -24,24 +24,26 @@ export const AsideNav = ({ mobile }) => {
   return (
     <Suspense fallback={<AsideNavLoader />}>
       <aside
-        className={`flex ${
-          mobile ? "border-none" : "border-2"
-        } min-w-[300px] flex-col items-center max-w-[400px] justify-between h-full py-5`}
+        className={`flex ${mobile ? "border-none" : "border-2"} ${
+          mobile ? "min-w-[250px]" : "min-w-[300px]"
+        } flex-col ${mobile ? "items-start" : "items-center"} max-w-[400px] ${
+          mobile ? "justify-start gap-[100px]" : "justify-between"
+        } h-full py-5`}
       >
         <div
-          className="w-[80%] relative cursor-pointer"
+          className=" w-[80%] relative cursor-pointer"
           onClick={() => router.push("/")}
         >
-          <h1 className="font-mono capitalize font-semibold text-3xl ">
+          <h1 className="font-mono capitalize font-semibold text-xl sm:text-3xl ">
             TimeTrove
           </h1>
-          <div className="absolute left-[20%] bg-purple rounded-xl w-[15%] h-[4px]"></div>
+          <div className="absolute left-[10%] sm:left-[20%] bg-purple rounded-xl w-[15%] h-[4px]"></div>
         </div>
 
-        <div className="capitalize space-y-4 text-lg font-semibold w-[80%]">
+        <div className="capitalize space-y-4 text-sm sm:text-lg font-semibold w-[80%]">
           <h3
             className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
-              path == "/popular-products"
+              path == "/shop"
                 ? "bg-purple text-white"
                 : "hover:bg-purple hover:text-white"
             } transition-colors cursor-pointer`}
@@ -101,14 +103,14 @@ export const AsideNav = ({ mobile }) => {
           </h3>
         </div>
 
-        <div className="w-[80%] flex flex-col items-center justify-center border-t space-y-3 pt-5">
-          <h4 className="text-lg font-semibold opacity-80 w-full text-left">
-            Total orders <span className="font-bold pop">14</span>
-          </h4>
-          <HoverCardOrder order="Nike Shoes" />
-          <HoverCardOrder order="Nike Shoes" />
-          <HoverCardOrder order="Nike Shoes" />
-        </div>
+        {!mobile && (
+          <div className="w-[80%] flex flex-col items-center justify-center border-t space-y-3 pt-5">
+            <h4 className="text-sm sm:text-lg font-semibold opacity-80 w-full text-left">
+              Total orders <span className="font-bold pop">14</span>
+            </h4>
+            <HoverCardOrder order="Nike Shoes" />
+          </div>
+        )}
 
         <div className="w-[80%]">
           <Button
@@ -130,7 +132,7 @@ export function HoverCardOrder({ order }) {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <div className="flex gap-2 items-center w-[90%]">
+        <div className="flex gap-2 text-sm sm:text-lg items-center w-[90%]">
           <div className="w-7 h-7 border-black border-2 rounded-lg"></div>
           <p className="font-semibold truncate ">Nike Shoes</p>
         </div>

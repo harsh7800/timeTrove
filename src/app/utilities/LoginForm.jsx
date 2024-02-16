@@ -29,7 +29,6 @@ export const LoginForm = ({ setToggle }) => {
   const [togglePassword, setTogglePassword] = useState(false);
   const state = useSelector((state) => state.LoginAuth.user);
   const dispatch = useDispatch();
-  console.log(state);
   const router = useRouter();
   const { toast } = useToast();
   const formSchema = z.object({
@@ -91,7 +90,6 @@ export const LoginForm = ({ setToggle }) => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log(data);
         dispatch(
           login({
             user: data,
@@ -114,7 +112,7 @@ export const LoginForm = ({ setToggle }) => {
         });
         setTimeout(() => {
           router.push("/shop");
-        }, 3000);
+        }, 1500);
         // router.push("/");
         // let verifiedData = await verifyJWT(
         //   data.token,
