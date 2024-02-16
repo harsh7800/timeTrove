@@ -25,8 +25,8 @@ export const TopNav = () => {
 
   return (
     <Suspense fallback={<TopNavLoader />}>
-      <div className="w-full px-2 md:px-5 py-5 space-y-5">
-        <div className=" flex justify-between items-center">
+      <div className="relative w-full px-2 md:px-5 py-5 space-y-5">
+        <div className="flex justify-between items-center">
           <SideSheet />
           <div className="w-[60%] lg:w-[50%] flex items-center gap-0">
             <Input placeholder="Search the Product" className="outline-none" />

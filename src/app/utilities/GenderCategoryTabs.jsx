@@ -113,7 +113,7 @@ export const GenderCategoryTabs = ({
       </TabsList>
       <TabsContent
         value="all"
-        className="w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
+        className=" w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
       >
         {allData}
       </TabsContent>
