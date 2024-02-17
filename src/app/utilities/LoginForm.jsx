@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import ForgotPass from "../utilities/forgotPass";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
@@ -31,6 +31,7 @@ export const LoginForm = ({ setToggle }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { toast } = useToast();
+  // console.log(JSON.stringify(Cookies.get("token")));
   const formSchema = z.object({
     email: z
       .string()
@@ -85,7 +86,8 @@ export const LoginForm = ({ setToggle }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(form.getValues()),
-        }
+        },
+        { cache: "reload" }
       );
       const data = await response.json();
 
@@ -95,8 +97,9 @@ export const LoginForm = ({ setToggle }) => {
             user: data,
           })
         );
-        localStorage.setItem("user", JSON.stringify(data));
-        console.log(2);
+
+        Cookies.set("username", data.username);
+        Cookies.set("email", data.email);
         toast({
           title: (
             <div className="flex items-center gap-2">

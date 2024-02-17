@@ -3,6 +3,8 @@ import User from "@/app/models/User";
 import CryptoJS from "crypto-js";
 const jwt = require("jsonwebtoken");
 import { NextResponse, userAgent } from "next/server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function POST(request) {
   await connectDb();
@@ -11,7 +13,7 @@ export async function POST(request) {
     // Searching the User based on details given
     let user = await User.findOne({ email });
 
-    if (user && user.email === email.trim()) {
+    if (user && user.email === email.toLowerCase().trim()) {
       // Decrypting Password
       let bytes = CryptoJS.AES.decrypt(
         user.password,
@@ -24,7 +26,8 @@ export async function POST(request) {
         let email = user.email;
         let username = user.username;
         let token = jwt.sign({ email, username }, process.env.JWT_SECRET_KEY);
-
+        // cookies().set("user", { email, token, username });
+        cookies().set("token", token);
         return NextResponse.json(
           {
             message: "Logged Successfully",

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Menu, Search, ShoppingCart, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import TopNavLoader from "./TopNavLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { ChangeColorToBlack } from "../store/slice";
@@ -18,18 +18,24 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { AsideNav } from "./asideNav";
 import { useRouter } from "next-nprogress-bar";
+import Cookies from "js-cookie";
+// import { decodeJWT } from "../helpers/functions";
 
 export const TopNav = () => {
   const state = useSelector((state) => state.LoginAuth.user);
   const disPatch = useDispatch();
-
+  // let userData = decodeJWT(Cookies.get("token"));
   return (
     <Suspense fallback={<TopNavLoader />}>
       <div className="relative w-full px-2 md:px-5 py-5 space-y-5">
         <div className="flex justify-between items-center">
           <SideSheet />
           <div className="w-[60%] lg:w-[50%] flex items-center gap-0">
-            <Input placeholder="Search the Product" className="outline-none" />
+            <Input
+              placeholder="Search the Product"
+              defaultValue={Cookies.get("token")}
+              className="outline-none"
+            />
             <Button className="bg-white hover:bg-white">
               <Search className="text-black" />
             </Button>
@@ -46,11 +52,12 @@ export const TopNav = () => {
                 </p>
               </span>
             </Button>
-            {localStorage.getItem("user") ? (
+            {Cookies.get("token") ? (
               <div className="flex items-center gap-2">
                 <DropDownMenu />
                 <p className="font-bold hidden md:block">
-                  {localStorage.getItem("user").username || state.username}
+                  {state.username || Cookies.get("username")}
+                  {/* {state.username} */}
                 </p>
               </div>
             ) : (

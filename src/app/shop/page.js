@@ -74,7 +74,7 @@ const WomenData = async () => {
 async function getData(productFor = "") {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_HOST}/api/products/getProduct?productFor=${productFor}`,
-    { cache: "no-cache" }
+    { cache: "no-store" }
   );
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.

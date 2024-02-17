@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+// import { cookies } from "next/headers";
+import Cookies from "js-cookie";
 export const LoginAuth = createSlice({
   name: "LoginAuth",
   initialState: {
@@ -10,12 +12,12 @@ export const LoginAuth = createSlice({
       // For simplicity, let's assume a successful login for any username/password
       state.user = action.payload.user;
       // Save user details in local storage
-      localStorage.setItem("user", JSON.stringify(state.user));
+      // cookies.set("user", JSON.stringify(state.user), { secure: true });
     },
     logout: (state) => {
       // Clear user details in state and local storage
       state.user = {};
-      localStorage.removeItem("user");
+      // cookies.delete("user");
     },
   },
 });
