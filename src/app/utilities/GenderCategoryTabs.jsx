@@ -21,6 +21,9 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
+import ProductCard from "./productCard";
+import { useCart } from "../store/zustandStore";
+import { addToCart } from "../helpers/functions";
 export const GenderCategoryTabs = ({
   section,
   allData,
@@ -28,6 +31,9 @@ export const GenderCategoryTabs = ({
   womenData,
 }) => {
   const [tabValue, setTabValue] = useState("all");
+  const updateSubTotal = useCart((state) => state.updateSubTotal);
+  const cart = useCart((state) => state.cart);
+  const clearCart = useCart((state) => state.clearCart);
 
   return (
     <Tabs defaultValue="all" className="w-full">
@@ -115,19 +121,62 @@ export const GenderCategoryTabs = ({
         value="all"
         className=" w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
       >
-        {allData}
+        {allData?.map((data) => {
+          return (
+            <ProductCard
+              addToCart={() =>
+                addToCart(
+                  cart,
+                  data.title,
+                  1,
+                  data.price,
+                  data.title,
+                  data.size,
+                  data.color,
+                  data.img,
+                  updateSubTotal
+                )
+              }
+              key={data._id}
+              category={data.subCategory}
+              ImageURL={data.img}
+              price={data.price}
+              title={data.title}
+            />
+          );
+        })}
       </TabsContent>
       <TabsContent
         value="men"
         className="w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
       >
-        {menData}
+        {menData?.map((data) => {
+          return (
+            <ProductCard
+              key={data._id}
+              category={data.subCategory}
+              ImageURL={data.img}
+              price={data.price}
+              title={data.title}
+            />
+          );
+        })}
       </TabsContent>
       <TabsContent
         value="women"
         className="w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
       >
-        {womenData}
+        {womenData?.map((data) => {
+          return (
+            <ProductCard
+              key={data._id}
+              category={data.subCategory}
+              ImageURL={data.img}
+              price={data.price}
+              title={data.title}
+            />
+          );
+        })}
       </TabsContent>
     </Tabs>
   );

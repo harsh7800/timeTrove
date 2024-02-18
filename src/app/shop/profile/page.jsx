@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm, Controller } from "react-hook-form";
@@ -15,9 +14,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useStore } from "@/app/store/zustandStore";
 
 export default function Page() {
-  const state = useSelector((state) => state.LoginAuth.user);
+  const state = useStore((state) => state.user);
 
   const userDetailsformSchema = z.object({
     username: z.string().min(2, {

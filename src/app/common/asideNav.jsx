@@ -11,13 +11,13 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import AsideNavLoader from "./AsideNavLoader";
-import { logout } from "../store/loginAuth";
-import { useDispatch } from "react-redux";
+import { useStore } from "../store/zustandStore";
 
 export const AsideNav = ({ mobile }) => {
   const router = useRouter();
   const path = usePathname();
-  const dispatch = useDispatch();
+  const logout = useStore((state) => state.logout);
+
   const handleRedirect = (path) => {
     router.push(`/shop/${path}`);
   };
@@ -43,7 +43,7 @@ export const AsideNav = ({ mobile }) => {
         <div className="capitalize space-y-4 text-sm sm:text-lg font-semibold w-[80%]">
           <h3
             className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
-              path == "/shop"
+              path == "/shop/popular-products"
                 ? "bg-purple text-white"
                 : "hover:bg-purple hover:text-white"
             } transition-colors cursor-pointer`}
@@ -54,7 +54,7 @@ export const AsideNav = ({ mobile }) => {
 
           <h3
             className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
-              path == "/winterwears"
+              path == "/shop/winterwears"
                 ? "bg-purple text-white"
                 : "hover:bg-purple hover:text-white"
             } transition-colors cursor-pointer`}
@@ -65,7 +65,7 @@ export const AsideNav = ({ mobile }) => {
 
           <h3
             className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
-              path == "/footwears"
+              path == "/shop/footwears"
                 ? "bg-purple text-white"
                 : "hover:bg-purple hover:text-white"
             } transition-colors cursor-pointer`}
@@ -76,7 +76,7 @@ export const AsideNav = ({ mobile }) => {
 
           <h3
             className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
-              path == "/anime"
+              path == "/shop/anime"
                 ? "bg-purple text-white"
                 : "hover:bg-purple hover:text-white"
             } transition-colors cursor-pointer`}
@@ -93,7 +93,7 @@ export const AsideNav = ({ mobile }) => {
 
           <h3
             className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
-              path == "/new-arrivals"
+              path == "/shop/new-arrivals"
                 ? "bg-purple text-white"
                 : "hover:bg-purple hover:text-white"
             } transition-colors cursor-pointer`}
@@ -115,8 +115,8 @@ export const AsideNav = ({ mobile }) => {
         <div className="w-[80%]">
           <Button
             onClick={() => {
-              dispatch(logout());
               router.push("/authentication");
+              logout();
             }}
             className="w-30 bg-white text-black text-lg hover:bg-white"
           >

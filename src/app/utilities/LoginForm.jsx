@@ -11,7 +11,6 @@ import { IoMdCloseCircle } from "react-icons/io";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,15 +22,12 @@ import { useRouter } from "next-nprogress-bar";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../store/loginAuth";
+import { useStore } from "../store/zustandStore";
 export const LoginForm = ({ setToggle }) => {
   const [togglePassword, setTogglePassword] = useState(false);
-  const state = useSelector((state) => state.LoginAuth.user);
-  const dispatch = useDispatch();
+  const login = useStore((state) => state.login);
   const router = useRouter();
   const { toast } = useToast();
-  // console.log(JSON.stringify(Cookies.get("token")));
   const formSchema = z.object({
     email: z
       .string()
@@ -92,14 +88,13 @@ export const LoginForm = ({ setToggle }) => {
       const data = await response.json();
 
       if (response.ok) {
-        dispatch(
-          login({
-            user: data,
-          })
-        );
+        // dispatch(
+        //   login({
+        //     user: data,
+        //   })
+        // );
 
-        Cookies.set("username", data.username);
-        Cookies.set("email", data.email);
+        login(data);
         toast({
           title: (
             <div className="flex items-center gap-2">

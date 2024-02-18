@@ -17,7 +17,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
-const ProductCard = ({ category, title, price, ImageURL }) => {
+import { useStore } from "../store/zustandStore";
+const ProductCard = ({ category, title, price, ImageURL, addToCart }) => {
+  const ClearCart = () => sessionStorage.removeItem("cart");
   const [isThere, setIsThere] = useState(false);
   return (
     <div className="border w-full sm:w-[250px] h-[400px] px-2 py-4 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5">
@@ -51,7 +53,9 @@ const ProductCard = ({ category, title, price, ImageURL }) => {
       <h3 className="font-semibold">Rs {price}</h3>
       <div className=" w-full mt-5 flex gap-2 justify-between items-center">
         <BuyNowDrawer />
-        <Button className="hidden sm:block w-1/2">Go to Cart</Button>
+        <Button className="hidden sm:block w-1/2" onClick={addToCart}>
+          Add to Cart
+        </Button>
         <LiaCartPlusSolid
           className="block sm:hidden w-1/2 rounded-lg h-[35px] bg-black text-white"
           size={40}

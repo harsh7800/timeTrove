@@ -18,10 +18,12 @@ import { useRouter } from "next/navigation";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
 import { Check, Loader2, X } from "lucide-react";
+import { useStore } from "../store/zustandStore";
 
 export const Signup = ({ setToggle }) => {
   const { toast } = useToast();
   const router = useRouter();
+  const login = useStore((state) => state.login);
   const formSchema = z.object({
     username: z.string().min(4, {
       message: "Username must be at least 4 characters.",
@@ -97,6 +99,7 @@ export const Signup = ({ setToggle }) => {
 
       let data = await response.json();
       if (response.ok) {
+        login(data);
         toast({
           title: (
             <div className="flex items-center gap-2">

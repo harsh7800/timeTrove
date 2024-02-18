@@ -10,10 +10,10 @@ export default function ShopLayout({
         <div className="w-fit hidden lg:flex">
           <AsideNav />
         </div>
-        <div className="w-[100%] lg:w-[85%]">
+        <main className="w-[100%] lg:w-[85%]">
           <TopNav />
           {children}
-        </div>
+        </main>
       </main>
     </section>
   );
