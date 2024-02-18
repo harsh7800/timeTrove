@@ -1,9 +1,9 @@
+@import url("https: //fonts.googleapis.com/css2?family=Karla:wght@400;500;700&family=Marcellus+SC&family=Noto+Serif+Display:wght@400;500&family=Oswald:wght@600&family=Poppins:ital,wght@1,300&family=Roboto:wght@400;900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
-@import url("https: //fonts.googleapis.com/css2?family=Karla:wght@400;500;700&family=Marcellus+SC&family=Noto+Serif+Display:wght@400;500&family=Oswald:wght@600&family=Poppins:ital,wght@1,300&family=Roboto:wght@400;900&display=swap");
 
 :root {
   --font-poppins: Poppins, sans-serif;

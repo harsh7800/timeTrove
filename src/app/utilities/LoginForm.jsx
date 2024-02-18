@@ -173,9 +173,10 @@ export const LoginForm = ({ setToggle }) => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel htmlFor="email">Email</FormLabel>
                   <FormControl>
                     <Input
+                      id="email"
                       className="placeholder:font-medium opacity-80 placeholder-shown:font-medium"
                       placeholder="Enter Your Email"
                       {...field}
@@ -190,10 +191,12 @@ export const LoginForm = ({ setToggle }) => {
               name="password"
               render={({ field }) => (
                 <FormItem className="relative">
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel htmlFor="password">Password</FormLabel>
                   <FormControl>
                     <div className="w-full relative flex items-center justify-around">
                       <Input
+                        name="password"
+                        id="password"
                         type={togglePassword ? "text" : "password"}
                         className="placeholder:font-medium opacity-80"
                         placeholder="Enter Your Password"
