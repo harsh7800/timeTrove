@@ -6,7 +6,7 @@ export default function ShopLayout({
 }) {
   return (
     <section>
-      <main className="w-full h-[100vh] min-h-[750px] flex">
+      <main className="w-full h-[100vh] min-h-[650px] flex">
         <div className="w-fit hidden lg:flex">
           <AsideNav />
         </div>

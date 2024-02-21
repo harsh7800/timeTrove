@@ -1,6 +1,6 @@
 "use client";
 import { FaHeart } from "react-icons/fa";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { LiaCartArrowDownSolid, LiaCartPlusSolid } from "react-icons/lia";
 import { FaMinus, FaPlus } from "react-icons/fa6";
@@ -17,10 +17,25 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
-import { useStore } from "../store/zustandStore";
-const ProductCard = ({ category, title, price, ImageURL, addToCart }) => {
-  const ClearCart = () => sessionStorage.removeItem("cart");
-  const [isThere, setIsThere] = useState(false);
+import { useCart, useQuickBuy, wishlist } from "../store/zustandStore";
+import { useShallow } from "zustand/react/shallow";
+import { useRouter } from "next-nprogress-bar";
+const ProductCard = ({
+  category,
+  title,
+  price,
+  ImageURL,
+  addToCart,
+  addToWishlist,
+  removeFromWishlist,
+  QuickBuy,
+  size,
+  color,
+  availableQty,
+}) => {
+  const updateSubTotal = useCart(useShallow((state) => state.updateSubTotal));
+  const router = useRouter();
+  const wishlistCart = wishlist(useShallow((state) => state.wishlistCart));
   return (
     <div className="border w-full sm:w-[250px] h-[400px] px-2 py-4 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5">
       <div className="w-full border h-[250px] rounded-lg select-none">
@@ -52,21 +67,39 @@ const ProductCard = ({ category, title, price, ImageURL, addToCart }) => {
       </div> */}
       <h3 className="font-semibold">Rs {price}</h3>
       <div className=" w-full mt-5 flex gap-2 justify-between items-center">
-        <BuyNowDrawer />
-        <Button className="hidden sm:block w-1/2" onClick={addToCart}>
-          Add to Cart
+        <BuyNowDrawer
+          productTitle={title}
+          name={title}
+          size={size}
+          color={color}
+          qty={1}
+          price={price}
+          img={ImageURL}
+          QuickBuy={QuickBuy}
+        />
+        <Button
+          className={`hidden sm:block w-1/2 ${
+            availableQty == 0 && "opacity-70 cursor-not-allowed"
+          }`}
+          onClick={availableQty != 0 ? addToCart : undefined}
+        >
+          {availableQty == 0 ? "Out of Stock" : "Add to Cart"}
         </Button>
         <LiaCartPlusSolid
+          onClick={addToCart}
           className="block sm:hidden w-1/2 rounded-lg h-[35px] bg-black text-white"
           size={40}
         />
       </div>
       {/* <div className="bg-purple absolute top-5 right-5 p-1 rounded-full"> */}
       <FaHeart
-        onClick={() => setIsThere(!isThere)}
+        onClick={() => {
+          wishlistCart[title] ? removeFromWishlist() : addToWishlist();
+          router.refresh();
+        }}
         size={25}
         className={`cursor-pointer ${
-          isThere ? "text-[#e60073]" : "text-grey.200"
+          wishlistCart[title] ? "text-[#e60073]" : "text-grey.200"
         } absolute top-5 right-5 `}
       />
       {/* </div> */}
@@ -76,11 +109,35 @@ const ProductCard = ({ category, title, price, ImageURL, addToCart }) => {
 
 export default ProductCard;
 
-const BuyNowDrawer = ({ data }) => {
+const BuyNowDrawer = ({
+  QuickBuy,
+  productTitle,
+  qty,
+  price,
+  name,
+  size,
+  color,
+  img,
+  addToCart,
+  removeFromCart,
+}) => {
+  const QuickBuyCart = useQuickBuy(useShallow((state) => state.QuickBuyCart));
+  const subTotal = useQuickBuy(useShallow((state) => state.subTotal));
+  const clearCart = useQuickBuy(useShallow((state) => state.clearCart));
+  const router = useRouter();
+
   return (
     <Drawer>
       <DrawerTrigger asChild className="hidden sm:block">
-        <Button className=" bg-black w-1/2">Quick Buy</Button>
+        <Button
+          className=" bg-black w-1/2"
+          onClick={async () => {
+            QuickBuy();
+            router.refresh();
+          }}
+        >
+          Quick Buy
+        </Button>
       </DrawerTrigger>
       <DrawerTrigger
         asChild
@@ -100,7 +157,20 @@ const BuyNowDrawer = ({ data }) => {
         <div className="flex justify-center items-start gap-5 ">
           <div className="w-[90%] sm:w-[500px] my-5 shadow-md  p-4 rounded-lg space-y-6">
             <h3 className="font-bold w-full text-start">Your Order</h3>
-            <QuickBuyProductCard />
+            {Object.keys(QuickBuyCart).map((data, index) => {
+              return (
+                <QuickBuyProductCard
+                  key={index}
+                  ImageUrl={QuickBuyCart[data].img}
+                  productTitle={QuickBuyCart[data].name}
+                  price={QuickBuyCart[data].price}
+                  qty={QuickBuyCart[data].qty}
+                  totalAmount={subTotal}
+                  addToCart={addToCart}
+                  removeFromCart={removeFromCart}
+                />
+              );
+            })}
             <div className="w-full">
               <div className="w-full sm:w-[80%] flex items-center justify-between">
                 <p className="mt-2 font-semibold text-xs">Delivery</p>
@@ -112,7 +182,7 @@ const BuyNowDrawer = ({ data }) => {
               </div>
               <div className="w-full sm:w-[80%] mt-1 flex items-center text-xl justify-between">
                 <p className="mt-2 font-semibold">Total</p>
-                <p className="mt-2 font-bold">990</p>
+                <p className="mt-2 font-bold">{subTotal}</p>
               </div>
             </div>
             <div className="block lg:hidden border-1 shadow-lg rounded-lg px-7 py-3 w-[full] space-y-4">
@@ -128,11 +198,14 @@ const BuyNowDrawer = ({ data }) => {
             </div>
             <div className="w-full flex justify-center items-center gap-2">
               <DrawerClose asChild>
-                <Button className="w-1/2 bg-grey text-black font-bold hover:bg-grey.200">
+                <Button
+                  className="w-1/2 bg-grey text-black font-bold hover:bg-grey.200"
+                  onClick={clearCart}
+                >
                   Cancel
                 </Button>
               </DrawerClose>
-              <Button className="w-1/2">Pay 990/-</Button>
+              <Button className="w-1/2">Pay {subTotal}/-</Button>
             </div>
           </div>
 
@@ -162,26 +235,27 @@ const BuyNowDrawer = ({ data }) => {
   );
 };
 
-const QuickBuyProductCard = ({
+export const QuickBuyProductCard = ({
+  addToCart,
+  removeFromCart,
   ImageUrl,
   productTitle,
   size,
   color,
-  price,
   qty,
-  totalAmount,
-  discount,
-  delivery,
+  price,
 }) => {
+  const cart = useCart(useShallow((state) => state.cart));
+  const updateSubTotal = useCart((state) => state.updateSubTotal);
   return (
     <div className="w-full flex items-center justify-start gap-4">
       <img
-        className="w-[60px] sm:w-[90px] rounded-lg"
-        src="https://ae01.alicdn.com/kf/HTB1g0tCIVGWBuNjy0Fbq6z4sXXaZ/Naruto-Anime-T-shirt-Men-Women-New-Cotton-Tee-T-Shirts-Casual-Brand-Clothing-Cotton-Hot.jpg"
+        className="w-[60px] sm:w-[90px] rounded-lg border"
+        src={ImageUrl}
         alt="product"
       />
       <div>
-        <h3 className="font-bold truncate">Kakashi Anime Tshirt</h3>
+        <h3 className="font-bold truncate w-3/4">{productTitle}</h3>
         <p className="font-semibold ">
           <span className="text-[#999999] text-sm">
             Size <span className="font-semibold text-black text-sm">Xl</span>
@@ -192,20 +266,22 @@ const QuickBuyProductCard = ({
           </span>
         </p>
         <p className="font-bold flex items-center gap-2 text-sm sm:text-md">
-          Rs 999{" "}
+          Rs {price}{" "}
           <span className=" flex items-center gap-2 text-[#999999] ml-1 font-medium text-sm">
             Qty{" "}
-            <div className="flex items-center gap-1 sm:gap-3 text-black font-bold">
+            <span className="flex items-center gap-1 sm:gap-3 text-black font-bold">
               <FaMinus
+                onClick={removeFromCart}
                 size={20}
                 className="cursor-pointer p-1 bg-black rounded-full text-white"
               />
-              1
+              {qty}
               <FaPlus
+                onClick={addToCart}
                 size={20}
                 className="cursor-pointer p-1 bg-black rounded-full text-white"
               />
-            </div>{" "}
+            </span>{" "}
           </span>
         </p>
       </div>

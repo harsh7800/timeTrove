@@ -40,7 +40,7 @@ export const AsideNav = ({ mobile }) => {
           <div className="absolute left-[10%] sm:left-[20%] bg-purple rounded-xl w-[15%] h-[4px]"></div>
         </div>
 
-        <div className="capitalize space-y-4 text-sm sm:text-lg font-semibold w-[80%]">
+        <div className="capitalize space-y-4 text-sm sm:text-md font-semibold w-[80%]">
           <h3
             className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
               path == "/shop/popular-products"
@@ -105,7 +105,7 @@ export const AsideNav = ({ mobile }) => {
 
         {!mobile && (
           <div className="w-[80%] flex flex-col items-center justify-center border-t space-y-3 pt-5">
-            <h4 className="text-sm sm:text-lg font-semibold opacity-80 w-full text-left">
+            <h4 className="text-sm sm:text-md font-semibold opacity-80 w-full text-left">
               Total orders <span className="font-bold pop">14</span>
             </h4>
             <HoverCardOrder order="Nike Shoes" />
@@ -118,7 +118,7 @@ export const AsideNav = ({ mobile }) => {
               router.push("/authentication");
               logout();
             }}
-            className="w-30 bg-white text-black text-lg hover:bg-white"
+            className="w-30 bg-white text-black text-md hover:bg-white"
           >
             <LogOut /> &nbsp;&nbsp; Log Out
           </Button>
@@ -132,7 +132,7 @@ export function HoverCardOrder({ order }) {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <div className="flex gap-2 text-sm sm:text-lg items-center w-[90%]">
+        <div className="flex gap-2 text-sm sm:text-md items-center w-[90%]">
           <div className="w-7 h-7 border-black border-2 rounded-lg"></div>
           <p className="font-semibold truncate ">Nike Shoes</p>
         </div>

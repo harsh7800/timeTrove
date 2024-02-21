@@ -22,8 +22,14 @@ import {
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import ProductCard from "./productCard";
-import { useCart } from "../store/zustandStore";
-import { addToCart } from "../helpers/functions";
+import { useCart, useQuickBuy, wishlist } from "../store/zustandStore";
+import {
+  QuickBuy,
+  addToCart,
+  addToWishlist,
+  removeFromCart,
+  removeFromWishlist,
+} from "../helpers/functions";
 export const GenderCategoryTabs = ({
   section,
   allData,
@@ -31,9 +37,18 @@ export const GenderCategoryTabs = ({
   womenData,
 }) => {
   const [tabValue, setTabValue] = useState("all");
-  const updateSubTotal = useCart((state) => state.updateSubTotal);
+  //------------useCart-store------
   const cart = useCart((state) => state.cart);
-  const clearCart = useCart((state) => state.clearCart);
+  const updateSubTotal = useCart((state) => state.updateSubTotal);
+
+  //------------wishlist-store------
+  const wishlistCart = wishlist((state) => state.wishlistCart);
+  const wishlistSubTotal = wishlist((state) => state.wishlistSubTotal);
+
+  //------------useQuickBuy-store------
+  const QuickBuyCart = useQuickBuy((state) => state.QuickBuyCart);
+  const quickBuySubTotal = useQuickBuy((state) => state.quickBuySubTotal);
+  const clearCart = useQuickBuy((state) => state.clearCart);
 
   return (
     <Tabs defaultValue="all" className="w-full">
@@ -124,6 +139,21 @@ export const GenderCategoryTabs = ({
         {allData?.map((data) => {
           return (
             <ProductCard
+              availableQty={data.availableQty}
+              QuickBuy={() =>
+                QuickBuy(
+                  QuickBuyCart,
+                  data.title,
+                  1,
+                  data.price,
+                  data.title,
+                  data.size,
+                  data.color,
+                  data.img,
+                  quickBuySubTotal,
+                  clearCart
+                )
+              }
               addToCart={() =>
                 addToCart(
                   cart,
@@ -136,6 +166,30 @@ export const GenderCategoryTabs = ({
                   data.img,
                   updateSubTotal
                 )
+              }
+              addToWishlist={() =>
+                addToWishlist(
+                  wishlistCart,
+                  data.title,
+                  1,
+                  data.price,
+                  data.title,
+                  data.size,
+                  data.color,
+                  data.img,
+                  wishlistSubTotal
+                )
+              }
+              removeFromWishlist={() =>
+                removeFromWishlist(
+                  wishlistCart,
+                  data.title,
+                  1,
+                  wishlistSubTotal
+                )
+              }
+              removeFromCart={() =>
+                removeFromCart(cart, data.title, 1, updateSubTotal)
               }
               key={data._id}
               category={data.subCategory}
@@ -153,6 +207,44 @@ export const GenderCategoryTabs = ({
         {menData?.map((data) => {
           return (
             <ProductCard
+              availableQty={data.availableQty}
+              addToCart={() =>
+                addToCart(
+                  cart,
+                  data.title,
+                  1,
+                  data.price,
+                  data.title,
+                  data.size,
+                  data.color,
+                  data.img,
+                  updateSubTotal
+                )
+              }
+              addToWishlist={() =>
+                addToWishlist(
+                  wishlistCart,
+                  data.title,
+                  1,
+                  data.price,
+                  data.title,
+                  data.size,
+                  data.color,
+                  data.img,
+                  wishlistSubTotal
+                )
+              }
+              removeFromWishlist={() =>
+                removeFromWishlist(
+                  wishlistCart,
+                  data.title,
+                  1,
+                  wishlistSubTotal
+                )
+              }
+              removeFromCart={() =>
+                removeFromCart(cart, data.title, 1, updateSubTotal)
+              }
               key={data._id}
               category={data.subCategory}
               ImageURL={data.img}
@@ -169,6 +261,44 @@ export const GenderCategoryTabs = ({
         {womenData?.map((data) => {
           return (
             <ProductCard
+              availableQty={data.availableQty}
+              addToCart={() =>
+                addToCart(
+                  cart,
+                  data.title,
+                  1,
+                  data.price,
+                  data.title,
+                  data.size,
+                  data.color,
+                  data.img,
+                  updateSubTotal
+                )
+              }
+              addToWishlist={() =>
+                addToWishlist(
+                  wishlistCart,
+                  data.title,
+                  1,
+                  data.price,
+                  data.title,
+                  data.size,
+                  data.color,
+                  data.img,
+                  wishlistSubTotal
+                )
+              }
+              removeFromWishlist={() =>
+                removeFromWishlist(
+                  wishlistCart,
+                  data.title,
+                  1,
+                  wishlistSubTotal
+                )
+              }
+              removeFromCart={() =>
+                removeFromCart(cart, data.title, 1, updateSubTotal)
+              }
               key={data._id}
               category={data.subCategory}
               ImageURL={data.img}
