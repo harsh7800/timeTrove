@@ -37,7 +37,7 @@ export default function WishlistSheet() {
       <SheetTrigger>
         <span className="relative">
           <Heart />
-          {wishlistCart && (
+          {Object.keys(wishlistCart).length != 0 && (
             <p className="absolute top-[-45%] bg-black text-xs px-2 text-white p-1 rounded-full right-[-50%]">
               {Object.keys(wishlistCart).length || 0}
             </p>
