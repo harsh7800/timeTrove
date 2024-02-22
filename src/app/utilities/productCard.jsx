@@ -23,6 +23,7 @@ import { useRouter } from "next-nprogress-bar";
 import { BsCartCheckFill } from "react-icons/bs";
 import { CheckCheck } from "lucide-react";
 const ProductCard = ({
+  index,
   category,
   title,
   price,
@@ -39,7 +40,11 @@ const ProductCard = ({
   const wishlistCart = wishlist(useShallow((state) => state.wishlistCart));
   const cart = useCart(useShallow((state) => state.cart));
   return (
-    <div className="border w-full sm:w-[250px] h-[400px] px-2 py-4 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5">
+    <div
+      className={`border w-full sm:w-[250px] h-[400px] px-2 py-4 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5  animate-fade-down animate-once animate-duration-[800ms] animate-delay-[${
+        index * 50
+      }] animate-ease-in-out animate-normal animate-fill-forwards`}
+    >
       <div className="w-full border h-[250px] rounded-lg select-none">
         <Image
           src={ImageURL}

@@ -2,7 +2,7 @@
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function TopNavLoader() {
+export default function Loading() {
   return (
     <div className="w-full px-5 py-5 space-y-5">
       <div className=" flex justify-between items-center">

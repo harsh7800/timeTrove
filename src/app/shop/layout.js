@@ -1,5 +1,5 @@
-import { AsideNav } from "../common/asideNav";
-import { TopNav } from "../common/topNav";
+import { AsideNav } from "../common/asidenav/asideNav";
+import { TopNav } from "../common/topnav/topNav";
 
 export default function ShopLayout({
   children, // will be a page or nested layout

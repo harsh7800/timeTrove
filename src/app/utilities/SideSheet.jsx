@@ -1,5 +1,5 @@
 import { Menu } from "lucide-react";
-import { AsideNav } from "../common/asideNav";
+import { AsideNav } from "../common/asidenav/asideNav";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export const SideSheet = () => {

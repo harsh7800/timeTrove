@@ -136,9 +136,10 @@ export const GenderCategoryTabs = ({
         value="all"
         className=" w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
       >
-        {allData?.map((data) => {
+        {allData?.map((data, index) => {
           return (
             <ProductCard
+              index={index}
               availableQty={data.availableQty}
               QuickBuy={() =>
                 QuickBuy(
@@ -206,9 +207,10 @@ export const GenderCategoryTabs = ({
         value="men"
         className="w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
       >
-        {menData?.map((data) => {
+        {menData?.map((data, index) => {
           return (
             <ProductCard
+              index={index}
               availableQty={data.availableQty}
               QuickBuy={() =>
                 QuickBuy(
@@ -276,9 +278,10 @@ export const GenderCategoryTabs = ({
         value="women"
         className="w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
       >
-        {womenData?.map((data) => {
+        {womenData?.map((data, index) => {
           return (
             <ProductCard
+              index={index}
               availableQty={data.availableQty}
               QuickBuy={() =>
                 QuickBuy(

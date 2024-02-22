@@ -5,7 +5,7 @@ import { HoverCardOrder } from "./asideNav";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const AsideNavLoader = () => {
+const Loading = () => {
   return (
     <aside className="border-r border-2 min-w-[350px] flex flex-col items-center max-w-[400px] justify-between py-5">
       <Skeleton className="bg-grey.200 w-[90%] h-[40px]" />
@@ -34,4 +34,4 @@ const AsideNavLoader = () => {
   );
 };
 
-export default AsideNavLoader;
+export default Loading;
