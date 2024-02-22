@@ -1,6 +1,6 @@
 "use client";
 import { FaHeart } from "react-icons/fa";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { LiaCartArrowDownSolid, LiaCartPlusSolid } from "react-icons/lia";
 import { FaMinus, FaPlus } from "react-icons/fa6";
@@ -109,31 +109,17 @@ const ProductCard = ({
 
 export default ProductCard;
 
-const BuyNowDrawer = ({
-  QuickBuy,
-  productTitle,
-  qty,
-  price,
-  name,
-  size,
-  color,
-  img,
-  addToCart,
-  removeFromCart,
-}) => {
-  const QuickBuyCart = useQuickBuy(useShallow((state) => state.QuickBuyCart));
-  const subTotal = useQuickBuy(useShallow((state) => state.subTotal));
-  const clearCart = useQuickBuy(useShallow((state) => state.clearCart));
+const BuyNowDrawer = ({ price, name, size, color, img }) => {
   const router = useRouter();
-
+  const [cart, setCart] = useState({});
   return (
     <Drawer>
       <DrawerTrigger asChild className="hidden sm:block">
         <Button
           className=" bg-black w-1/2"
-          onClick={async () => {
-            QuickBuy();
+          onClick={() => {
             router.refresh();
+            setCart({ qty: 1, price, name, size, color, img });
           }}
         >
           Quick Buy
@@ -157,34 +143,41 @@ const BuyNowDrawer = ({
         <div className="flex justify-center items-start gap-5 ">
           <div className="w-[90%] sm:w-[500px] my-5 shadow-md  p-4 rounded-lg space-y-6">
             <h3 className="font-bold w-full text-start">Your Order</h3>
-            {Object.keys(QuickBuyCart).map((data, index) => {
-              return (
-                <QuickBuyProductCard
-                  key={index}
-                  ImageUrl={QuickBuyCart[data].img}
-                  productTitle={QuickBuyCart[data].name}
-                  price={QuickBuyCart[data].price}
-                  qty={QuickBuyCart[data].qty}
-                  totalAmount={subTotal}
-                  addToCart={addToCart}
-                  removeFromCart={removeFromCart}
-                />
-              );
-            })}
-            <div className="w-full">
-              <div className="w-full sm:w-[80%] flex items-center justify-between">
-                <p className="mt-2 font-semibold text-xs">Delivery</p>
-                <p className="mt-2 font-semibold text-xs">40</p>
+            {cart.qty != 0 && (
+              <QuickBuyProductCard
+                cart={cart}
+                addToCart={() =>
+                  setCart((prevCart) => ({
+                    ...prevCart,
+                    qty: prevCart.qty + 1,
+                  }))
+                }
+                removeFromCart={() =>
+                  setCart((prevCart) => ({
+                    ...prevCart,
+                    qty: prevCart.qty - 1,
+                  }))
+                }
+              />
+            )}
+            {cart.qty != 0 && cart.qty != 0 && (
+              <div className="w-full">
+                <div className="w-full sm:w-[80%] flex items-center justify-between">
+                  <p className="mt-2 font-semibold text-xs">Delivery</p>
+                  <p className="mt-2 font-semibold text-xs">40</p>
+                </div>
+                <div className="w-full sm:w-[80%] mt-1 flex items-center justify-between">
+                  <p className="mt-2 font-semibold text-xs">Discount</p>
+                  <p className="mt-2 font-semibold text-xs">00</p>
+                </div>
+                <div className="w-full sm:w-[80%] mt-1 flex items-center text-xl justify-between">
+                  <p className="mt-2 font-semibold">Total</p>
+                  <p className="mt-2 font-bold">
+                    {cart.qty != 0 ? cart.price : 0}
+                  </p>
+                </div>
               </div>
-              <div className="w-full sm:w-[80%] mt-1 flex items-center justify-between">
-                <p className="mt-2 font-semibold text-xs">Discount</p>
-                <p className="mt-2 font-semibold text-xs">00</p>
-              </div>
-              <div className="w-full sm:w-[80%] mt-1 flex items-center text-xl justify-between">
-                <p className="mt-2 font-semibold">Total</p>
-                <p className="mt-2 font-bold">{subTotal}</p>
-              </div>
-            </div>
+            )}
             <div className="block lg:hidden border-1 shadow-lg rounded-lg px-7 py-3 w-[full] space-y-4">
               <h3 className="font-bold">Shipping Address</h3>
               <RadioGroup defaultValue="option-one">
@@ -200,12 +193,14 @@ const BuyNowDrawer = ({
               <DrawerClose asChild>
                 <Button
                   className="w-1/2 bg-grey text-black font-bold hover:bg-grey.200"
-                  onClick={clearCart}
+                  onClick={() => setCart({})}
                 >
                   Cancel
                 </Button>
               </DrawerClose>
-              <Button className="w-1/2">Pay {subTotal}/-</Button>
+              <Button className="w-1/2">
+                Pay {cart.qty != 0 ? cart.price : 0}/-
+              </Button>
             </div>
           </div>
 
@@ -235,27 +230,16 @@ const BuyNowDrawer = ({
   );
 };
 
-export const QuickBuyProductCard = ({
-  addToCart,
-  removeFromCart,
-  ImageUrl,
-  productTitle,
-  size,
-  color,
-  qty,
-  price,
-}) => {
-  const cart = useCart(useShallow((state) => state.cart));
-  const updateSubTotal = useCart((state) => state.updateSubTotal);
+export const QuickBuyProductCard = ({ addToCart, removeFromCart, cart }) => {
   return (
     <div className="w-full flex items-center justify-start gap-4">
       <img
         className="w-[60px] sm:w-[90px] rounded-lg border"
-        src={ImageUrl}
+        src={cart.img}
         alt="product"
       />
       <div>
-        <h3 className="font-bold truncate w-3/4">{productTitle}</h3>
+        <h3 className="font-bold truncate w-3/4">{cart.productTitle}</h3>
         <p className="font-semibold ">
           <span className="text-[#999999] text-sm">
             Size <span className="font-semibold text-black text-sm">Xl</span>
@@ -266,7 +250,7 @@ export const QuickBuyProductCard = ({
           </span>
         </p>
         <p className="font-bold flex items-center gap-2 text-sm sm:text-md">
-          Rs {price}{" "}
+          Rs {cart.price}{" "}
           <span className=" flex items-center gap-2 text-[#999999] ml-1 font-medium text-sm">
             Qty{" "}
             <span className="flex items-center gap-1 sm:gap-3 text-black font-bold">
@@ -275,7 +259,7 @@ export const QuickBuyProductCard = ({
                 size={20}
                 className="cursor-pointer p-1 bg-black rounded-full text-white"
               />
-              {qty}
+              {cart.qty}
               <FaPlus
                 onClick={addToCart}
                 size={20}

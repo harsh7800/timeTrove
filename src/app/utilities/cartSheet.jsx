@@ -104,7 +104,7 @@ export default function CartSheet() {
         ) : (
           <div className="w-full text-center font-bold mt-5">
             <h1 className="text-[60px]">😴</h1>
-            <h1 className="text-lg">Your Seems to be Empty</h1>
+            <h1 className="text-lg">Your Cart Seems to be Empty</h1>
           </div>
         )}
       </SheetContent>

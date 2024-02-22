@@ -194,6 +194,8 @@ export const GenderCategoryTabs = ({
               key={data._id}
               category={data.subCategory}
               ImageURL={data.img}
+              size={data.size}
+              color={data.color}
               price={data.price}
               title={data.title}
             />
