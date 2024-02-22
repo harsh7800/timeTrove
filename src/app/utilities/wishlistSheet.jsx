@@ -50,7 +50,7 @@ export default function WishlistSheet() {
         </SheetHeader>
         {Object.keys(wishlistCart).length > 0 ? (
           <div className="flex justify-center items-start gap-5 ">
-            <div className="w-[90%] sm:w-[500px] my-5 shadow-md  p-4 rounded-lg space-y-6">
+            <div className="w-full sm:w-[500px] my-5 shadow-md  p-4 rounded-lg space-y-6">
               <h3 className="font-bold w-full text-start">
                 Your Wishlisted Items
               </h3>

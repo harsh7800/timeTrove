@@ -41,9 +41,9 @@ export default function CartSheet() {
         </SheetHeader>
         {Object.keys(cart).length > 0 ? (
           <div className="flex justify-center items-start gap-5 h-full">
-            <div className="w-[90%] sm:w-[500px] my-5 shadow-md p-4 rounded-lg">
+            <div className="w-full sm:w-[500px] my-5 shadow-md p-4 rounded-lg">
               <h3 className="font-bold w-full text-start">Your Order</h3>
-              <div className="space-y-6 min-h-[300px] h-[55dvh] overflow-y-scroll bg-white scroll mt-2">
+              <div className="space-y-6 min-h-[300px] max-h-[55dvh] overflow-y-scroll bg-white scroll mt-2">
                 {Object.keys(cart).map((data, index) => {
                   return (
                     <QuickBuyProductCard

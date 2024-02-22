@@ -53,7 +53,7 @@ export const GenderCategoryTabs = ({
   return (
     <Tabs defaultValue="all" className="w-full">
       <TabsList className="flex w-full gap-2 justify-between border-b-2 h-20 rounded-none px-5">
-        <h1 className="font-semibold text-3xl">{section}</h1>
+        <h1 className="font-semibold text-md lg:text-3xl">{section}</h1>
         <div className="flex md:hidden items-center gap-2">
           <TabsTrigger
             onClick={() => setTabValue("all")}

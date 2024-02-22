@@ -110,7 +110,12 @@ const ProductCard = ({
           />
         ) : (
           <LiaCartPlusSolid
-            onClick={availableQty != 0 ? addToCart : undefined}
+            onClick={() => {
+              if (availableQty !== 0) {
+                router.refresh();
+                addToCart();
+              }
+            }}
             className="block sm:hidden w-1/2 rounded-lg h-[35px] bg-black text-white"
             size={40}
           />
@@ -154,7 +159,12 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
         asChild
         className="block sm:hidden bg-grey rounded-lg w-1/2 h-[35px]"
       >
-        <LiaCartArrowDownSolid />
+        <LiaCartArrowDownSolid
+          onClick={() => {
+            router.refresh();
+            setCart({ qty: 1, price, name, size, color, img });
+          }}
+        />
       </DrawerTrigger>
       <DrawerContent className="bg-white">
         <DrawerHeader className="text-left pl-[15px] sm:pl-[50px]">
