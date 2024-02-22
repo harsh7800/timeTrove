@@ -26,14 +26,14 @@ export default function CartSheet() {
   return (
     <Sheet>
       <SheetTrigger>
-        <span className="relative">
+        <div className="relative">
           <ShoppingCart />
           {Object.keys(cart).length != 0 && (
-            <p className="absolute top-[-45%] bg-black text-xs px-2 text-white p-1 rounded-full right-[-50%]">
+            <p className="animate-bounce absolute top-[-45%] bg-black text-xs px-2 text-white p-1 rounded-full right-[-40%]">
               {Object.keys(cart).length || 0}
             </p>
           )}
-        </span>
+        </div>
       </SheetTrigger>
       <SheetContent className="bg-white h-[100dvh]">
         <SheetHeader>

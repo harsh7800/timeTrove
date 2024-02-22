@@ -35,14 +35,14 @@ export default function WishlistSheet() {
   return (
     <Sheet>
       <SheetTrigger>
-        <span className="relative">
+        <div className="relative">
           <Heart />
           {Object.keys(wishlistCart).length != 0 && (
-            <p className="absolute top-[-45%] bg-black text-xs px-2 text-white p-1 rounded-full right-[-50%]">
+            <p className="absolute top-[-45%] bg-black text-xs px-2 text-white p-1 rounded-full right-[-40%]">
               {Object.keys(wishlistCart).length || 0}
             </p>
           )}
-        </span>
+        </div>
       </SheetTrigger>
       <SheetContent className="bg-white">
         <SheetHeader>
