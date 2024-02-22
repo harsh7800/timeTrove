@@ -3,7 +3,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <div className="w-full flex flex-wrap gap-3">
+    <div className="w-full px-5 flex flex-wrap gap-3">
+      <div className="flex items-center w-full gap-2 justify-between border-b-2 h-20 rounded-none ">
+        <Skeleton className="h-10 w-[150px] bg-grey.200" />
+        <div className="flex gap-2">
+          <Skeleton className="h-10 w-[100px] bg-grey.200" />
+          <Skeleton className="h-10 w-[100px] bg-grey.200" />
+          <Skeleton className="h-10 w-[100px] bg-grey.200" />
+        </div>
+        <Skeleton className="h-10 w-[50px] bg-grey.200" />
+      </div>
       {Array.from({ length: 20 }, (_, i) => (
         <Skeleton
           key={i}

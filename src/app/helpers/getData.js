@@ -1,3 +1,4 @@
+"use server";
 export async function getData(productFor = "") {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_HOST}/api/products/getProduct?productFor=${productFor}`,

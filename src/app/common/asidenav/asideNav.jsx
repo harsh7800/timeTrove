@@ -10,7 +10,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import Loading from "./loading";
 import { useStore } from "../../store/zustandStore";
 
 export const AsideNav = ({ mobile }) => {
