@@ -48,7 +48,7 @@ export default function CartSheet() {
                   return (
                     <QuickBuyProductCard
                       key={index}
-                      ImageUrl={cart[data].img}
+                      img={cart[data].img}
                       productTitle={cart[data].name}
                       price={cart[data].price}
                       qty={cart[data].qty}

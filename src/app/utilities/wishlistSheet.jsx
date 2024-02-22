@@ -59,7 +59,7 @@ export default function WishlistSheet() {
                   return (
                     <QuickBuyProductCard
                       key={index}
-                      ImageUrl={wishlistCart[data].img}
+                      img={wishlistCart[data].img}
                       productTitle={wishlistCart[data].name}
                       price={wishlistCart[data].price}
                       qty={wishlistCart[data].qty}

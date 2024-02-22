@@ -146,6 +146,10 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
             {cart.qty != 0 && (
               <QuickBuyProductCard
                 cart={cart}
+                img={cart.img}
+                price={cart.price}
+                qty={cart.qty}
+                productTitle={cart.name}
                 addToCart={() =>
                   setCart((prevCart) => ({
                     ...prevCart,
@@ -230,16 +234,24 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
   );
 };
 
-export const QuickBuyProductCard = ({ addToCart, removeFromCart, cart }) => {
+export const QuickBuyProductCard = ({
+  addToCart,
+  removeFromCart,
+  img,
+  productTitle,
+  qty,
+  price,
+}) => {
+  const router = useRouter();
   return (
     <div className="w-full flex items-center justify-start gap-4">
       <img
         className="w-[60px] sm:w-[90px] rounded-lg border"
-        src={cart.img}
+        src={img}
         alt="product"
       />
       <div>
-        <h3 className="font-bold truncate w-3/4">{cart.productTitle}</h3>
+        <h3 className="font-bold truncate w-3/4">{productTitle}</h3>
         <p className="font-semibold ">
           <span className="text-[#999999] text-sm">
             Size <span className="font-semibold text-black text-sm">Xl</span>
@@ -250,16 +262,22 @@ export const QuickBuyProductCard = ({ addToCart, removeFromCart, cart }) => {
           </span>
         </p>
         <p className="font-bold flex items-center gap-2 text-sm sm:text-md">
-          Rs {cart.price}{" "}
+          Rs {price}{" "}
           <span className=" flex items-center gap-2 text-[#999999] ml-1 font-medium text-sm">
             Qty{" "}
-            <span className="flex items-center gap-1 sm:gap-3 text-black font-bold">
+            <span className="flex items-center gap-1 sm:gap-3 text-black font-bold select-none">
               <FaMinus
-                onClick={removeFromCart}
+                onClick={() => {
+                  if (qty <= 1) {
+                    console.log(1);
+                    router.refresh();
+                  }
+                  removeFromCart();
+                }}
                 size={20}
                 className="cursor-pointer p-1 bg-black rounded-full text-white"
               />
-              {cart.qty}
+              {qty}
               <FaPlus
                 onClick={addToCart}
                 size={20}
