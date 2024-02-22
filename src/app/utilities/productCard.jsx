@@ -20,6 +20,8 @@ import Image from "next/image";
 import { useCart, useQuickBuy, wishlist } from "../store/zustandStore";
 import { useShallow } from "zustand/react/shallow";
 import { useRouter } from "next-nprogress-bar";
+import { BsCartCheckFill } from "react-icons/bs";
+import { CheckCheck } from "lucide-react";
 const ProductCard = ({
   category,
   title,
@@ -33,9 +35,9 @@ const ProductCard = ({
   color,
   availableQty,
 }) => {
-  const updateSubTotal = useCart(useShallow((state) => state.updateSubTotal));
   const router = useRouter();
   const wishlistCart = wishlist(useShallow((state) => state.wishlistCart));
+  const cart = useCart(useShallow((state) => state.cart));
   return (
     <div className="border w-full sm:w-[250px] h-[400px] px-2 py-4 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5">
       <div className="w-full border h-[250px] rounded-lg select-none">
@@ -80,16 +82,34 @@ const ProductCard = ({
         <Button
           className={`hidden sm:block w-1/2 ${
             availableQty == 0 && "opacity-70 cursor-not-allowed"
-          }`}
-          onClick={availableQty != 0 ? addToCart : undefined}
+          } ${cart[title] && "bg-white border text-black hover:bg-white"}`}
+          onClick={() => {
+            if (availableQty !== 0) {
+              router.refresh();
+              addToCart();
+            }
+          }}
         >
-          {availableQty == 0 ? "Out of Stock" : "Add to Cart"}
+          {cart[title]
+            ? "Added to Cart"
+            : availableQty == 0
+            ? "Out of Stock"
+            : "Add to Cart"}
         </Button>
-        <LiaCartPlusSolid
-          onClick={addToCart}
-          className="block sm:hidden w-1/2 rounded-lg h-[35px] bg-black text-white"
-          size={40}
-        />
+        {cart[title] ? (
+          <CheckCheck
+            size={40}
+            className={`block sm:hidden w-1/2 text-[20px] rounded-lg h-[35px] bg-black   ${
+              cart[title] && "bg-white border text-[#33cc33] hover:bg-white"
+            }`}
+          />
+        ) : (
+          <LiaCartPlusSolid
+            onClick={availableQty != 0 ? addToCart : undefined}
+            className="block sm:hidden w-1/2 rounded-lg h-[35px] bg-black text-white"
+            size={40}
+          />
+        )}
       </div>
       {/* <div className="bg-purple absolute top-5 right-5 p-1 rounded-full"> */}
       <FaHeart

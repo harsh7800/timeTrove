@@ -210,6 +210,20 @@ export const GenderCategoryTabs = ({
           return (
             <ProductCard
               availableQty={data.availableQty}
+              QuickBuy={() =>
+                QuickBuy(
+                  QuickBuyCart,
+                  data.title,
+                  1,
+                  data.price,
+                  data.title,
+                  data.size,
+                  data.color,
+                  data.img,
+                  quickBuySubTotal,
+                  clearCart
+                )
+              }
               addToCart={() =>
                 addToCart(
                   cart,
@@ -250,6 +264,8 @@ export const GenderCategoryTabs = ({
               key={data._id}
               category={data.subCategory}
               ImageURL={data.img}
+              size={data.size}
+              color={data.color}
               price={data.price}
               title={data.title}
             />
@@ -264,6 +280,20 @@ export const GenderCategoryTabs = ({
           return (
             <ProductCard
               availableQty={data.availableQty}
+              QuickBuy={() =>
+                QuickBuy(
+                  QuickBuyCart,
+                  data.title,
+                  1,
+                  data.price,
+                  data.title,
+                  data.size,
+                  data.color,
+                  data.img,
+                  quickBuySubTotal,
+                  clearCart
+                )
+              }
               addToCart={() =>
                 addToCart(
                   cart,
@@ -304,6 +334,8 @@ export const GenderCategoryTabs = ({
               key={data._id}
               category={data.subCategory}
               ImageURL={data.img}
+              size={data.size}
+              color={data.color}
               price={data.price}
               title={data.title}
             />
