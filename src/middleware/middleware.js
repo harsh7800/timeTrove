@@ -1,16 +1,28 @@
-import { useStore } from "@/app/store/zustandStore";
-import { useRouter } from "next-nprogress-bar";
-import { useShallow } from "zustand/react/shallow";
+import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
-export default async function CheckAuth() {
-  const router = useRouter;
-  let user = useStore(useShallow((state) => state.user));
-  let token = user.token;
-  console.log(token);
-
-  if (token) {
-    router.push("/shop");
-  } else {
-    router.push("/authentication");
+export function middleware(request) {
+  //: string | URL | undefined
+  console.log(1);
+  const tokenValue = request.cookies.get("token"); // for auth token check
+  async function isAuthCheck() {
+    try {
+      const api = await fetch(
+        `${process.env.BASE_URL}/auth/verifyToken?token=${tokenValue?.value}`
+      );
+      const data = await api.json();
+      if (data.message !== "Verified successfully") {
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
+    } catch (error) {
+      console.log(error);
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
   }
+  return isAuthCheck();
 }
+
+export const config = {
+  matcher: "/authentication",
+  // matcher: "/dashboard/:path*"
+};

@@ -38,7 +38,7 @@ export default function WishlistSheet() {
         <div className="relative">
           <Heart />
           {Object.keys(wishlistCart).length != 0 && (
-            <p className="absolute top-[-45%] bg-black text-xs px-2 text-white p-1 rounded-full right-[-40%]">
+            <p className="absolute top-[-45%] bg-purple text-xs px-2 text-white p-1 rounded-full right-[-40%] font-bold">
               {Object.keys(wishlistCart).length || 0}
             </p>
           )}

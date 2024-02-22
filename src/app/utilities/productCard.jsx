@@ -247,14 +247,22 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
             <h3 className="font-bold">Shipping Address</h3>
             <RadioGroup defaultValue="option-one">
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="option-one" id="option-one" />
+                <RadioGroupItem
+                  value="option-one"
+                  id="option-one"
+                  className="accent-purple text-purple"
+                />
                 <Label htmlFor="option-one" className="leading-5">
                   431804, Sarafa Line, Sonar Gully, Kinwat, <br /> Nanded,
                   Maharastra
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="option-one" id="option-one" />
+                <RadioGroupItem
+                  value="option-one"
+                  id="option-one"
+                  className="accent-purple text-purple"
+                />
                 <Label htmlFor="option-one" className="leading-5">
                   431804, Sarafa Line, Sonar Gully, Kinwat, <br /> Nanded,
                   Maharastra
@@ -300,7 +308,7 @@ export const QuickBuyProductCard = ({
           Rs {price}{" "}
           <span className=" flex items-center gap-2 text-[#999999] ml-1 font-medium text-sm">
             Qty{" "}
-            <span className="flex items-center gap-1 sm:gap-3 text-black font-bold select-none">
+            <span className="flex items-center gap-1 sm:gap-3 text-purple font-bold select-none">
               <FaMinus
                 onClick={() => {
                   if (qty <= 1) {
