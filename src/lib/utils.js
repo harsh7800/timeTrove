@@ -6,9 +6,9 @@ import { twMerge } from "tailwind-merge";
 // import { NextRequest, NextResponse } from "next/server";
 import { SignJWT, jwtVerify } from "jose";
 import Cookies from "js-cookie";
+import { useStore } from "@/app/store/zustandStore";
 const secretKey = "secret";
 const key = new TextEncoder().encode(secretKey);
-
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
@@ -20,6 +20,30 @@ export async function verifyJWT(token, secretKey) {
   Cookies.set("UserDetails", decoded, { expires: 2 });
 
   return { success: true, data: decoded };
+}
+
+export async function CreateUser(name, email, picture) {
+  const login = useStore((state) => state.login);
+  console.log({ name, email, picture });
+  try {
+    let data;
+    await connectDb();
+    const userExist = await User.findOne({
+      email: profile.email.toLowerCase(),
+    });
+    if (!userExist) {
+      const newUser = await User.create({
+        username: name,
+        email: email.toLowerCase(),
+        image: picture,
+      });
+    }
+    let token = jwt.sign({ email, name }, process.env.JWT_SECRET_KEY);
+    data = { email, name, picture, token };
+    login(data);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function encrypt(payload) {

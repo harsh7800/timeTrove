@@ -1,4 +1,4 @@
-import connectDb from "@/middleware/mongoose";
+import connectDb from "@/lib/mongoose";
 import User from "@/app/models/User";
 import CryptoJS from "crypto-js";
 import { NextResponse } from "next/server";
@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 export async function POST(request) {
   await connectDb();
   try {
-    const { username, email, password } = await request.json();
+    const { username, email, password }  = await request.json();
     //checking if the user exists
     const userExist = await User.findOne({
       $or: [{ email: email.toLowerCase() }],

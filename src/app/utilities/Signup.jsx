@@ -19,6 +19,8 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
 import { Check, Loader2, X } from "lucide-react";
 import { useStore } from "../store/zustandStore";
+import { FcGoogle } from "react-icons/fc";
+import { signIn } from "next-auth/react";
 
 export const Signup = ({ setToggle }) => {
   const { toast } = useToast();
@@ -225,16 +227,26 @@ export const Signup = ({ setToggle }) => {
         </Form>
       </div>
       <div className="w-full flex flex-col justify-center items-center font-poppins gap-2 font-medium space-y-1 mt-2">
-        <button
-          disabled={!form.formState.isValid}
-          className={`w-[80svw] sm:w-2/3 min-w-[150px] py-2 rounded-lg bg-black ${
-            !form.formState.isValid ? "opacity-50" : "opacity-100"
-          } text-white hover:opacity-70`}
-          onClick={onSubmit}
-          type="submit"
-        >
-          Sign Up{" "}
-        </button>
+        <div className="w-[80svw] sm:w-2/3 min-w-[150px] space-y-2">
+          <button
+            disabled={!form.formState.isValid}
+            className={`w-full py-2 rounded-lg bg-black ${
+              !form.formState.isValid ? "opacity-50" : "opacity-100"
+            } text-white hover:opacity-70 transition-all`}
+            onClick={onSubmit}
+            type="submit"
+          >
+            Sign Up{" "}
+          </button>
+          <button
+            className="border w-full py-1.5 rounded-lg bg-white capitalize flex justify-center items-center gap-2 font-bold hover:bg-grey transition-all"
+            onClick={() =>
+              signIn("google", { callbackUrl: "http://localhost:3000/shop" })
+            }
+          >
+            <FcGoogle size={30} /> Sign up With google
+          </button>
+        </div>
       </div>
       <p className="text-xs font-bold mt-[-10px]">or</p>
 

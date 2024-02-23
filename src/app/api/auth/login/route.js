@@ -1,4 +1,4 @@
-import connectDb from "@/middleware/mongoose";
+import connectDb from "@/lib/mongoose";
 import User from "@/app/models/User";
 import CryptoJS from "crypto-js";
 const jwt = require("jsonwebtoken");

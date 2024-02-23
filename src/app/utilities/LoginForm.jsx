@@ -21,9 +21,11 @@ import ForgotPass from "../utilities/forgotPass";
 import { useRouter } from "next-nprogress-bar";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import Cookies from "js-cookie";
+import { signIn } from "next-auth/react";
 import { useStore } from "../store/zustandStore";
-export const LoginForm = ({ setToggle }) => {
+import { getServerSession } from "next-auth";
+export const LoginForm = async ({ setToggle }) => {
+  // const session = getServerSession();
   const [togglePassword, setTogglePassword] = useState(false);
   const login = useStore((state) => state.login);
   const router = useRouter();
@@ -88,12 +90,6 @@ export const LoginForm = ({ setToggle }) => {
       const data = await response.json();
 
       if (response.ok) {
-        // dispatch(
-        //   login({
-        //     user: data,
-        //   })
-        // );
-
         login(data);
         toast({
           title: (
@@ -247,14 +243,21 @@ export const LoginForm = ({ setToggle }) => {
           disabled={!form.formState.isValid}
           className={`w-[80svw] sm:w-2/3 min-w-[150px] py-2 rounded-lg bg-black ${
             !form.formState.isValid ? "opacity-50" : "opacity-100"
-          } text-white hover:opacity-70`}
+          } text-white hover:opacity-70 transition-all`}
           onClick={onSubmit}
           // onClick={() => console.log(process)}
           type="submit"
         >
-          Sign In{" "}
+          Sign In
         </button>
-        <button className="border w-[80svw] sm:w-2/3 min-w-[150px] py-1.5 rounded-lg bg-white capitalize flex justify-center items-center gap-2 hover:opacity-50">
+        <button
+          className="border w-[80svw] sm:w-2/3 min-w-[150px] py-1.5 rounded-lg bg-white capitalize flex justify-center items-center gap-2 hover:bg-grey transition-all font-bold"
+          onClick={async (e) => {
+            let data = await signIn("google", {
+              callbackUrl: "http://localhost:3000/shop",
+            });
+          }}
+        >
           <FcGoogle size={30} /> Sign In With google
         </button>
       </div>
@@ -264,7 +267,7 @@ export const LoginForm = ({ setToggle }) => {
           className="text-purple-600 cursor-pointer hover:underline"
           onClick={() => setToggle(true)}
         >
-          Sign In
+          Sign Up
         </span>
       </p>
     </div>
