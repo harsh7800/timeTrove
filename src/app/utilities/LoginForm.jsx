@@ -23,8 +23,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useStore } from "../store/zustandStore";
-import { getServerSession } from "next-auth";
-export const LoginForm = async ({ setToggle }) => {
+export default function LoginForm({ setToggle }) {
   // const session = getServerSession();
   const [togglePassword, setTogglePassword] = useState(false);
   const login = useStore((state) => state.login);
@@ -272,4 +271,4 @@ export const LoginForm = async ({ setToggle }) => {
       </p>
     </div>
   );
-};
+}

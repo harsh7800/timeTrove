@@ -18,7 +18,7 @@ export const TopNav = () => {
       <SideSheet />
       <div className="w-[60%] lg:w-[50%] flex items-center gap-2">
         <Input
-          placeholder="Search the Product"
+          placeholder=" Search for products by subcategory (e.g. hoodies, t-shirts) or brand name"
           defaultValue={user.token}
           className="outline-none"
         />

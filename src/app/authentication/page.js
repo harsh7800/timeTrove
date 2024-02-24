@@ -1,17 +1,12 @@
 "use client";
-
-import {
-  RegisterLink,
-  LoginLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
+import dynamic from "next/dynamic";
 import illustrationBG from "../../../public/vector-purple-landscape-illustration.png";
-import { LoginForm } from "../utilities/LoginForm";
+// import { LoginForm } from "../utilities/LoginForm";
 import { useState } from "react";
-import { Signup } from "../utilities/Signup";
+// import { Signup } from "../utilities/Signup";
 
-// Client Components:
-// const LoginForm = dynamic(() => import("../utilities/LoginForm"));
-// const Signup = dynamic(() => import("../utilities/Signup"));
+const LoginForm = dynamic(() => import("../utilities/LoginForm"));
+const Signup = dynamic(() => import("../utilities/Signup"));
 
 export default function Page() {
   const [toggle, setToggle] = useState(false);

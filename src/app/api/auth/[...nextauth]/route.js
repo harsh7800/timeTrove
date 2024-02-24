@@ -2,7 +2,6 @@ import connectDb from "@/lib/mongoose";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 import User from "@/app/models/User";
-import { CreateUser } from "@/lib/utils";
 const jwt = require("jsonwebtoken");
 const handler = NextAuth({
   providers: [

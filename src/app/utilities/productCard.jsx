@@ -1,6 +1,6 @@
 "use client";
 import { FaHeart } from "react-icons/fa";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { LiaCartArrowDownSolid, LiaCartPlusSolid } from "react-icons/lia";
 import { FaMinus, FaPlus } from "react-icons/fa6";
@@ -17,11 +17,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
-import { useCart, useQuickBuy, wishlist } from "../store/zustandStore";
+import { useCart, wishlist } from "../store/zustandStore";
 import { useShallow } from "zustand/react/shallow";
 import { useRouter } from "next-nprogress-bar";
-import { BsCartCheckFill } from "react-icons/bs";
 import { CheckCheck } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 const ProductCard = ({
   index,
   category,
@@ -41,7 +41,7 @@ const ProductCard = ({
   const cart = useCart(useShallow((state) => state.cart));
   return (
     <div
-      className={`border w-full sm:w-[250px] h-[400px] px-2 py-4 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5  animate-fade-down animate-once animate-duration-[800ms] animate-delay-[${
+      className={`border w-full sm:w-[250px] h-[fit] px-2 py-2 rounded-lg relative hover:shadow-shadow-2 transition-all cursor-pointer space-y-0.5  animate-fade-down animate-once animate-duration-[800ms] animate-delay-[${
         index * 50
       }] animate-ease-in-out animate-normal animate-fill-forwards`}
     >
@@ -54,8 +54,10 @@ const ProductCard = ({
           alt="Product"
         />
       </div>
-      <h3 className="font-semibold opacity-60">{category}</h3>
-      <h3 className="font-semibold truncate w-5/6">{title}</h3>
+      <h3 className="font-semibold text-[#808080] text-sm opacity-60 capitalize">
+        {category}
+      </h3>
+      <h3 className="font-semibold truncate w-5/6 text-sm">{title}</h3>
       {/* <div className="flex items-center gap-2">
         <h3 className="font-semibold ">XS</h3>
         <h3 className="font-semibold ">S</h3>
@@ -72,7 +74,7 @@ const ProductCard = ({
         <div className="w-5 bg-[#1a1aff] h-5 rounded-full border-grey.200 border-[3px]"></div>
         <div className="w-5 bg-[#fff] h-5 rounded-full border-grey.200 border-[3px]"></div>
       </div> */}
-      <h3 className="font-semibold">Rs {price}</h3>
+      <h3 className="font-bold text-sm">Rs {price}</h3>
       <div className=" w-full mt-5 flex gap-2 justify-between items-center">
         <BuyNowDrawer
           productTitle={title}
@@ -85,7 +87,7 @@ const ProductCard = ({
           QuickBuy={QuickBuy}
         />
         <Button
-          className={`hidden sm:block w-1/2 ${
+          className={`hidden hover:bg-white hover:text-black hover:border sm:block w-1/2 ${
             availableQty == 0 && "opacity-70 cursor-not-allowed"
           } ${cart[title] && "bg-white border text-black hover:bg-white"}`}
           onClick={() => {
@@ -146,7 +148,7 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
     <Drawer>
       <DrawerTrigger asChild className="hidden sm:block">
         <Button
-          className=" bg-black w-1/2"
+          className=" bg-black w-1/2 hover:bg-white hover:text-black hover:border"
           onClick={() => {
             router.refresh();
             setCart({ qty: 1, price, name, size, color, img });
@@ -288,11 +290,15 @@ export const QuickBuyProductCard = ({
   const router = useRouter();
   return (
     <div className="w-full flex items-center justify-start gap-4">
-      <img
-        className="w-[60px] sm:w-[90px] rounded-lg border"
-        src={img}
-        alt="product"
-      />
+      <Suspense
+        fallback={<Skeleton className="bg-grey.200 w-[60px] h-[70px]" />}
+      >
+        <img
+          className="w-[60px] sm:w-[90px] rounded-lg border"
+          src={img}
+          alt="product"
+        />
+      </Suspense>
       <div>
         <h3 className="font-bold truncate w-3/4">{productTitle}</h3>
         <p className="font-semibold ">

@@ -22,7 +22,7 @@ import {
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import ProductCard from "./productCard";
-import { useCart, useQuickBuy, wishlist } from "../store/zustandStore";
+import { filter, useCart, useQuickBuy, wishlist } from "../store/zustandStore";
 import {
   QuickBuy,
   addToCart,
@@ -30,6 +30,10 @@ import {
   removeFromCart,
   removeFromWishlist,
 } from "../helpers/functions";
+import { usePathname } from "next/navigation";
+import { useShallow } from "zustand/react/shallow";
+import { PopoverClose } from "@radix-ui/react-popover";
+import { useRouter } from "next-nprogress-bar";
 export const GenderCategoryTabs = ({
   section,
   allData,
@@ -50,6 +54,29 @@ export const GenderCategoryTabs = ({
   const quickBuySubTotal = useQuickBuy((state) => state.quickBuySubTotal);
   const clearCart = useQuickBuy((state) => state.clearCart);
 
+  //------------filter-store------
+  const filterData = filter(useShallow((state) => state.filterData));
+
+  const filterProductData = (data, filterData) => {
+    const { budget, size, color, brand, category, subCategory } = filterData;
+
+    const isPriceInRange = data.price >= budget[0] && data.price <= budget[1];
+    const isSizeMatch = size === "" || data.size === size;
+    const isColorMatch = color === "" || data.color === color;
+    const isBrandMatch = brand === "" || data.brand === brand;
+    const isCategoryMatch = category === "" || data.category === category;
+    const isSubCategoryMatch =
+      subCategory === "" || data.subCategory === subCategory;
+
+    return (
+      isPriceInRange &&
+      isSizeMatch &&
+      isColorMatch &&
+      isBrandMatch &&
+      isCategoryMatch &&
+      isSubCategoryMatch
+    );
+  };
   return (
     <Tabs defaultValue="all" className="w-full">
       <TabsList className="flex w-full gap-2 justify-between border-b-2 h-20 rounded-none px-5">
@@ -136,72 +163,74 @@ export const GenderCategoryTabs = ({
         value="all"
         className=" w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
       >
-        {allData?.map((data, index) => {
-          return (
-            <ProductCard
-              index={index}
-              availableQty={data.availableQty}
-              QuickBuy={() =>
-                QuickBuy(
-                  QuickBuyCart,
-                  data.title,
-                  1,
-                  data.price,
-                  data.title,
-                  data.size,
-                  data.color,
-                  data.img,
-                  quickBuySubTotal,
-                  clearCart
-                )
-              }
-              addToCart={() =>
-                addToCart(
-                  cart,
-                  data.title,
-                  1,
-                  data.price,
-                  data.title,
-                  data.size,
-                  data.color,
-                  data.img,
-                  updateSubTotal
-                )
-              }
-              addToWishlist={() =>
-                addToWishlist(
-                  wishlistCart,
-                  data.title,
-                  1,
-                  data.price,
-                  data.title,
-                  data.size,
-                  data.color,
-                  data.img,
-                  wishlistSubTotal
-                )
-              }
-              removeFromWishlist={() =>
-                removeFromWishlist(
-                  wishlistCart,
-                  data.title,
-                  1,
-                  wishlistSubTotal
-                )
-              }
-              removeFromCart={() =>
-                removeFromCart(cart, data.title, 1, updateSubTotal)
-              }
-              key={data._id}
-              category={data.subCategory}
-              ImageURL={data.img}
-              size={data.size}
-              color={data.color}
-              price={data.price}
-              title={data.title}
-            />
-          );
-        })}
+        {allData
+          ?.filter((data) => filterProductData(data, filterData))
+          .map((data, index) => {
+            return (
+              <ProductCard
+                index={index}
+                availableQty={data.availableQty}
+                QuickBuy={() =>
+                  QuickBuy(
+                    QuickBuyCart,
+                    data.title,
+                    1,
+                    data.price,
+                    data.title,
+                    data.size,
+                    data.color,
+                    data.img,
+                    quickBuySubTotal,
+                    clearCart
+                  )
+                }
+                addToCart={() =>
+                  addToCart(
+                    cart,
+                    data.title,
+                    1,
+                    data.price,
+                    data.title,
+                    data.size,
+                    data.color,
+                    data.img,
+                    updateSubTotal
+                  )
+                }
+                addToWishlist={() =>
+                  addToWishlist(
+                    wishlistCart,
+                    data.title,
+                    1,
+                    data.price,
+                    data.title,
+                    data.size,
+                    data.color,
+                    data.img,
+                    wishlistSubTotal
+                  )
+                }
+                removeFromWishlist={() =>
+                  removeFromWishlist(
+                    wishlistCart,
+                    data.title,
+                    1,
+                    wishlistSubTotal
+                  )
+                }
+                removeFromCart={() =>
+                  removeFromCart(cart, data.title, 1, updateSubTotal)
+                }
+                key={data._id}
+                category={data.subCategory}
+                ImageURL={data.img}
+                size={data.size}
+                color={data.color}
+                price={data.price}
+                title={data.title}
+              />
+            );
+          })}
       </TabsContent>
       <TabsContent
         value="men"
@@ -350,9 +379,23 @@ export const GenderCategoryTabs = ({
 };
 
 const PopOverFilter = () => {
-  const [price, setPrice] = useState(500);
-  const [size, setSize] = useState("");
-  const [color, setColor] = useState("");
+  const pathname = usePathname();
+  const updateField = filter(useShallow((state) => state.updateField));
+  const filterData = filter(useShallow((state) => state.filterData));
+  const resetFilter = filter(useShallow((state) => state.resetFilter));
+  const router = useRouter();
+
+  let category = [
+    "popular-products",
+    "winterwears",
+    "footwears",
+    "anime",
+    "new-arrivals",
+  ];
+  let subCategory = ["Hoodies", "Tshirts", "Sneaker", "Sandal"];
+  const handleRedirect = (path) => {
+    router.push(`/shop/${path}`);
+  };
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -366,70 +409,125 @@ const PopOverFilter = () => {
           <div className="flex gap-3 items-center">
             <Label htmlFor="price">Price</Label>
             <p className="font-semibold">
-              {`${price[0] ?? 500}  - ${price[1] ?? 2000}`}
+              {`${filterData.budget[0] ?? 500}  - ${
+                filterData.budget[1] ?? 2000
+              }`}
             </p>
           </div>
           <Slider
             id="price"
             onValueChange={(e) => {
-              setPrice(e);
+              updateField("budget", e);
             }}
             color="#f2f2f2"
-            defaultValue={[500, 2000]}
+            defaultValue={filterData.budget}
             max={10000}
             step={100}
           />
 
-          <RadioGroup
-            id="size"
-            defaultValue="1"
-            className="flex gap-2 flex-wrap items-center pt-8 relative"
-          >
-            <Label htmlFor="size" className="absolute top-2">
-              Size
-            </Label>
-            <div className="flex items-center space-x-2 bg-grey px-2 py-2 rounded-lg cursor-pointer">
-              <RadioGroupItem value="XS" id="1" className="bg-white" />
-              <Label htmlFor="1">XS</Label>
-            </div>
-            <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
-              <RadioGroupItem value="S" id="2" className="bg-white" />
-              <Label htmlFor="2">S</Label>
-            </div>
-            <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
-              <RadioGroupItem value="M" id="3" className="bg-white" />
-              <Label htmlFor="3">M</Label>
-            </div>
-            <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
-              <RadioGroupItem value="L" id="4" className="bg-white" />
-              <Label htmlFor="4">L</Label>
-            </div>
-            <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
-              <RadioGroupItem value="XL" id="5" className="bg-white" />
-              <Label htmlFor="5">Xl</Label>
-            </div>
-          </RadioGroup>
-          <DropDown name="Color" value="s" />
-          <DropDown name="Brand" value="s" />
+          {pathname != "/shop" && (
+            <RadioGroup
+              id="size"
+              defaultValue={filterData.size}
+              onValueChange={(e) => {
+                updateField("size", e);
+              }}
+              className="flex gap-2 flex-wrap items-center pt-8 relative"
+            >
+              <Label htmlFor="size" className="absolute top-2">
+                Size
+              </Label>
+              <div className="flex items-center space-x-2 bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                <RadioGroupItem value="XS" id="1" className="bg-white" />
+                <Label htmlFor="1">XS</Label>
+              </div>
+              <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                <RadioGroupItem value="S" id="2" className="bg-white" />
+                <Label htmlFor="2">S</Label>
+              </div>
+              <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                <RadioGroupItem value="M" id="3" className="bg-white" />
+                <Label htmlFor="3">M</Label>
+              </div>
+              <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                <RadioGroupItem value="L" id="4" className="bg-white" />
+                <Label htmlFor="4">L</Label>
+              </div>
+              <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                <RadioGroupItem value="XL" id="5" className="bg-white" />
+                <Label htmlFor="5">Xl</Label>
+              </div>
+            </RadioGroup>
+          )}
+          {pathname != "/shop" && (
+            <DropDown
+              name="Color"
+              value="s"
+              updateField={(e) => updateField("color", e)}
+            />
+          )}
+          <DropDown
+            name="Brand"
+            value="s"
+            updateField={(e) => updateField("brand", e)}
+          />
+          {/* {(pathname == "/shop" ||
+            pathname == "/shop/popular-products" ||
+            pathname == "/shop/new-arrivals") && (
+            <DropDown
+              name="Category"
+              value="Winterwear"
+              data={category}
+              updateField={(e) => updateField("category", e)}
+            />
+          )} */}
+
+          <DropDown
+            name="Subcategory"
+            data={subCategory}
+            updateField={(e) => updateField("subCategory", e)}
+          />
         </div>
+        <PopoverClose>
+          <Button className="mt-4" onClick={resetFilter}>
+            Clear Filter
+          </Button>
+        </PopoverClose>
       </PopoverContent>
     </Popover>
   );
 };
 
-const DropDown = ({ name, value, data }) => {
+const DropDown = ({ name, value, data, updateField }) => {
   return (
-    <Select>
+    <Select onValueChange={updateField} className="mt-2">
       <Label className="mt-5">{name}</Label>
-      <SelectTrigger className="w-full">
-        <SelectValue placeholder={`Select your ${name}`} />
+      <SelectTrigger className="w-full font-semibold text-[#808080]">
+        <SelectValue
+          placeholder={`Select your ${name}`}
+          className="placeholder:font-bold"
+        />
       </SelectTrigger>
       <SelectContent className="bg-white">
         <SelectGroup>
-          <SelectLabel>{name}</SelectLabel>
-          <SelectItem className="uppercase" value={value}>
-            {value}
-          </SelectItem>
+          {data ? (
+            data.map((item, i) => (
+              <SelectItem
+                key={i}
+                className="capitalize hover:bg-grey cursor-pointer transition-all"
+                value={item}
+              >
+                {item}
+              </SelectItem>
+            ))
+          ) : (
+            <SelectItem
+              className="uppercase hover:bg-grey cursor-pointer transition-all"
+              value={value}
+            >
+              {value}
+            </SelectItem>
+          )}
         </SelectGroup>
       </SelectContent>
     </Select>

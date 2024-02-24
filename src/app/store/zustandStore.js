@@ -61,3 +61,29 @@ export const useQuickBuy = create(
     }
   )
 );
+
+export const filter = create((set) => ({
+  filterData: {
+    budget: [500, 5000],
+    size: "",
+    color: "",
+    brand: "",
+    category: "",
+    subCategory: "",
+  },
+  updateField: (fieldName, newValue) =>
+    set((state) => ({
+      filterData: { ...state.filterData, [fieldName]: newValue },
+    })),
+  resetFilter: () =>
+    set({
+      filterData: {
+        budget: [500, 2000],
+        size: "",
+        color: "",
+        brand: "",
+        category: "",
+        subCategory: "",
+      },
+    }),
+}));
