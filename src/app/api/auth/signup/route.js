@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 export async function POST(request) {
   await connectDb();
   try {
-    const { username, email, password }  = await request.json();
+    const { username, email, password } = await request.json();
     //checking if the user exists
     const userExist = await User.findOne({
       $or: [{ email: email.toLowerCase() }],
@@ -27,6 +27,7 @@ export async function POST(request) {
         username: username,
         email: email.toLowerCase(),
         password: encryptedPassword,
+        registrationMethod: "Email&Password",
       });
 
       return NextResponse.json(

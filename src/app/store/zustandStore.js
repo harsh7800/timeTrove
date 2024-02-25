@@ -10,7 +10,7 @@ export const useStore = create(
     }),
     {
       name: "user-details",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
@@ -25,7 +25,7 @@ export const useCart = create(
     }),
     {
       name: "cart",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
@@ -41,7 +41,7 @@ export const wishlist = create(
     }),
     {
       name: "wishlistCart",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
@@ -57,7 +57,7 @@ export const useQuickBuy = create(
     }),
     {
       name: "QuickBuyCart",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

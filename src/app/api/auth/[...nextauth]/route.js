@@ -27,6 +27,7 @@ const handler = NextAuth({
             username: name,
             email: email.toLowerCase(),
             image: picture,
+            registrationMethod: "google",
           });
         }
         let token = jwt.sign({ email, name }, process.env.JWT_SECRET_KEY);

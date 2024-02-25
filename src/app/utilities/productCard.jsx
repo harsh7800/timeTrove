@@ -214,7 +214,7 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
                 <div className="w-full sm:w-[80%] mt-1 flex items-center text-xl justify-between">
                   <p className="mt-2 font-semibold">Total</p>
                   <p className="mt-2 font-bold">
-                    {cart.qty != 0 ? cart.price : 0}
+                    {cart.qty != 0 ? cart.qty * cart.price : 0}
                   </p>
                 </div>
               </div>
@@ -240,7 +240,7 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
                 </Button>
               </DrawerClose>
               <Button className="w-1/2">
-                Pay {cart.qty != 0 ? cart.price : 0}/-
+                Pay {cart.qty != 0 ? cart.qty * cart.price + 40 : 0}/-
               </Button>
             </div>
           </div>

@@ -8,7 +8,8 @@ export async function getData(productFor = "") {
   // You can return Date, Map, Set, etc.
 
   if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
+    // * This will activate the closest `error.js` Error Boundary
+    // * Create a custom error page
     throw new Error("Failed to fetch data");
   }
   let data = res.json();

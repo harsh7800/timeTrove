@@ -14,7 +14,7 @@ export const DropDownMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar className="bg-[#f2f2f2] hover:bg-grey.200 text-black font-bold cursor-pointer select-none transition-colors">
+        <Avatar className="bg-[#f2f2f2] hover:bg-grey.200 border-2 text-black font-bold cursor-pointer select-none transition-colors">
           <AvatarImage
             src="https://lh3.googleusercontent.com/a/ACg8ocIwXKjuDN7gFtM-0wIETQDRJz42gOyp3B350wCepEW7yw=s96-c"
             alt="@shadcn"
@@ -25,7 +25,9 @@ export const DropDownMenu = () => {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-white">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel className="font-bold text-[#808080]">
+          My Account
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer hover:bg-grey transition-all"

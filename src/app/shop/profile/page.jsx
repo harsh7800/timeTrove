@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useStore } from "@/app/store/zustandStore";
+import { updateAccountCred } from "@/app/helpers/updateAccountCred";
 
 export default function Page() {
   const state = useStore((state) => state.user);
@@ -52,7 +53,7 @@ export default function Page() {
       })
       .refine((data) => {
         let { newPassword, confirmNewPassword } = passwordForm.getValues();
-        return newPassword == confirmNewPassword;
+        return newPassword === confirmNewPassword;
       }),
   });
 
@@ -96,7 +97,7 @@ export default function Page() {
               <FormItem className="relative">
                 <FormControl>
                   <div className="px-0 sm:py-6 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt className="text-sm sm:text-lg font-medium leading-6 text-gray-900">
+                    <dt className="text-sm sm:text-md font-medium leading-6 text-gray-900">
                       Full Name
                     </dt>
                     <Input
@@ -118,7 +119,7 @@ export default function Page() {
               <FormItem className="relative">
                 <FormControl>
                   <div className="px-0 sm:py-6 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt className="text-sm sm:text-lg font-medium leading-6 text-gray-900">
+                    <dt className="text-sm sm:text-md font-medium leading-6 text-gray-900">
                       Email Address
                     </dt>
                     <Input
@@ -136,7 +137,15 @@ export default function Page() {
 
           <Button
             disabled={!userDetailsForm.formState.isValid}
-            onClick={() => console.log(userDetails.username, userDetails.email)}
+            onClick={async () => {
+              let data = await updateAccountCred(
+                true,
+                false,
+                userDetailsForm.getValues(),
+                state.token
+              );
+              console.log(data);
+            }}
             className="relative sm:left-[45%] left-[40%] sm:mt-[60px] mt-[10px]"
           >
             Update
@@ -153,7 +162,7 @@ export default function Page() {
               <FormItem className="relative">
                 <FormControl>
                   <div className="px-0 sm:py-6 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt className="text-sm sm:text-lg font-medium leading-6 text-gray-900">
+                    <dt className="text-sm sm:text-md font-medium leading-6 text-gray-900">
                       Old Password
                     </dt>
                     <Input
@@ -175,7 +184,7 @@ export default function Page() {
               <FormItem className="relative">
                 <FormControl>
                   <div className="px-0 sm:py-6 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt className="text-sm sm:text-lg font-medium leading-6 text-gray-900">
+                    <dt className="text-sm sm:text-md font-medium leading-6 text-gray-900">
                       New Password
                     </dt>
                     <Input
@@ -197,7 +206,7 @@ export default function Page() {
               <FormItem className="relative">
                 <FormControl>
                   <div className="px-0 sm:py-6 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt className="text-sm sm:text-lg font-medium leading-6 text-gray-900">
+                    <dt className="text-sm sm:text-md font-medium leading-6 text-gray-900">
                       Confirm Password
                     </dt>
                     <Input
@@ -216,6 +225,14 @@ export default function Page() {
           <Button
             disabled={!passwordForm.formState.isValid}
             className="relative sm:left-[45%] left-[40%] sm:mt-[60px] mt-[10px]"
+            onClick={() => {
+              updateAccountCred(
+                false,
+                true,
+                passwordForm.getValues(),
+                state.token
+              );
+            }}
           >
             Update
           </Button>

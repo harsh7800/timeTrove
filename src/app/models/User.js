@@ -11,6 +11,7 @@ const UserSchema = new mongoose.Schema(
     password: { type: String },
     role: { type: String, default: "user", required: true },
     image: { type: String, default: "" },
+    registrationMethod: { type: String, default: "" },
   },
   { timestamps: true }
 );

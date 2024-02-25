@@ -89,7 +89,12 @@ export default function LoginForm({ setToggle }) {
       const data = await response.json();
 
       if (response.ok) {
-        login(data);
+        let accountCred = {
+          token: data.token,
+          username: data.username,
+          email: data.email,
+        };
+        login(accountCred);
         toast({
           title: (
             <div className="flex items-center gap-2">
