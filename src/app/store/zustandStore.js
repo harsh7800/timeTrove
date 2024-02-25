@@ -4,8 +4,16 @@ import { useShallow } from "zustand/react/shallow";
 export const useStore = create(
   persist(
     (set, get) => ({
-      user: {},
+      user: {
+        email: "",
+        username: "",
+        token: "",
+      },
       login: (data) => set({ user: data }),
+      updateField: (fields) =>
+        set((state) => ({
+          user: { ...state.user, ...fields },
+        })),
       logout: () => set({ user: {} }), // Clear user data on logout
     }),
     {

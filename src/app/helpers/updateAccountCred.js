@@ -2,17 +2,25 @@ import { useStore } from "../store/zustandStore";
 export async function updateAccountCred(
   emailandusername,
   password,
-  values,
-  token
+  newData,
+  states
 ) {
-  console.log(values);
+  // states.newEmail = newEmail;
+  let values = {
+    email: states.email,
+    updatedEmail: newData.email,
+    updatedUsername: newData.username,
+    password: newData.password,
+    newPassword: newData.newPassword,
+  };
+
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_HOST}/api/account?emailOrUsername=${emailandusername}&password=${password}`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        token: token,
+        token: states.token,
       },
       body: JSON.stringify(values),
     }
@@ -21,6 +29,5 @@ export async function updateAccountCred(
     // throw new Error("Failed to Update Account");
   }
   let data = await res.json();
-  console.log(data);
   return data;
 }

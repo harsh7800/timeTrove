@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useToast } from "@/components/ui/use-toast";
+
 import {
   Form,
   FormControl,
@@ -16,9 +18,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { useStore } from "@/app/store/zustandStore";
 import { updateAccountCred } from "@/app/helpers/updateAccountCred";
+import { Loader2 } from "lucide-react";
+import { FaCircleCheck } from "react-icons/fa6";
+import { IoMdCloseCircle } from "react-icons/io";
 
 export default function Page() {
   const state = useStore((state) => state.user);
+  const updateField = useStore((state) => state.updateField);
+
+  const { toast } = useToast();
 
   const userDetailsformSchema = z.object({
     username: z.string().min(2, {
@@ -138,13 +146,33 @@ export default function Page() {
           <Button
             disabled={!userDetailsForm.formState.isValid}
             onClick={async () => {
+              toast({
+                title: (
+                  <div className="flex items-center gap-3 text-black text-md">
+                    <Loader2 className="animate-spin" />
+                    <p>Loading..</p>
+                  </div>
+                ),
+                duration: 10000, // Adjust the duration as needed
+                className: "bg-white",
+              });
               let data = await updateAccountCred(
                 true,
                 false,
                 userDetailsForm.getValues(),
-                state.token
+                state
               );
-              console.log(data);
+              updateField({ email: data.email, username: data.username });
+              toast({
+                title: (
+                  <div className="flex items-center gap-2">
+                    <FaCircleCheck size={15} color="#2eb82e" /> {data.message}
+                  </div>
+                ),
+                duration: "3000",
+                className: "bg-white",
+                variant: "success",
+              });
             }}
             className="relative sm:left-[45%] left-[40%] sm:mt-[60px] mt-[10px]"
           >
@@ -225,13 +253,43 @@ export default function Page() {
           <Button
             disabled={!passwordForm.formState.isValid}
             className="relative sm:left-[45%] left-[40%] sm:mt-[60px] mt-[10px]"
-            onClick={() => {
-              updateAccountCred(
+            onClick={async () => {
+              toast({
+                title: (
+                  <div className="flex items-center gap-3 text-black text-md">
+                    <Loader2 className="animate-spin" />
+                    <p>Loading..</p>
+                  </div>
+                ),
+                duration: 10000, // Adjust the duration as needed
+                className: "bg-white",
+              });
+              let data = await updateAccountCred(
                 false,
                 true,
                 passwordForm.getValues(),
-                state.token
+                state
               );
+              console.log(data.success);
+              toast({
+                title: (
+                  <div className="flex items-center gap-2">
+                    {data.success ? (
+                      <FaCircleCheck size={15} color="#2eb82e" />
+                    ) : (
+                      <IoMdCloseCircle size={15} color="#ff1a1a" />
+                    )}{" "}
+                    {data.message}
+                  </div>
+                ),
+                duration: "3000",
+                className: "bg-white",
+                variant: "success",
+                onSwipeEnd: () => {
+                  router.push("/shop");
+                },
+              });
+              data.success && passwordForm.reset();
             }}
           >
             Update
