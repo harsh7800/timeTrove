@@ -89,7 +89,7 @@ export default function Page() {
           Account Information
         </h3>
         <p className="mt-1 max-w-2xl text-sm  leading-3 sm:leading-6 text-gray-500">
-          Personal details and Billing address.
+          Account details and Password.
         </p>
         <p className="text-[12px] text-gray-500 text-right absolute bottom-0 right-0">
           * Below Field are editable

@@ -31,11 +31,14 @@ export const DropDownMenu = () => {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer hover:bg-grey transition-all"
-          onClick={() => router.push("/shop/profile")}
+          onClick={() => router.push("/shop/account/profile")}
         >
           Profile
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer hover:bg-grey transition-all">
+        <DropdownMenuItem
+          className="cursor-pointer hover:bg-grey transition-all"
+          onClick={() => router.push("/shop/account/billing")}
+        >
           Billing
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer hover:bg-grey transition-all">
