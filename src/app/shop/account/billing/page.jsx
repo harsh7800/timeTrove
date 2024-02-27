@@ -1,6 +1,6 @@
 import { DeliveryDialog } from "@/app/utilities/deliveryDialog";
 import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
+import { Edit, Home } from "lucide-react";
 
 export default function Page() {
   return (
@@ -29,8 +29,10 @@ const AddressCard = () => {
   return (
     <div className=" w-[400px] border flex py-4 px-2 gap-3 items-center rounded-lg">
       <div className="w-[80px] h-[80px] rounded-lg border"></div>
-      <div>
-        <h2 className="font-semibold text-[16px]">Home</h2>
+      <div className="space-y-2">
+        <h2 className="font-semibold flex items-center gap-1 text-[16px]">
+          <Home /> Home
+        </h2>
         <p className="font-semibold text-[#808080] text-[13px]">
           431804, Sarafa Line, Sonar Gully, Kinwat, <br /> Nanded, Maharastra
         </p>
