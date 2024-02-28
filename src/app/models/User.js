@@ -12,6 +12,10 @@ const UserSchema = new mongoose.Schema(
     role: { type: String, default: "user", required: true },
     image: { type: String, default: "" },
     registrationMethod: { type: String, default: "" },
+    billingAddress: {
+      type: [Object], // Assuming billingAddress is an array of objects
+      default: [],
+    },
   },
   { timestamps: true }
 );

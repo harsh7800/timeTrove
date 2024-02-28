@@ -9,8 +9,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { User } from "lucide-react";
+import { useStore } from "../store/zustandStore";
 export const DropDownMenu = () => {
   const router = useRouter();
+  const email = useStore((state) => state.user.email);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -37,7 +39,7 @@ export const DropDownMenu = () => {
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer hover:bg-grey transition-all"
-          onClick={() => router.push("/shop/account/billing")}
+          onClick={() => router.push(`/shop/account/billing/${email}`)}
         >
           Billing
         </DropdownMenuItem>

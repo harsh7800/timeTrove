@@ -26,17 +26,18 @@ import { z } from "zod";
 import { useStore } from "../store/zustandStore";
 import { useShallow } from "zustand/react/shallow";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { Edit, Loader2 } from "lucide-react";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
 import { useRouter } from "next-nprogress-bar";
 import { DialogClose } from "@radix-ui/react-dialog";
 
-export function DeliveryDialog({
+export function EditDeliveryDialog({
   addressName,
   firstName,
   lastName,
   state,
+  phoneNum,
   city,
   landmark,
   pincode,
@@ -94,6 +95,7 @@ export function DeliveryDialog({
       firstName: firstName,
       lastName: lastName,
       state: state,
+      phoneNum: phoneNum,
       city: city,
       landmark: landmark,
       pincode: pincode,
@@ -106,7 +108,7 @@ export function DeliveryDialog({
       title: (
         <div className="flex items-center gap-3 text-black text-md">
           <Loader2 className="animate-spin" />
-          <p>Loading..</p>
+          <p>Updating..</p>
         </div>
       ),
       duration: 10000, // Adjust the duration as needed
@@ -126,7 +128,7 @@ export function DeliveryDialog({
       toast({
         title: (
           <div className="flex items-center gap-2">
-            <FaCircleCheck size={15} color="#2eb82e" /> New Address Added
+            <FaCircleCheck size={15} color="#2eb82e" /> Address Updated
           </div>
         ),
         duration: "3000",
@@ -152,7 +154,10 @@ export function DeliveryDialog({
     <Dialog className="w-full">
       <DialogTrigger asChild>
         <div className="flex justify-center">
-          <Button className="mt-3 mx-auto">Add New Address</Button>
+          <Edit
+            size={20}
+            className="cursor-pointer hover:text-[#808080] transition-all"
+          />
         </div>
       </DialogTrigger>
       <DialogContent
@@ -165,19 +170,22 @@ export function DeliveryDialog({
           <DialogTitle>Add New Address</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-2 select-none"
+          >
             <FormField
               control={form.control}
               name="addressName"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="select-none">
                   <FormLabel htmlFor="addressName">
                     Name of the Address
                   </FormLabel>
                   <FormControl>
                     <Input
                       id="email"
-                      className="placeholder:font-medium placeholder:text-[12px] sm:placeholder:text-[14px] opacity-80 placeholder-shown:font-medium placeholder-shown:text-[14px]"
+                      className="select-none placeholder:font-medium placeholder:text-[12px] sm:placeholder:text-[14px] opacity-80 placeholder-shown:font-medium placeholder-shown:text-[14px]"
                       placeholder="Enter Your Email"
                       {...field}
                     />

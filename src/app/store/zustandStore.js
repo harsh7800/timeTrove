@@ -95,3 +95,18 @@ export const filter = create((set) => ({
       },
     }),
 }));
+
+export const Address = create((set) => ({
+  addressData: {
+    addressName: "",
+    firstName: "",
+    lastName: "",
+    phoneNum: "",
+    state: "",
+    city: "",
+    pincode: "",
+    landmark: "",
+  },
+  updateAddress: (data) => set(() => ({ addressData: data })),
+  resetAddress: (data) => set(() => ({ addressData: {} })),
+}));
