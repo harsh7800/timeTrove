@@ -2,7 +2,6 @@ import { LogOut, TrendingUp, Zap } from "lucide-react";
 import React from "react";
 import { PiHoodie, PiSneaker } from "react-icons/pi";
 import { HoverCardOrder } from "./asideNav";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const Loading = () => {

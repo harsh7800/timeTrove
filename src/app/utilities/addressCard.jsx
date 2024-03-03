@@ -1,27 +1,65 @@
-import User from "../models/User";
+"use client";
+import { useEffect, useState } from "react";
+// import { Address } from "../store/zustandStore";
 import { EditDeliveryDialog } from "./editDeliveryDialog";
+import { DeleteAddress } from "./deleteAddress";
 const { Home, Briefcase, Trash } = require("lucide-react");
 
-export const AddressCard = async ({
-  id,
+export const AddressCard = ({
   addressType,
   addressName,
+  pincode,
+  landmark,
+  city,
+  state,
   firstName,
   lastName,
   phoneNum,
-  state,
-  city,
-  pincode,
-  landmark,
+  id,
 }) => {
-  async function getAddress(id) {
-    "use server";
-    await connectDb();
-    const user = await User.findOne({ email });
-    return user ? user.billingAddress : [];
-  }
+  const [localState, setLocalState] = useState({
+    addressType,
+    addressName,
+    pincode,
+    landmark,
+    city,
+    state,
+    firstName,
+    lastName,
+    phoneNum,
+    id,
+  });
+
+  // Function to update state when new props are received
+  useEffect(() => {
+    setLocalState({
+      addressType,
+      addressName,
+      pincode,
+      landmark,
+      city,
+      state,
+      firstName,
+      lastName,
+      phoneNum,
+      id,
+    });
+  }, [
+    addressType,
+    addressName,
+    pincode,
+    landmark,
+    city,
+    state,
+    firstName,
+    lastName,
+    phoneNum,
+    id,
+  ]);
+  // const addressData = Address((state) => state.addressData);
+  // const updateAddress = Address((state) => state.updateAddress);
   return (
-    <div className=" w-[400px] border justify-between flex py-4 px-3 gap-3 items-center rounded-lg">
+    <div className="w-full lg:w-[350px] border justify-between flex py-4 px-3 gap-3 items-center rounded-lg">
       <div className="space-y-2">
         <h2 className="font-semibold flex items-center gap-1 text-[16px]">
           {addressType == "home" ? <Home /> : <Briefcase />} {addressName}
@@ -32,6 +70,7 @@ export const AddressCard = async ({
       </div>
       <div className="flex gap-2">
         <EditDeliveryDialog
+          localState={localState}
           addressName={addressName}
           firstName={firstName}
           lastName={lastName}
@@ -41,12 +80,9 @@ export const AddressCard = async ({
           city={city}
           state={state}
           addressType={addressType}
+          id={id}
         />
-        <Trash
-          //   onClick={}
-          size={20}
-          className="cursor-pointer hover:text-[#808080] transition-all"
-        />
+        <DeleteAddress addressName={addressName} id={id} />
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ export const useStore = create(
         email: "",
         username: "",
         token: "",
+        billingAddress: [],
       },
       login: (data) => set({ user: data }),
       updateField: (fields) =>

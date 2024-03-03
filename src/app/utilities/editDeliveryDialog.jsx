@@ -33,6 +33,8 @@ import { useRouter } from "next-nprogress-bar";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 export function EditDeliveryDialog({
+  localState,
+  id,
   addressName,
   firstName,
   lastName,
@@ -46,6 +48,7 @@ export function EditDeliveryDialog({
   const router = useRouter();
   const email = useStore(useShallow((state) => state.user.email));
   const { toast } = useToast();
+
   const formSchema = z.object({
     addressName: z.string().min(2, {
       message: "Address Name must be at least 2 characters.",
@@ -91,15 +94,15 @@ export function EditDeliveryDialog({
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      addressName: addressName,
-      firstName: firstName,
-      lastName: lastName,
-      state: state,
-      phoneNum: phoneNum,
-      city: city,
-      landmark: landmark,
-      pincode: pincode,
-      addressType: addressType,
+      addressName: localState.addressName,
+      firstName: localState.firstName,
+      lastName: localState.lastName,
+      state: localState.state,
+      phoneNum: localState.phoneNum,
+      city: localState.city,
+      landmark: localState.landmark,
+      pincode: localState.pincode,
+      addressType: localState.addressType,
     },
   });
 
@@ -115,13 +118,13 @@ export function EditDeliveryDialog({
       className: "bg-white",
     });
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_HOST}/api/account/addAddress`,
+      `${process.env.NEXT_PUBLIC_HOST}/api/account/editAddress?id=${id}`,
       {
         method: "POST",
         headers: {
           "content-Type": "application/json",
         },
-        body: JSON.stringify({ email, data }),
+        body: JSON.stringify({ email, data, id: id }),
       }
     );
     if (response.ok) {
@@ -131,12 +134,11 @@ export function EditDeliveryDialog({
             <FaCircleCheck size={15} color="#2eb82e" /> Address Updated
           </div>
         ),
-        duration: "3000",
+        duration: 1500,
         className: "bg-white",
         variant: "success",
       });
       router.refresh();
-      form.reset();
     } else {
       toast({
         title: (
@@ -145,7 +147,7 @@ export function EditDeliveryDialog({
             Again
           </div>
         ),
-        duration: "3000",
+        duration: 1500,
         className: "bg-white",
       });
     }

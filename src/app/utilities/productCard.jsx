@@ -17,7 +17,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
-import { useCart, wishlist } from "../store/zustandStore";
+import { useCart, useStore, wishlist } from "../store/zustandStore";
 import { useShallow } from "zustand/react/shallow";
 import { useRouter } from "next-nprogress-bar";
 import { CheckCheck } from "lucide-react";
@@ -87,7 +87,7 @@ const ProductCard = ({
           QuickBuy={QuickBuy}
         />
         <Button
-          className={`hidden hover:bg-white hover:text-black hover:border sm:block w-1/2 ${
+          className={`hidden bg-black text-white hover:bg-white hover:text-black hover:border sm:block w-1/2 ${
             availableQty == 0 && "opacity-70 cursor-not-allowed"
           } ${cart[title] && "bg-white border text-black hover:bg-white"}`}
           onClick={() => {
@@ -106,7 +106,7 @@ const ProductCard = ({
         {cart[title] ? (
           <CheckCheck
             size={40}
-            className={`block sm:hidden w-1/2 text-[20px] rounded-lg h-[35px] bg-black   ${
+            className={`block  sm:hidden w-1/2 text-[20px] rounded-lg h-[35px] bg-black   ${
               cart[title] && "bg-white border text-[#33cc33] hover:bg-white"
             }`}
           />
@@ -144,11 +144,13 @@ export default ProductCard;
 const BuyNowDrawer = ({ price, name, size, color, img }) => {
   const router = useRouter();
   const [cart, setCart] = useState({});
+  const [deliveryAddress, setdeliveryAddress] = useState({});
+  const address = useStore((state) => state.user.billingAddress);
   return (
     <Drawer>
       <DrawerTrigger asChild className="hidden sm:block">
         <Button
-          className=" bg-black w-1/2 hover:bg-white hover:text-black hover:border"
+          className="  w-1/2 bg-black text-white hover:bg-white hover:text-black hover:border"
           onClick={() => {
             router.refresh();
             setCart({ qty: 1, price, name, size, color, img });
@@ -178,100 +180,112 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
           </DrawerDescription>
         </DrawerHeader>
         <div className="flex justify-center items-start gap-5 ">
-          <div className="w-[90%] sm:w-[500px] my-5 shadow-md  p-4 rounded-lg space-y-6">
-            <h3 className="font-bold w-full text-start">Your Order</h3>
-            {cart.qty != 0 && (
-              <QuickBuyProductCard
-                cart={cart}
-                img={cart.img}
-                price={cart.price}
-                qty={cart.qty}
-                productTitle={cart.name}
-                addToCart={() =>
-                  setCart((prevCart) => ({
-                    ...prevCart,
-                    qty: prevCart.qty + 1,
-                  }))
-                }
-                removeFromCart={() =>
-                  setCart((prevCart) => ({
-                    ...prevCart,
-                    qty: prevCart.qty - 1,
-                  }))
-                }
-              />
-            )}
-            {cart.qty != 0 && cart.qty != 0 && (
-              <div className="w-full">
-                <div className="w-full sm:w-[80%] flex items-center justify-between">
-                  <p className="mt-2 font-semibold text-xs">Delivery</p>
-                  <p className="mt-2 font-semibold text-xs">40</p>
+          {cart.qty != 0 && cart.qty != 0 ? (
+            <div className="w-[90%] sm:w-[500px] my-5 shadow-md  p-4 rounded-lg space-y-6">
+              <h3 className="font-bold w-full text-start">Your Order</h3>
+              {cart.qty != 0 && (
+                <QuickBuyProductCard
+                  cart={cart}
+                  img={cart.img}
+                  price={cart.price}
+                  qty={cart.qty}
+                  productTitle={cart.name}
+                  addToCart={() =>
+                    setCart((prevCart) => ({
+                      ...prevCart,
+                      qty: prevCart.qty + 1,
+                    }))
+                  }
+                  removeFromCart={() =>
+                    setCart((prevCart) => ({
+                      ...prevCart,
+                      qty: prevCart.qty - 1,
+                    }))
+                  }
+                />
+              )}
+              {cart.qty != 0 && cart.qty != 0 && (
+                <div className="w-full">
+                  <div className="w-full sm:w-[80%] flex items-center justify-between">
+                    <p className="mt-2 font-semibold text-xs">Delivery</p>
+                    <p className="mt-2 font-semibold text-xs">40</p>
+                  </div>
+                  <div className="w-full sm:w-[80%] mt-1 flex items-center justify-between">
+                    <p className="mt-2 font-semibold text-xs">Discount</p>
+                    <p className="mt-2 font-semibold text-xs">00</p>
+                  </div>
+                  <div className="w-full sm:w-[80%] mt-1 flex items-center text-xl justify-between">
+                    <p className="mt-2 font-semibold">Total</p>
+                    <p className="mt-2 font-bold">
+                      {cart.qty != 0 ? cart.qty * cart.price : 0}
+                    </p>
+                  </div>
                 </div>
-                <div className="w-full sm:w-[80%] mt-1 flex items-center justify-between">
-                  <p className="mt-2 font-semibold text-xs">Discount</p>
-                  <p className="mt-2 font-semibold text-xs">00</p>
-                </div>
-                <div className="w-full sm:w-[80%] mt-1 flex items-center text-xl justify-between">
-                  <p className="mt-2 font-semibold">Total</p>
-                  <p className="mt-2 font-bold">
-                    {cart.qty != 0 ? cart.qty * cart.price : 0}
-                  </p>
-                </div>
+              )}
+              <div className="block lg:hidden border-1 shadow-lg rounded-lg px-7 py-3 w-[full] space-y-4">
+                <h3 className="font-bold">Shipping Address</h3>
+                <RadioGroup defaultValue="option-one">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="option-one" id="option-one" />
+                    <Label htmlFor="option-one" className="leading-5">
+                      431804, Sarafa Line, Sonar Gully, Kinwat, Nanded,
+                      Maharastra
+                    </Label>
+                  </div>
+                </RadioGroup>
               </div>
-            )}
-            <div className="block lg:hidden border-1 shadow-lg rounded-lg px-7 py-3 w-[full] space-y-4">
+
+              <div className="w-full flex justify-center items-center gap-2">
+                <DrawerClose asChild>
+                  <Button
+                    className="w-1/2 bg-grey text-black font-bold hover:bg-grey.200"
+                    onClick={() => setCart({})}
+                  >
+                    Cancel
+                  </Button>
+                </DrawerClose>
+                <Button
+                  className="w-1/2 bg-black text-white"
+                  onClick={() => console.log(deliveryAddress)}
+                  disabled={Object.keys(deliveryAddress).length == 0}
+                >
+                  Pay {cart.qty != 0 ? cart.qty * cart.price + 40 : 0}/-
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <h1 className="font-bold">Please add a product to continue</h1>
+          )}
+          {cart.qty != 0 && cart.qty != 0 && (
+            <div className="hidden mt-2 lg:block border-2 rounded-lg px-7 py-3 w-[40%] max-w-[500px] space-y-4">
               <h3 className="font-bold">Shipping Address</h3>
-              <RadioGroup defaultValue="option-one">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="option-one" id="option-one" />
-                  <Label htmlFor="option-one" className="leading-5">
-                    431804, Sarafa Line, Sonar Gully, Kinwat, Nanded, Maharastra
-                  </Label>
-                </div>
+              <RadioGroup
+                onValueChange={(value) => {
+                  setdeliveryAddress(value);
+                }}
+              >
+                {address &&
+                  address?.map((addr, i) => {
+                    return (
+                      <div
+                        className="flex items-center space-x-2 space-y-2"
+                        key={i}
+                      >
+                        <RadioGroupItem
+                          value={addr}
+                          id={addr._id}
+                          className="accent-purple text-purple"
+                        />
+                        <Label htmlFor={addr._id} className="leading-5">
+                          {addr.pincode}, {addr.addressName}, {addr.landmark},
+                          &nbsp;{addr.city}, <br /> {addr.state}
+                        </Label>
+                      </div>
+                    );
+                  })}
               </RadioGroup>
             </div>
-            <div className="w-full flex justify-center items-center gap-2">
-              <DrawerClose asChild>
-                <Button
-                  className="w-1/2 bg-grey text-black font-bold hover:bg-grey.200"
-                  onClick={() => setCart({})}
-                >
-                  Cancel
-                </Button>
-              </DrawerClose>
-              <Button className="w-1/2">
-                Pay {cart.qty != 0 ? cart.qty * cart.price + 40 : 0}/-
-              </Button>
-            </div>
-          </div>
-
-          <div className="hidden mt-2 lg:block border-2 rounded-lg px-7 py-3 w-[40%] max-w-[500px] space-y-4">
-            <h3 className="font-bold">Shipping Address</h3>
-            <RadioGroup defaultValue="option-one">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem
-                  value="option-one"
-                  id="option-one"
-                  className="accent-purple text-purple"
-                />
-                <Label htmlFor="option-one" className="leading-5">
-                  431804, Sarafa Line, Sonar Gully, Kinwat, <br /> Nanded,
-                  Maharastra
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem
-                  value="option-one"
-                  id="option-one"
-                  className="accent-purple text-purple"
-                />
-                <Label htmlFor="option-one" className="leading-5">
-                  431804, Sarafa Line, Sonar Gully, Kinwat, <br /> Nanded,
-                  Maharastra
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
+          )}
         </div>
         <DrawerFooter className="pt-2"></DrawerFooter>
       </DrawerContent>
@@ -288,6 +302,15 @@ export const QuickBuyProductCard = ({
   price,
 }) => {
   const router = useRouter();
+  const email = useStore((state) => state.user.email);
+  const [address, setAddress] = useState([]);
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_HOST}/api/account/${email}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setAddress(data);
+      });
+  }, []);
   return (
     <div className="w-full flex items-center justify-start gap-4">
       <Suspense

@@ -489,7 +489,7 @@ const PopOverFilter = () => {
           />
         </div>
         <PopoverClose>
-          <Button className="mt-4" onClick={resetFilter}>
+          <Button className="mt-4 bg-black text-white" onClick={resetFilter}>
             Clear Filter
           </Button>
         </PopoverClose>

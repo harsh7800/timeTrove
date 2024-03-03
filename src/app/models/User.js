@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { AddressSchema } from "./Address";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -12,15 +13,9 @@ const UserSchema = new mongoose.Schema(
     role: { type: String, default: "user", required: true },
     image: { type: String, default: "" },
     registrationMethod: { type: String, default: "" },
-    billingAddress: {
-      type: [Object], // Assuming billingAddress is an array of objects
-      default: [],
-    },
+    billingAddress: [AddressSchema],
   },
   { timestamps: true }
 );
 
-// mongoose.models = {};
-
 export default mongoose.models.User || mongoose.model("User", UserSchema);
-// export default mongoose.model("User", UserSchema);

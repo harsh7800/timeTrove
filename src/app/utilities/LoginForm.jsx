@@ -93,6 +93,7 @@ export default function LoginForm({ setToggle }) {
           token: data.token,
           username: data.username,
           email: data.email,
+          billingAddress: data.billingAddress,
         };
         login(accountCred);
         toast({

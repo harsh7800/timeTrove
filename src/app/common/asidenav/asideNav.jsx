@@ -49,7 +49,6 @@ export const AsideNav = ({ mobile }) => {
         >
           <TrendingUp /> popular products
         </h3>
-
         <h3
           className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
             path == "/shop/winterwears"

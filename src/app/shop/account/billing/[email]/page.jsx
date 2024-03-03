@@ -23,26 +23,32 @@ export default async function Page({ params }) {
           List of All Billing Address
         </p>
       </div>
-      <div className="mt-4 gap-3 flex flex-wrap">
-        {data?.map((item, i) => {
-          return (
-            <AddressCard
-              addressType={item.addressType}
-              addressName={item.addressName}
-              firstName={item.firstName}
-              lastName={item.lastName}
-              landmark={item.landmark}
-              city={item.city}
-              phoneNum={item.phoneNum}
-              state={item.state}
-              pincode={item.pincode}
-              key={i}
-              id={i}
-            />
-          );
-        })}
+      <div className="w-full mt-4 gap-3 flex-wrap md:flex-nowrap flex">
+        {data.length != 0 ? (
+          data?.map((item, i) => {
+            return (
+              <AddressCard
+                addressType={item.addressType}
+                addressName={item.addressName}
+                firstName={item.firstName}
+                lastName={item.lastName}
+                landmark={item.landmark}
+                city={item.city}
+                phoneNum={item.phoneNum}
+                state={item.state}
+                pincode={item.pincode}
+                key={i}
+                id={item._id.toString()}
+              />
+            );
+          })
+        ) : (
+          <h1 className="text-center w-full text-[30px] font-bold text-[#808080]">
+            No Address Found
+          </h1>
+        )}
       </div>
-      <DeliveryDialog getAddress />
+      <DeliveryDialog />
     </div>
   );
 }

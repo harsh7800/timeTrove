@@ -41,6 +41,7 @@ export function DeliveryDialog({
   landmark,
   pincode,
   addressType,
+  id,
 }) {
   const router = useRouter();
   const email = useStore(useShallow((state) => state.user.email));
@@ -152,7 +153,12 @@ export function DeliveryDialog({
     <Dialog className="w-full">
       <DialogTrigger asChild>
         <div className="flex justify-center">
-          <Button className="mt-3 mx-auto">Add New Address</Button>
+          <Button
+            className="mt-3 mx-auto bg-black text-white hover:bg-white hover:text-black border"
+            variant=""
+          >
+            Add New Address
+          </Button>
         </div>
       </DialogTrigger>
       <DialogContent
@@ -362,12 +368,15 @@ export function DeliveryDialog({
               )}
             />
             {!form.formState.isValid ? (
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full bg-black text-white">
                 Save changes
               </Button>
             ) : (
               <DialogClose asChild>
-                <Button type="submit" className="w-full">
+                <Button
+                  type="submit"
+                  className="w-full bg-black text-white hover:bg-white hover:text-black border"
+                >
                   Save changes
                 </Button>
               </DialogClose>

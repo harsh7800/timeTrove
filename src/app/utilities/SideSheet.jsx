@@ -1,6 +1,11 @@
 import { Menu } from "lucide-react";
 import { AsideNav } from "../common/asidenav/asideNav";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export const SideSheet = () => {
   return (

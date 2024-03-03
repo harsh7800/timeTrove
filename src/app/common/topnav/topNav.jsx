@@ -36,7 +36,7 @@ export const TopNav = () => {
             </p>
           </div>
         ) : (
-          <Button className="bg-grey text-black font-bold rounded-xl">
+          <Button className="bg-black text-white hover:bg-white hover:text-black transition-all font-bold rounded-xl">
             Login
           </Button>
         )}

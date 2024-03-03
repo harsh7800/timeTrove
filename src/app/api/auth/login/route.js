@@ -35,6 +35,7 @@ export async function POST(request) {
               token: token,
               email: user.email,
               username: user.username,
+              billingAddress: user.billingAddress,
               success: true,
             },
             { status: 200 }

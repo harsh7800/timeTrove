@@ -1,5 +1,22 @@
+const plugin = require("tailwindcss/plugin");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  plugins: [
+    plugin(function ({ addComponents }) {
+      addComponents({
+        ".btn-black": {
+          backgroundColor: "#000", // Replace with your preferred background color
+          color: "#fff", // Replace with your preferred text color
+          "&:hover": {
+            color: "#000", // Replace with your preferred hover text color
+            backgroundColor: "#fff", // Replace with your preferred hover background color
+            borderColor: "currentColor", // Specify border color if needed
+            transition: "all",
+          },
+        },
+      });
+    }),
+  ],
   darkMode: ["class"],
   content: [
     "./pages/**/*.{js,jsx}",
@@ -8,6 +25,7 @@ module.exports = {
     "./src/**/*.{js,jsx}",
   ],
   prefix: "",
+
   theme: {
     container: {
       center: true,

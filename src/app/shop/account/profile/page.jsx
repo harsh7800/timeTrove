@@ -174,7 +174,7 @@ export default function Page() {
                 variant: "success",
               });
             }}
-            className="relative sm:left-[45%] left-[40%] sm:mt-[60px] mt-[10px]"
+            className="bg-black text-white hover:text-black hover:bg-white hover:border transition-all relative sm:left-[45%] left-[40%] sm:mt-[60px] mt-[10px]"
           >
             Update
           </Button>
@@ -252,7 +252,7 @@ export default function Page() {
 
           <Button
             disabled={!passwordForm.formState.isValid}
-            className="relative sm:left-[45%] left-[40%] sm:mt-[60px] mt-[10px]"
+            className="relative sm:left-[45%] left-[40%] sm:mt-[60px] mt-[10px] bg-black text-white hover:text-black hover:bg-white hover:border transition-all"
             onClick={async () => {
               toast({
                 title: (
