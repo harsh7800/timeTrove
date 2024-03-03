@@ -15,6 +15,7 @@ export async function DELETE(reuest) {
       return NextResponse.json(
         {
           message: "Address Deleted Successfully",
+          billingAddress: user.billingAddress,
         },
         { status: 200 }
       );

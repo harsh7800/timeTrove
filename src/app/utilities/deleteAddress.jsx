@@ -20,6 +20,8 @@ import { useRouter } from "next-nprogress-bar";
 export function DeleteAddress({ addressName, id }) {
   const { toast } = useToast();
   const email = useStore(useShallow((state) => state.user.email));
+  const updateField = useStore(useShallow((state) => state.updateField));
+
   const router = useRouter();
   async function onSubmit(data) {
     toast({
@@ -43,6 +45,8 @@ export function DeleteAddress({ addressName, id }) {
       }
     );
     if (response.ok) {
+      let address = await response.json();
+      updateField({ billingAddress: address.billingAddress });
       toast({
         title: (
           <div className="flex items-center gap-2">

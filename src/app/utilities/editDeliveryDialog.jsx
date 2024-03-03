@@ -48,6 +48,7 @@ export function EditDeliveryDialog({
   const router = useRouter();
   const email = useStore(useShallow((state) => state.user.email));
   const { toast } = useToast();
+  const updateField = useStore(useShallow((state) => state.updateField));
 
   const formSchema = z.object({
     addressName: z.string().min(2, {
@@ -128,6 +129,8 @@ export function EditDeliveryDialog({
       }
     );
     if (response.ok) {
+      let address = await response.json();
+      updateField({ billingAddress: address.billingAddress });
       toast({
         title: (
           <div className="flex items-center gap-2">
@@ -372,12 +375,12 @@ export function EditDeliveryDialog({
               )}
             />
             {!form.formState.isValid ? (
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full bg-black text-white">
                 Save changes
               </Button>
             ) : (
               <DialogClose asChild>
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full bg-black text-white">
                   Save changes
                 </Button>
               </DialogClose>

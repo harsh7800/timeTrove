@@ -19,6 +19,7 @@ export async function POST(request) {
       return NextResponse.json(
         {
           message: "Address Added Successfully",
+          billingAddress: user.billingAddress,
         },
         { status: 201 }
       );

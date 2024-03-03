@@ -45,6 +45,7 @@ export function DeliveryDialog({
 }) {
   const router = useRouter();
   const email = useStore(useShallow((state) => state.user.email));
+  const updateField = useStore(useShallow((state) => state.updateField));
   const { toast } = useToast();
   const formSchema = z.object({
     addressName: z.string().min(2, {
@@ -124,6 +125,8 @@ export function DeliveryDialog({
       }
     );
     if (response.ok) {
+      let address = await response.json();
+      updateField({ billingAddress: address.billingAddress });
       toast({
         title: (
           <div className="flex items-center gap-2">
@@ -375,7 +378,7 @@ export function DeliveryDialog({
               <DialogClose asChild>
                 <Button
                   type="submit"
-                  className="w-full bg-black text-white hover:bg-white hover:text-black border"
+                  className="w-full bg-black text-white border"
                 >
                   Save changes
                 </Button>
