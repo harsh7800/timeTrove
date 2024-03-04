@@ -146,6 +146,7 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
   const [cart, setCart] = useState({});
   const [deliveryAddress, setdeliveryAddress] = useState({});
   const address = useStore((state) => state.user.billingAddress);
+  const email = useStore((state) => state.user.email);
   return (
     <Drawer>
       <DrawerTrigger asChild className="hidden sm:block">
@@ -258,7 +259,21 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
           )}
           {cart.qty != 0 && cart.qty != 0 && (
             <div className="hidden mt-2 lg:block border-2 rounded-lg px-7 py-3 w-[40%] max-w-[500px] space-y-4">
-              <h3 className="font-bold">Shipping Address</h3>
+              {address?.length != 0 ? (
+                <h3 className="font-bold">Shipping Address</h3>
+              ) : (
+                <div className="w-full space-y-2 flex flex-col items-center">
+                  <h3 className="font-bold">No Address Found</h3>
+                  <Button
+                    className="font-bold bg-black text-white"
+                    onClick={() =>
+                      router.push(`/shop/account/billing/${email}`)
+                    }
+                  >
+                    Add Address
+                  </Button>
+                </div>
+              )}
               <RadioGroup
                 onValueChange={(value) => {
                   setdeliveryAddress(value);
@@ -312,7 +327,9 @@ export const QuickBuyProductCard = ({
       });
   }, []);
   return (
-    <div className="w-full flex items-center justify-start gap-4">
+    <div
+      className={`w-full flex items-center justify-start gap-4 animate-fade-left animate-once animate-duration-[800ms] animate-delay-[200] animate-ease-in-out animate-normal animate-fill-forwards`}
+    >
       <Suspense
         fallback={<Skeleton className="bg-grey.200 w-[60px] h-[70px]" />}
       >

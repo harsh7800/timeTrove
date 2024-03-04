@@ -35,7 +35,7 @@ export async function POST(request) {
           message: "Account Created Successfully",
           username: username,
           email: email,
-          billingAddress: userExist.billingAddress,
+          billingAddress: [],
           token: token,
           success: true,
         },

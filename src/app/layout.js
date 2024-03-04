@@ -17,21 +17,19 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         ></link>
       </Head>
-      <Suspense>
-        <body className={`${poppins} ${noto_serif_display}`}>
-          <ProgressBar
-            height="4px"
-            color="#b800e6"
-            options={{ showSpinner: true }}
-            delay={600}
-            shallowRouting
-          />
-          {children}
-          <Toaster />
-          <SpeedInsights />
-          <Analytics />
-        </body>
-      </Suspense>
+      <body className={`${poppins} ${noto_serif_display}`}>
+        <ProgressBar
+          height="4px"
+          color="#b800e6"
+          options={{ showSpinner: true }}
+          delay={600}
+          shallowRouting
+        />
+        {children}
+        <Toaster />
+        <SpeedInsights />
+        <Analytics />
+      </body>
     </html>
   );
 }

@@ -95,12 +95,12 @@ export default function WishlistSheet() {
                     className="w-1/2 bg-grey text-black font-bold hover:bg-grey.200"
                     onClick={clearCart}
                   >
-                    Remove All
+                    Clear Wishlist
                   </Button>
                 </DrawerClose>
                 <DrawerClose asChild>
                   <Button
-                    className="w-1/2"
+                    className="w-1/2 bg-black text-white"
                     onClick={() => {
                       addToCartFromWishlist(cart, wishlistCart, updateSubTotal);
                       clearCart();

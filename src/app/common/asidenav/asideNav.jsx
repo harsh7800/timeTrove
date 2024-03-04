@@ -11,6 +11,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { useStore } from "../../store/zustandStore";
+import Image from "next/image";
 
 export const AsideNav = ({ mobile }) => {
   const router = useRouter();
@@ -79,9 +80,9 @@ export const AsideNav = ({ mobile }) => {
           } transition-colors cursor-pointer`}
           onClick={() => handleRedirect("anime")}
         >
-          <img
-            width="25"
-            height="25"
+          <Image
+            width={25}
+            height={25}
             src="https://img.icons8.com/ios/50/naruto.png"
             alt="naruto"
           />

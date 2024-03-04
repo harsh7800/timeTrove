@@ -94,10 +94,10 @@ export default function CartSheet() {
                     className="w-1/2 bg-grey text-black font-bold hover:bg-grey.200"
                     onClick={clearCart}
                   >
-                    Cancel
+                    Clear Cart
                   </Button>
                 </DrawerClose>
-                <Button className="w-1/2">Checkout</Button>
+                <Button className="w-1/2 bg-black text-white">Checkout</Button>
               </div>
             </div>
           </div>
