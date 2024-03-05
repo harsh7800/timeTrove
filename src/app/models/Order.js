@@ -7,7 +7,7 @@ const OrderSchema = new mongoose.Schema(
     orderId: { type: String, require: true },
     paymentInfo: { type: Object, default: {} },
     products: {
-      type: [Array],
+      type: Object,
       required: true,
     },
 
@@ -62,5 +62,4 @@ const OrderSchema = new mongoose.Schema(
 //     acquirer_data: { auth_code: '739726' },
 //     created_at: 1705378692
 //   }
-export default defaultmongoose.models.Order ||
-  mongoose.model("Order", OrderSchema);
+export default mongoose.models.Order || mongoose.model("Order", OrderSchema);

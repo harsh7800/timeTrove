@@ -173,7 +173,7 @@ export const GenderCategoryTabs = ({
                 QuickBuy={() =>
                   QuickBuy(
                     QuickBuyCart,
-                    data.title,
+                    data.slug,
                     1,
                     data.price,
                     data.title,
@@ -228,6 +228,7 @@ export const GenderCategoryTabs = ({
                 color={data.color}
                 price={data.price}
                 title={data.title}
+                slug={data.slug}
               />
             );
           })}

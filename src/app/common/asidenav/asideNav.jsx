@@ -42,7 +42,7 @@ export const AsideNav = ({ mobile }) => {
       <div className="capitalize space-y-4 text-sm sm:text-md font-semibold w-[80%]">
         <h3
           className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
-            path == "/shop/popular-products"
+            path.includes("popular-products")
               ? "bg-purple text-white"
               : "hover:bg-purple hover:text-white"
           } transition-colors cursor-pointer`}
@@ -52,7 +52,7 @@ export const AsideNav = ({ mobile }) => {
         </h3>
         <h3
           className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
-            path == "/shop/winterwears"
+            path.includes("winterwears")
               ? "bg-purple text-white"
               : "hover:bg-purple hover:text-white"
           } transition-colors cursor-pointer`}
@@ -63,7 +63,7 @@ export const AsideNav = ({ mobile }) => {
 
         <h3
           className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
-            path == "/shop/footwears"
+            path.includes("footwears")
               ? "bg-purple text-white"
               : "hover:bg-purple hover:text-white"
           } transition-colors cursor-pointer`}
@@ -74,7 +74,7 @@ export const AsideNav = ({ mobile }) => {
 
         <h3
           className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
-            path == "/shop/anime"
+            path.includes("anime")
               ? "bg-purple text-white"
               : "hover:bg-purple hover:text-white"
           } transition-colors cursor-pointer`}
@@ -91,7 +91,7 @@ export const AsideNav = ({ mobile }) => {
 
         <h3
           className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
-            path == "/shop/new-arrivals"
+            path.includes("new-arrivals")
               ? "bg-purple text-white"
               : "hover:bg-purple hover:text-white"
           } transition-colors cursor-pointer`}

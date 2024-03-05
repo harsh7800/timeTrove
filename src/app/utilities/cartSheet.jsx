@@ -16,7 +16,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { DrawerClose } from "@/components/ui/drawer";
 import { QuickBuyProductCard } from "./productCard";
-import { addToCart, removeFromCart } from "../helpers/functions";
+import { Checkout, addToCart, removeFromCart } from "../helpers/functions";
+import { useStore } from "zustand";
 
 export default function CartSheet() {
   const cart = useCart(useShallow((state) => state.cart));
@@ -28,9 +29,9 @@ export default function CartSheet() {
       <SheetTrigger>
         <div className="relative">
           <ShoppingCart />
-          {Object.keys(cart).length != 0 && (
+          {Object.keys(cart)?.length != 0 && (
             <p className="animate-bounce absolute top-[-45%] bg-purple text-xs px-2 text-white font-bold p-1 rounded-full right-[-40%]">
-              {Object.keys(cart).length || 0}
+              {Object.keys(cart)?.length || 0}
             </p>
           )}
         </div>

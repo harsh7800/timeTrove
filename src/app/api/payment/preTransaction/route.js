@@ -6,14 +6,15 @@ import Product from "@/app/models/Product";
 import { NextResponse } from "next/server";
 
 export async function POST(request, { params }) {
-  let { subTotal, cart } = await request.json();
-  let sumtotal;
+  let { subTotal, email, cart, userData } = await request.json();
+  await connectDb();
+  let sumtotal = 0;
   for (let item in cart) {
     sumtotal += cart[item].price * cart[item].qty;
+    console.log(cart[item].price * cart[item].qty);
     let product = await Product.findOne({ slug: item });
-    console.log(product.availableQty);
-    console.log(cart[item].qty);
     if (product.availableQty < cart[item].qty) {
+      console.log(1);
       return NextResponse.json(
         {
           success: false,
@@ -23,6 +24,8 @@ export async function POST(request, { params }) {
       );
     }
     if (product.price != cart[item].price) {
+      console.log(product.price, cart[item].price);
+      console.log(1);
       return NextResponse.json(
         {
           success: false,
@@ -33,10 +36,11 @@ export async function POST(request, { params }) {
     }
   }
   if (sumtotal != subTotal) {
+    console.log(sumtotal, subTotal);
     return NextResponse.json(
       {
         success: false,
-        error: `we current have only ${product.availableQty} and you are ordering ${cart[item].qty},please reduce the quantity and try again`,
+        error: `Error Calculating The Total Price To Pay Please Try Again`,
       },
       { status: 404 }
     );
@@ -53,29 +57,30 @@ export async function POST(request, { params }) {
   const amount = subTotal;
   const currency = "INR";
   const options = {
-    amount: subTotal,
+    amount: parseInt(subTotal) * 100,
     currency,
     receipt: shortid.generate(),
     payment_capture,
   };
   try {
+    console.log(1);
     const response = await razorpay.orders.create(options);
-
-    let order = new Order({
-      email: JSON.parse(req.body).userInfo.email,
-      phone: JSON.parse(req.body).userInfo.phone,
+    let order = await Order.create({
+      email: email,
+      phone: userData.phone,
       orderId: response.id,
       paymentInfo: { card: {} },
-      products: JSON.parse(req.body).cart,
-      address: JSON.parse(req.body).userInfo.address,
-      amount: JSON.parse(req.body).subtotal,
+      products: cart,
+      address: userData.address,
+      amount: subTotal,
       status: response.status,
     });
+    console.log(order);
 
-    await order.save();
     return NextResponse.json({
       id: response.id,
       currency: response.currency,
+      response: response,
       amount: response.amount,
       success: true,
     });

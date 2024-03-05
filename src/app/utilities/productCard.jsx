@@ -17,11 +17,17 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
-import { useCart, useStore, wishlist } from "../store/zustandStore";
+import {
+  useCart,
+  useQuickBuy,
+  useStore,
+  wishlist,
+} from "../store/zustandStore";
 import { useShallow } from "zustand/react/shallow";
 import { useRouter } from "next-nprogress-bar";
 import { CheckCheck } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Checkout, QuickCheckout } from "../helpers/functions";
 const ProductCard = ({
   index,
   category,
@@ -35,6 +41,7 @@ const ProductCard = ({
   size,
   color,
   availableQty,
+  slug,
 }) => {
   const router = useRouter();
   const wishlistCart = wishlist(useShallow((state) => state.wishlistCart));
@@ -85,6 +92,7 @@ const ProductCard = ({
           price={price}
           img={ImageURL}
           QuickBuy={QuickBuy}
+          slug={slug}
         />
         <Button
           className={`hidden bg-black text-white hover:bg-white hover:text-black hover:border sm:block w-1/2 ${
@@ -141,12 +149,15 @@ const ProductCard = ({
 
 export default ProductCard;
 
-const BuyNowDrawer = ({ price, name, size, color, img }) => {
+const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
   const router = useRouter();
   const [cart, setCart] = useState({});
   const [deliveryAddress, setdeliveryAddress] = useState({});
   const address = useStore((state) => state.user.billingAddress);
   const email = useStore((state) => state.user.email);
+  const total =
+    cart[slug]?.qty != 0 ? cart[slug]?.qty * cart[slug]?.price + 40 : 0;
+  console.log(total);
   return (
     <Drawer>
       <DrawerTrigger asChild className="hidden sm:block">
@@ -154,7 +165,9 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
           className="  w-1/2 bg-black text-white hover:bg-white hover:text-black hover:border"
           onClick={() => {
             router.refresh();
-            setCart({ qty: 1, price, name, size, color, img });
+            setCart({
+              [slug]: { qty: 1, price, name, size, color, img, slug },
+            });
           }}
         >
           Quick Buy
@@ -167,7 +180,9 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
         <LiaCartArrowDownSolid
           onClick={() => {
             router.refresh();
-            setCart({ qty: 1, price, name, size, color, img });
+            setCart({
+              [slug]: { qty: 1, price, name, size, color, img, slug },
+            });
           }}
         />
       </DrawerTrigger>
@@ -181,30 +196,42 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
           </DrawerDescription>
         </DrawerHeader>
         <div className="flex justify-center items-start gap-5 ">
-          {cart.qty != 0 && cart.qty != 0 ? (
+          {cart[slug]?.qty != 0 && cart[slug]?.qty != 0 ? (
             <div className="w-[90%] sm:w-[500px] my-5 shadow-md  p-4 rounded-lg space-y-6">
               <h3 className="font-bold w-full text-start">Your Order</h3>
-              {cart.qty != 0 && (
-                <QuickBuyProductCard
-                  cart={cart}
-                  img={cart.img}
-                  price={cart.price}
-                  qty={cart.qty}
-                  productTitle={cart.name}
-                  addToCart={() =>
-                    setCart((prevCart) => ({
-                      ...prevCart,
-                      qty: prevCart.qty + 1,
-                    }))
-                  }
-                  removeFromCart={() =>
-                    setCart((prevCart) => ({
-                      ...prevCart,
-                      qty: prevCart.qty - 1,
-                    }))
-                  }
-                />
-              )}
+              {Object.keys(cart).map((product, i) => {
+                return (
+                  <QuickBuyProductCard
+                    key={i}
+                    cart={cart}
+                    img={cart[product].img}
+                    price={cart[product].price}
+                    qty={cart[product].qty}
+                    productTitle={cart[product].name}
+                    addToCart={() =>
+                      setCart((prevCart) => ({
+                        ...prevCart,
+                        [product]: {
+                          ...prevCart[product],
+                          qty: prevCart[product].qty + 1,
+                        },
+                      }))
+                    }
+                    removeFromCart={() =>
+                      setCart((prevCart) => ({
+                        ...prevCart,
+                        [product]: {
+                          ...prevCart[product],
+                          qty:
+                            prevCart[product].qty - 1 > 0
+                              ? prevCart[product].qty - 1
+                              : 0,
+                        },
+                      }))
+                    }
+                  />
+                );
+              })}
               {cart.qty != 0 && cart.qty != 0 && (
                 <div className="w-full">
                   <div className="w-full sm:w-[80%] flex items-center justify-between">
@@ -218,7 +245,9 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
                   <div className="w-full sm:w-[80%] mt-1 flex items-center text-xl justify-between">
                     <p className="mt-2 font-semibold">Total</p>
                     <p className="mt-2 font-bold">
-                      {cart.qty != 0 ? cart.qty * cart.price : 0}
+                      {cart[slug]?.qty != 0
+                        ? cart[slug]?.qty * cart[slug]?.price
+                        : 0}
                     </p>
                   </div>
                 </div>
@@ -247,17 +276,27 @@ const BuyNowDrawer = ({ price, name, size, color, img }) => {
                 </DrawerClose>
                 <Button
                   className="w-1/2 bg-black text-white"
-                  onClick={() => console.log(deliveryAddress)}
+                  onClick={async () => {
+                    let total =
+                      cart[slug]?.qty != 0
+                        ? cart[slug]?.qty * cart[slug]?.price
+                        : 0;
+                    await Checkout(total, email, cart, deliveryAddress, router);
+                  }}
                   disabled={Object.keys(deliveryAddress).length == 0}
                 >
-                  Pay {cart.qty != 0 ? cart.qty * cart.price + 40 : 0}/-
+                  Pay{" "}
+                  {cart[slug]?.qty != 0
+                    ? cart[slug]?.qty * cart[slug]?.price
+                    : 0}
+                  /-
                 </Button>
               </div>
             </div>
           ) : (
             <h1 className="font-bold">Please add a product to continue</h1>
           )}
-          {cart.qty != 0 && cart.qty != 0 && (
+          {cart[slug]?.qty != 0 && cart[slug]?.qty != 0 && (
             <div className="hidden mt-2 lg:block border-2 rounded-lg px-7 py-3 w-[40%] max-w-[500px] space-y-4">
               {address?.length != 0 ? (
                 <h3 className="font-bold">Shipping Address</h3>
@@ -333,9 +372,11 @@ export const QuickBuyProductCard = ({
       <Suspense
         fallback={<Skeleton className="bg-grey.200 w-[60px] h-[70px]" />}
       >
-        <img
+        <Image
           className="w-[60px] sm:w-[90px] rounded-lg border"
           src={img}
+          width={60}
+          height={90}
           alt="product"
         />
       </Suspense>

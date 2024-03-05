@@ -160,3 +160,63 @@ export async function addToCartFromWishlist(
   }
   updateSubTotal(subt);
 }
+
+export async function Checkout(subTotal, email, cart, userData, router) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/api/payment/preTransaction`,
+      {
+        method: "POST",
+        headers: {
+          "content-Type": "application/json",
+        },
+        body: JSON.stringify({ subTotal, email, cart, userData }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    if (data.success) {
+      var options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+        // Enter the Key ID generated from the Dashboard
+        name: "TimeTrove Pvt Ltd",
+        currency: data.currency,
+        amount: data.amount,
+        order_id: data.id,
+        description: "Thankyou for your test donation",
+        image: "",
+        handler: async function (response) {
+          let postTransaction = await fetch(
+            `${process.env.NEXT_PUBLIC_HOST}/api/payment/postTransaction`,
+            {
+              method: "PATCH",
+              body: JSON.stringify({
+                response: response,
+                orderId: data.id,
+                amount: data.amount,
+                currency: data.currency,
+              }),
+            }
+          );
+          console.log(postTransaction.status === 201);
+          if (postTransaction.status === 201) {
+            router.push(`/shop/account/orders/${email}`);
+          }
+          // alert(response.razorpay_payment_id);
+          // alert(response.razorpay_order_id);
+          // alert(response.razorpay_signature);
+        },
+        prefill: {
+          name: userData.firstName,
+          email: email,
+          contact: userData.phoneNum,
+        },
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
