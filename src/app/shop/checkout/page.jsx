@@ -28,9 +28,15 @@ const Page = () => {
           Please re-check the information before proceeding to pay
         </p>
       </div>
-      <div className="w-full flex item-center gap-4">
-        <div className="w-1/2 p-4 rounded-lg mt-5">
-          <h3 className="font-bold w-full text-start">Your Order</h3>
+      <div className="w-full flex md:flex-row flex-col-reverse item-center gap-4">
+        <div className="w-full md:w-1/2 p-4 rounded-lg mt-5">
+          {Object.keys(cart).length > 0 ? (
+            <h3 className="font-bold w-full text-start">Your Order</h3>
+          ) : (
+            <h3 className="font-bold w-full text-[20px] text-start">
+              Cart is empty
+            </h3>
+          )}
           <Cart />
           {Object.keys(cart).length > 0 && (
             <div className="w-full text-md mt-3">
@@ -137,17 +143,21 @@ const Cart = () => {
                       if (cart[data].qty <= 1) {
                         router.refresh();
                       }
-                      removeFromCart(cart, cart[data].name, 1, updateSubTotal);
+                      if (cart[data].qty > 1) {
+                        removeFromCart(cart, data, 1, updateSubTotal);
+                      }
                     }}
                     size={20}
-                    className="cursor-pointer p-1 bg-black rounded-full text-white"
+                    className={`cursor-pointer ${
+                      cart[data].qty == 1 && "opacity-70 cursor-not-allowed"
+                    } p-1 bg-black rounded-full text-white`}
                   />
                   {cart[data].qty}
                   <FaPlus
                     onClick={() =>
                       addToCart(
                         cart,
-                        cart[data].name,
+                        data,
                         1,
                         cart[data].price,
                         cart[data].title,
@@ -174,7 +184,7 @@ const SelectAddress = ({ setdeliveryAddress }) => {
   const address = useStore((state) => state.user.billingAddress);
 
   return (
-    <div className="hidden mt-2 lg:block border-l-2 px-7 py-3 w-[40%] max-w-[500px] space-y-4">
+    <div className="mt-2 border-none md:border-l-2 md:px-7 py-3 md:w-[40%] w-[full] md:max-w-[500px] space-y-4">
       {address?.length != 0 ? (
         <div className="">
           <h3 className="font-bold">Shipping Address</h3>
