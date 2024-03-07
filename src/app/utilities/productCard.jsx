@@ -25,9 +25,10 @@ import {
 } from "../store/zustandStore";
 import { useShallow } from "zustand/react/shallow";
 import { useRouter } from "next-nprogress-bar";
-import { CheckCheck } from "lucide-react";
+import { CheckCheck, Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Checkout, QuickCheckout } from "../helpers/functions";
+import { Checkout } from "../helpers/functions";
+import { useToast } from "@/components/ui/use-toast";
 const ProductCard = ({
   index,
   category,
@@ -37,7 +38,6 @@ const ProductCard = ({
   addToCart,
   addToWishlist,
   removeFromWishlist,
-  QuickBuy,
   size,
   color,
   availableQty,
@@ -84,20 +84,18 @@ const ProductCard = ({
       <h3 className="font-bold text-sm">Rs {price}</h3>
       <div className=" w-full mt-5 flex gap-2 justify-between items-center">
         <BuyNowDrawer
-          productTitle={title}
           name={title}
           size={size}
           color={color}
           qty={1}
           price={price}
           img={ImageURL}
-          QuickBuy={QuickBuy}
           slug={slug}
         />
         <Button
           className={`hidden bg-black text-white hover:bg-white hover:text-black hover:border sm:block w-1/2 ${
             availableQty == 0 && "opacity-70 cursor-not-allowed"
-          } ${cart[title] && "bg-white border text-black hover:bg-white"}`}
+          } ${cart[slug] && "bg-white border text-black hover:bg-white"}`}
           onClick={() => {
             if (availableQty !== 0) {
               router.refresh();
@@ -105,17 +103,17 @@ const ProductCard = ({
             }
           }}
         >
-          {cart[title]
+          {cart[slug]
             ? "Added to Cart"
             : availableQty == 0
             ? "Out of Stock"
             : "Add to Cart"}
         </Button>
-        {cart[title] ? (
+        {cart[slug] ? (
           <CheckCheck
             size={40}
             className={`block  sm:hidden w-1/2 text-[20px] rounded-lg h-[35px] bg-black   ${
-              cart[title] && "bg-white border text-[#33cc33] hover:bg-white"
+              cart[slug] && "bg-white border text-[#33cc33] hover:bg-white"
             }`}
           />
         ) : (
@@ -123,8 +121,8 @@ const ProductCard = ({
             onClick={() => {
               if (availableQty !== 0) {
                 router.refresh();
-                addToCart();
               }
+              addToCart();
             }}
             className="block sm:hidden w-1/2 rounded-lg h-[35px] bg-black text-white"
             size={40}
@@ -134,12 +132,12 @@ const ProductCard = ({
       {/* <div className="bg-purple absolute top-5 right-5 p-1 rounded-full"> */}
       <FaHeart
         onClick={() => {
-          wishlistCart[title] ? removeFromWishlist() : addToWishlist();
+          wishlistCart[slug] ? removeFromWishlist() : addToWishlist();
           router.refresh();
         }}
         size={25}
         className={`cursor-pointer ${
-          wishlistCart[title] ? "text-[#e60073]" : "text-grey.200"
+          wishlistCart[slug] ? "text-[#e60073]" : "text-grey.200"
         } absolute top-5 right-5 `}
       />
       {/* </div> */}
@@ -155,14 +153,13 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
   const [deliveryAddress, setdeliveryAddress] = useState({});
   const address = useStore((state) => state.user.billingAddress);
   const email = useStore((state) => state.user.email);
-  const total =
-    cart[slug]?.qty != 0 ? cart[slug]?.qty * cart[slug]?.price + 40 : 0;
-  console.log(total);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
   return (
     <Drawer>
       <DrawerTrigger asChild className="hidden sm:block">
         <Button
-          className="  w-1/2 bg-black text-white hover:bg-white hover:text-black hover:border"
+          className="w-1/2 bg-black text-white hover:bg-white hover:text-black hover:border"
           onClick={() => {
             router.refresh();
             setCart({
@@ -274,6 +271,7 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
                     Cancel
                   </Button>
                 </DrawerClose>
+
                 <Button
                   className="w-1/2 bg-black text-white"
                   onClick={async () => {
@@ -281,10 +279,23 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
                       cart[slug]?.qty != 0
                         ? cart[slug]?.qty * cart[slug]?.price
                         : 0;
-                    await Checkout(total, email, cart, deliveryAddress, router);
+                    await Checkout(
+                      total,
+                      email,
+                      cart,
+                      deliveryAddress,
+                      router,
+                      setLoading,
+                      toast
+                    );
                   }}
-                  disabled={Object.keys(deliveryAddress).length == 0}
+                  disabled={
+                    Object.keys(deliveryAddress).length == 0 && !loading
+                  }
                 >
+                  {loading && (
+                    <Loader2 className="animate-spin mr-1" size={20} />
+                  )}{" "}
                   Pay{" "}
                   {cart[slug]?.qty != 0
                     ? cart[slug]?.qty * cart[slug]?.price
@@ -399,7 +410,6 @@ export const QuickBuyProductCard = ({
               <FaMinus
                 onClick={() => {
                   if (qty <= 1) {
-                    console.log(1);
                     router.refresh();
                   }
                   removeFromCart();

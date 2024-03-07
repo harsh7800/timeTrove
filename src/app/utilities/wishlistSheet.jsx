@@ -67,7 +67,7 @@ export default function WishlistSheet() {
                       addToCart={() =>
                         addToWishlist(
                           wishlistCart,
-                          wishlistCart[data].name,
+                          data,
                           1,
                           wishlistCart[data].price,
                           wishlistCart[data].title,
@@ -80,7 +80,7 @@ export default function WishlistSheet() {
                       removeFromCart={() =>
                         removeFromWishlist(
                           wishlistCart,
-                          wishlistCart[data].name,
+                          data,
                           1,
                           wishlistSubTotal
                         )

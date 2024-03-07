@@ -170,9 +170,9 @@ export const GenderCategoryTabs = ({
               <ProductCard
                 index={index}
                 availableQty={data.availableQty}
-                QuickBuy={() =>
-                  QuickBuy(
-                    QuickBuyCart,
+                addToCart={() => {
+                  addToCart(
+                    cart,
                     data.slug,
                     1,
                     data.price,
@@ -180,27 +180,13 @@ export const GenderCategoryTabs = ({
                     data.size,
                     data.color,
                     data.img,
-                    quickBuySubTotal,
-                    clearCart
-                  )
-                }
-                addToCart={() =>
-                  addToCart(
-                    cart,
-                    data.title,
-                    1,
-                    data.price,
-                    data.title,
-                    data.size,
-                    data.color,
-                    data.img,
                     updateSubTotal
-                  )
-                }
+                  );
+                }}
                 addToWishlist={() =>
                   addToWishlist(
                     wishlistCart,
-                    data.title,
+                    data.slug,
                     1,
                     data.price,
                     data.title,
@@ -213,13 +199,13 @@ export const GenderCategoryTabs = ({
                 removeFromWishlist={() =>
                   removeFromWishlist(
                     wishlistCart,
-                    data.title,
+                    data.slug,
                     1,
                     wishlistSubTotal
                   )
                 }
                 removeFromCart={() =>
-                  removeFromCart(cart, data.title, 1, updateSubTotal)
+                  removeFromCart(cart, data.slug, 1, updateSubTotal)
                 }
                 key={data._id}
                 category={data.subCategory}

@@ -18,23 +18,29 @@ import { DrawerClose } from "@/components/ui/drawer";
 import { QuickBuyProductCard } from "./productCard";
 import { Checkout, addToCart, removeFromCart } from "../helpers/functions";
 import { useStore } from "zustand";
+import { useRouter } from "next-nprogress-bar";
+import { usePathname } from "next/navigation";
 
 export default function CartSheet() {
   const cart = useCart(useShallow((state) => state.cart));
   const updateSubTotal = useCart(useShallow((state) => state.updateSubTotal));
   const subTotal = useCart(useShallow((state) => state.subTotal));
   const clearCart = useCart(useShallow((state) => state.clearCart));
+  const Router = useRouter();
+  const path = usePathname();
   return (
     <Sheet>
       <SheetTrigger>
-        <div className="relative">
-          <ShoppingCart />
-          {Object.keys(cart)?.length != 0 && (
-            <p className="animate-bounce absolute top-[-45%] bg-purple text-xs px-2 text-white font-bold p-1 rounded-full right-[-40%]">
-              {Object.keys(cart)?.length || 0}
-            </p>
-          )}
-        </div>
+        {!path.toLocaleLowerCase().includes("checkout") && (
+          <div className="relative">
+            <ShoppingCart />
+            {Object.keys(cart)?.length != 0 && (
+              <p className="animate-bounce absolute top-[-45%] bg-purple text-xs px-2 text-white font-bold p-1 rounded-full right-[-40%]">
+                {Object.keys(cart)?.length || 0}
+              </p>
+            )}
+          </div>
+        )}
       </SheetTrigger>
       <SheetContent className="bg-white h-[100dvh]">
         <SheetHeader>
@@ -57,7 +63,7 @@ export default function CartSheet() {
                       addToCart={() =>
                         addToCart(
                           cart,
-                          cart[data].name,
+                          data,
                           1,
                           cart[data].price,
                           cart[data].title,
@@ -68,7 +74,7 @@ export default function CartSheet() {
                         )
                       }
                       removeFromCart={() =>
-                        removeFromCart(cart, cart[data].name, 1, updateSubTotal)
+                        removeFromCart(cart, data, 1, updateSubTotal)
                       }
                     />
                   );
@@ -98,7 +104,14 @@ export default function CartSheet() {
                     Clear Cart
                   </Button>
                 </DrawerClose>
-                <Button className="w-1/2 bg-black text-white">Checkout</Button>
+                <DrawerClose asChild>
+                  <Button
+                    className="w-1/2 bg-black text-white"
+                    onClick={() => Router.push("/shop/checkout")}
+                  >
+                    Checkout
+                  </Button>
+                </DrawerClose>
               </div>
             </div>
           </div>

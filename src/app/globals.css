@@ -41,3 +41,7 @@
 .monospace {
   font-family: var(--font-marcellus_sc);
 }
+
+.razorpay-container {
+  z-index: 99999999;
+}

@@ -7,7 +7,9 @@ export default function ShopLayout({
 }) {
   return (
     <section>
-      <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
+      <div className="relative z-[100]">
+        <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
+      </div>
       <main className="w-full h-[100vh] min-h-[650px] flex">
         <div className="w-fit hidden lg:flex">
           <AsideNav />

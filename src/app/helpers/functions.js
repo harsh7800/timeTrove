@@ -1,3 +1,5 @@
+import { Check, Cross, Loader2 } from "lucide-react";
+
 const jwt = require("jsonwebtoken");
 
 export async function decodeJWT(token) {
@@ -15,14 +17,17 @@ export async function addToCart(
   size,
   variant,
   img,
-  updateSubTotal
+  updateSubTotal,
+  router
 ) {
   let newCart = IniCart;
   if (itemCode in IniCart) {
+    console.log(itemCode);
     // console.log(newCart[itemCode]);
     newCart[itemCode].qty = IniCart[itemCode].qty + qty;
   } else {
     newCart[itemCode] = { qty: 1, price, name, size, variant, img };
+    console.log(itemCode);
   }
   let subt = 0;
   let key = Object.keys(newCart);
@@ -30,9 +35,16 @@ export async function addToCart(
     subt += newCart[key[i]].price * newCart[key[i]].qty;
   }
   updateSubTotal(subt);
+  router?.refresh();
 }
 
-export const removeFromCart = (IniCart, itemCode, qty, updateSubTotal) => {
+export const removeFromCart = (
+  IniCart,
+  itemCode,
+  qty,
+  updateSubTotal,
+  router
+) => {
   let newCart = IniCart; // Create a shallow copy of the original cart
 
   if (itemCode in newCart) {
@@ -51,6 +63,7 @@ export const removeFromCart = (IniCart, itemCode, qty, updateSubTotal) => {
     subt += newCart[key[i]].price * newCart[key[i]].qty;
   }
   updateSubTotal(subt);
+  router?.refresh();
 };
 
 export const QuickBuy = (
@@ -161,8 +174,27 @@ export async function addToCartFromWishlist(
   updateSubTotal(subt);
 }
 
-export async function Checkout(subTotal, email, cart, userData, router) {
+export async function Checkout(
+  subTotal,
+  email,
+  cart,
+  userData,
+  router,
+  setloading,
+  toast
+) {
   try {
+    toast({
+      title: (
+        <div className="flex items-center gap-3 text-black text-md">
+          <Loader2 className="animate-spin" />
+          <p>Loading..</p>
+        </div>
+      ),
+      duration: 10000, // Adjust the duration as needed
+      className: "bg-white",
+    });
+    setloading(true);
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_HOST}/api/payment/preTransaction`,
       {
@@ -185,6 +217,9 @@ export async function Checkout(subTotal, email, cart, userData, router) {
         order_id: data.id,
         description: "Thankyou for your test donation",
         image: "",
+        modal: {
+          zIndex: 200, // Set the desired z-index for the Razorpay dialog
+        },
         handler: async function (response) {
           let postTransaction = await fetch(
             `${process.env.NEXT_PUBLIC_HOST}/api/payment/postTransaction`,
@@ -200,7 +235,18 @@ export async function Checkout(subTotal, email, cart, userData, router) {
           );
           console.log(postTransaction.status === 201);
           if (postTransaction.status === 201) {
+            setloading(false);
             router.push(`/shop/account/orders/${email}`);
+            toast({
+              title: (
+                <div className="flex items-center gap-3 text-black text-md">
+                  <Check className="text-[green]" />
+                  <p>payment Success</p>
+                </div>
+              ),
+              duration: 1500, // Adjust the duration as needed
+              className: "bg-white",
+            });
           }
           // alert(response.razorpay_payment_id);
           // alert(response.razorpay_order_id);
@@ -217,6 +263,17 @@ export async function Checkout(subTotal, email, cart, userData, router) {
       paymentObject.open();
     }
   } catch (error) {
+    setloading(false);
+    toast({
+      title: (
+        <div className="flex items-center gap-3 text-black text-md">
+          <Cross className="text-[red]" />
+          <p>Payment Failed</p>
+        </div>
+      ),
+      duration: 10000, // Adjust the duration as needed
+      className: "bg-white",
+    });
     console.log(error);
   }
 }

@@ -11,7 +11,6 @@ export async function POST(request, { params }) {
   let sumtotal = 0;
   for (let item in cart) {
     sumtotal += cart[item].price * cart[item].qty;
-    console.log(cart[item].price * cart[item].qty);
     let product = await Product.findOne({ slug: item });
     if (product.availableQty < cart[item].qty) {
       console.log(1);
@@ -63,7 +62,6 @@ export async function POST(request, { params }) {
     payment_capture,
   };
   try {
-    console.log(1);
     const response = await razorpay.orders.create(options);
     let order = await Order.create({
       email: email,
@@ -75,7 +73,6 @@ export async function POST(request, { params }) {
       amount: subTotal,
       status: response.status,
     });
-    console.log(order);
 
     return NextResponse.json({
       id: response.id,
