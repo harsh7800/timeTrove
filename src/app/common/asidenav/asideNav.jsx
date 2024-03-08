@@ -1,7 +1,7 @@
 "use client";
 import { LogOut, TrendingUp, Zap } from "lucide-react";
 import { PiHoodie, PiSneaker } from "react-icons/pi";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next-nprogress-bar";
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/hover-card";
 import { useStore } from "../../store/zustandStore";
 import Image from "next/image";
+import { useShallow } from "zustand/react/shallow";
 
 export const AsideNav = ({ mobile }) => {
   const router = useRouter();
@@ -21,6 +22,19 @@ export const AsideNav = ({ mobile }) => {
   const handleRedirect = (path) => {
     router.push(`/shop/${path}`);
   };
+
+  const [data, setData] = useState([]);
+  const email = useStore(useShallow((state) => state.user.email));
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_HOST}/api/account/orders/${email}`, {
+      cache: "reload",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setData(data);
+      });
+  }, []);
   return (
     <aside
       className={`flex ${mobile ? "border-none" : "border-2"} ${
@@ -104,7 +118,7 @@ export const AsideNav = ({ mobile }) => {
       {!mobile && (
         <div className="w-[80%] flex flex-col items-center justify-center border-t space-y-3 pt-5">
           <h4 className="text-sm sm:text-md font-semibold opacity-80 w-full text-left">
-            Total orders <span className="font-bold pop">14</span>
+            Total orders <span className="font-bold pop">{data.length}</span>
           </h4>
           <HoverCardOrder order="Nike Shoes" />
         </div>

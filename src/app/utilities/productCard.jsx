@@ -370,8 +370,11 @@ export const QuickBuyProductCard = ({
   const email = useStore((state) => state.user.email);
   const [address, setAddress] = useState([]);
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_HOST}/api/account/${email}`)
-      .then((res) => res.json())
+    fetch(`${process.env.NEXT_PUBLIC_HOST}/api/account/${email}`, {
+      cache: "force-cache",
+    })
+      .then((res) => console.log(res))
+      .then((res) => res?.json())
       .then((data) => {
         setAddress(data);
       });

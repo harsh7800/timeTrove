@@ -1,4 +1,4 @@
-import { Check, Cross, Loader2 } from "lucide-react";
+import { Check, Cross, Loader2, X } from "lucide-react";
 
 const jwt = require("jsonwebtoken");
 
@@ -75,8 +75,7 @@ export const QuickBuy = (
   size,
   variant,
   img,
-  updateSubTotal,
-  clearCart
+  updateSubTotal
 ) => {
   if (Object.keys(IniCart).length == 0) {
     let newCart = IniCart; // Create a new cart object with a copy of IniCart
@@ -191,7 +190,7 @@ export async function Checkout(
           <p>Loading..</p>
         </div>
       ),
-      duration: 10000, // Adjust the duration as needed
+      duration: 5000, // Adjust the duration as needed
       className: "bg-white",
     });
     setloading(true);
@@ -206,7 +205,6 @@ export async function Checkout(
       }
     );
     const data = await response.json();
-    console.log(data);
     if (data.success) {
       var options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
@@ -217,6 +215,20 @@ export async function Checkout(
         order_id: data.id,
         description: "Thankyou for your test donation",
         image: "",
+        onabort: () => {
+          console.log(1);
+          setloading(false);
+          toast({
+            title: (
+              <div className="flex items-center gap-3 text-black text-md">
+                <X className="text-[red]" />
+                <p>Payment Cancelled</p>
+              </div>
+            ),
+            duration: 10000, // Adjust the duration as needed
+            className: "bg-white",
+          });
+        },
         modal: {
           zIndex: 200, // Set the desired z-index for the Razorpay dialog
         },
@@ -261,6 +273,7 @@ export async function Checkout(
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
+      console.log(paymentObject);
     }
   } catch (error) {
     setloading(false);

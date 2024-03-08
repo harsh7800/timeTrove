@@ -43,8 +43,11 @@ export const DropDownMenu = () => {
         >
           Billing
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer hover:bg-grey transition-all">
-          Order Status
+        <DropdownMenuItem
+          className="cursor-pointer hover:bg-grey transition-all"
+          onClick={() => router.push(`/shop/account/orders`)}
+        >
+          Orders
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

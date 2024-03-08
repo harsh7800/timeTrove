@@ -17,6 +17,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const cart = useCart(useShallow((state) => state.cart));
   const subTotal = useCart(useShallow((state) => state.subTotal));
+  const clearCart = useCart(useShallow((state) => state.clearCart));
   const email = useStore(useShallow((state) => state.user.email));
   const router = useRouter();
   const { toast } = useToast();

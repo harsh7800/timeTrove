@@ -2,11 +2,12 @@ import User from "@/app/models/User";
 import connectDb from "@/lib/mongoose";
 import { NextResponse } from "next/server";
 
-export async function GET(request, { params }) {
+export async function GET({ params }) {
   const email = params.getAddress;
   await connectDb();
 
   try {
+    console.log(1);
     const user = await User.findOne({ email });
 
     if (user) {
@@ -27,6 +28,7 @@ export async function GET(request, { params }) {
     }
   } catch (error) {
     console.error(error);
+    console.log(1);
     return NextResponse.json(
       {
         message: "Error Occurred",
