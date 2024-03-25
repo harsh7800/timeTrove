@@ -1,14 +1,12 @@
 "use client";
 import dynamic from "next/dynamic";
 import illustrationBG from "../../../public/vector-purple-landscape-illustration.png";
-// import { LoginForm } from "../utilities/LoginForm";
 import { useState } from "react";
-// import { Signup } from "../utilities/Signup";
 
 const LoginForm = dynamic(() => import("../utilities/LoginForm"));
 const Signup = dynamic(() => import("../utilities/Signup"));
 
-export default function Page() {
+export default function Page(request) {
   const [toggle, setToggle] = useState(false);
   return (
     <div

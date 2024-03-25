@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,10 +17,8 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
-import { Check, Loader2, X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { useStore } from "../store/zustandStore";
-import { FcGoogle } from "react-icons/fc";
-import { signIn } from "next-auth/react";
 
 export default function Signup({ setToggle }) {
   const { toast } = useToast();
@@ -116,7 +114,7 @@ export default function Signup({ setToggle }) {
           },
         });
         setTimeout(() => {
-          router.push("/");
+          router.push("/shop");
         }, 1500);
       } else {
         toast({

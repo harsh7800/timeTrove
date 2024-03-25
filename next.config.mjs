@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // images: {
-  //   domains: ["c.housingcdn.com"],
-  // },
   images: {
     remotePatterns: [
       {
@@ -10,6 +7,25 @@ const nextConfig = {
         hostname: "**",
       },
     ],
+  },
+  webpack: (config, { isServer }) => {
+    config.module.rules.push({
+      test: /\.(mp4|webm)$/,
+      use: [
+        {
+          loader: "file-loader",
+          options: {
+            publicPath: "/_next",
+            outputPath: "static/media",
+            name: "[name].[hash].[ext]",
+          },
+        },
+      ],
+    });
+
+    // For server-side rendering of videos, we need to ignore the fs module
+
+    return config;
   },
 };
 

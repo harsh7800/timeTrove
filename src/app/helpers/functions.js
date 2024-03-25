@@ -180,9 +180,11 @@ export async function Checkout(
   userData,
   router,
   setloading,
-  toast
+  toast,
+  clearCart
 ) {
   try {
+    // console.log(userData);
     toast({
       title: (
         <div className="flex items-center gap-3 text-black text-md">
@@ -215,22 +217,31 @@ export async function Checkout(
         order_id: data.id,
         description: "Thankyou for your test donation",
         image: "",
-        onabort: () => {
-          console.log(1);
-          setloading(false);
-          toast({
-            title: (
-              <div className="flex items-center gap-3 text-black text-md">
-                <X className="text-[red]" />
-                <p>Payment Cancelled</p>
-              </div>
-            ),
-            duration: 10000, // Adjust the duration as needed
-            className: "bg-white",
-          });
-        },
         modal: {
-          zIndex: 200, // Set the desired z-index for the Razorpay dialog
+          ondismiss: async function () {
+            let cancellation = await fetch(
+              `${process.env.NEXT_PUBLIC_HOST}/api/payment/handleCancellation`,
+              {
+                method: "PATCH",
+                body: JSON.stringify({
+                  order_id: data.id,
+                }),
+              }
+            );
+            if (cancellation.status == 201) {
+              setloading(false);
+              toast({
+                title: (
+                  <div className="flex items-center gap-3 text-black text-md">
+                    <X className="text-[red]" />
+                    <p>Payment Cancelled</p>
+                  </div>
+                ),
+                duration: 1500, // Adjust the duration as needed
+                className: "bg-white",
+              });
+            }
+          },
         },
         handler: async function (response) {
           let postTransaction = await fetch(
@@ -245,10 +256,13 @@ export async function Checkout(
               }),
             }
           );
-          console.log(postTransaction.status === 201);
           if (postTransaction.status === 201) {
+            if (clearCart && typeof clearCart === "function") {
+              clearCart();
+            }
             setloading(false);
-            router.push(`/shop/account/orders/${email}`);
+            router.refresh();
+            router.push(`/shop/account/${data.id}`);
             toast({
               title: (
                 <div className="flex items-center gap-3 text-black text-md">
@@ -273,14 +287,25 @@ export async function Checkout(
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
-      console.log(paymentObject);
+    } else {
+      setloading(false);
+      toast({
+        title: (
+          <div className="flex items-center gap-3 text-black text-md">
+            <X className="text-[red]" />
+            <p>Something Went Wrong Try Again</p>
+          </div>
+        ),
+        duration: 10000, // Adjust the duration as needed
+        className: "bg-white",
+      });
     }
   } catch (error) {
     setloading(false);
     toast({
       title: (
         <div className="flex items-center gap-3 text-black text-md">
-          <Cross className="text-[red]" />
+          <X className="text-[red]" />
           <p>Payment Failed</p>
         </div>
       ),

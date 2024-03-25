@@ -1,7 +1,6 @@
 import React from "react";
 import { GenderCategoryTabs } from "../../utilities/GenderCategoryTabs";
 import ProductCard from "../../utilities/productCard";
-import Loading from "./loading";
 
 export default async function Page() {
   "use server";

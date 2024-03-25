@@ -4,9 +4,17 @@ import { useCart, useStore } from "@/app/store/zustandStore";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { useRouter } from "next-nprogress-bar";
 import Image from "next/image";
 import React, { Suspense, useState } from "react";
@@ -65,7 +73,8 @@ const Page = () => {
                       deliveryAddress,
                       router,
                       setLoading,
-                      toast
+                      toast,
+                      clearCart
                     );
                   }}
                 >
@@ -101,34 +110,37 @@ const Cart = () => {
             className={`w-full flex justify-between items-center`}
           >
             <div className="items-center flex justify-start gap-4 ">
-              <Suspense
+              {/* <Suspense
                 fallback={
                   <Skeleton className="bg-grey.200 w-[60px] h-[70px]" />
                 }
-              >
-                <Image
-                  className="w-[60px] sm:w-[90px] rounded-lg border"
-                  src={cart[data].img}
-                  width={60}
-                  height={90}
-                  alt="product"
-                />
-              </Suspense>
+              > */}
+              <Image
+                className="w-[60px] sm:w-[90px] rounded-lg border"
+                src={cart[data].img}
+                width={60}
+                height={90}
+                alt="product"
+              />
+              {/* </Suspense> */}
               <div>
                 <h3 className="font-bold w-full">{cart[data].name}</h3>
-                <p className="font-semibold ">
-                  <span className="text-[#999999] text-sm">
-                    Size{" "}
-                    <span className="font-semibold text-black text-sm">Xl</span>
-                  </span>
-                  &nbsp;&nbsp;&nbsp;&nbsp;
-                  <span className="text-[#999999] text-sm">
-                    Color{" "}
-                    <span className="font-semibold text-black text-sm">
-                      Blue
-                    </span>
-                  </span>
-                </p>
+                <div className="flex gap-1 items-center font-semibold ">
+                  <div className="flex gap-1 items-center">
+                    <p className="text-[#999999] text-sm">
+                      Size {cart[data].size}{" "}
+                    </p>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                  </div>
+                  <div className="flex gap-1 items-center">
+                    <p className="text-[#999999] text-sm">Color </p>
+                    <div
+                      className="rounded-full w-5 h-5 border-[3px]"
+                      style={{ background: cart[data].variant }}
+                    ></div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                  </div>
+                </div>
                 <p className="font-bold flex items-center gap-2 text-sm sm:text-md">
                   Rs {cart[data].price}{" "}
                 </p>
@@ -183,7 +195,9 @@ const Cart = () => {
 
 const SelectAddress = ({ setdeliveryAddress }) => {
   const address = useStore((state) => state.user.billingAddress);
-
+  const email = useStore((state) => state.user.email);
+  const router = useRouter();
+  const { toast } = useToast();
   return (
     <div className="mt-2 border-none md:border-l-2 md:px-7 py-3 md:w-[40%] w-[full] md:max-w-[500px] space-y-4">
       {address?.length != 0 ? (
@@ -198,7 +212,11 @@ const SelectAddress = ({ setdeliveryAddress }) => {
           <h3 className="font-bold">No Address Found</h3>
           <Button
             className="font-bold bg-black text-white"
-            onClick={() => router.push(`/shop/account/billing/${email}`)}
+            onClick={() => {
+              email
+                ? router.push(`/shop/account/billing/${email}`)
+                : router.push("/authentication?redirect=checkout");
+            }}
           >
             Add Address
           </Button>

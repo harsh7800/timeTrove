@@ -258,7 +258,7 @@ export default function LoginForm({ setToggle }) {
         <button
           className="border w-[80svw] sm:w-2/3 min-w-[150px] py-1.5 rounded-lg bg-white capitalize flex justify-center items-center gap-2 hover:bg-grey transition-all font-bold"
           onClick={async (e) => {
-            let data = await signIn("google", {
+            let res = await signIn("google", {
               callbackUrl: "http://localhost:3000/shop",
             });
           }}
@@ -269,7 +269,7 @@ export default function LoginForm({ setToggle }) {
       <p className="font-semibold text-sm mt-5">
         Don&apos;t Have a Account?{" "}
         <span
-          className="text-purple-600 cursor-pointer hover:underline"
+          className="text-purple cursor-pointer hover:underline"
           onClick={() => setToggle(true)}
         >
           Sign Up

@@ -2,18 +2,20 @@ import mongoose from "mongoose";
 
 const OrderSchema = new mongoose.Schema(
   {
-    email: { type: String, require: true },
-    phone: { type: String, require: true },
-    orderId: { type: String, require: true },
-    paymentInfo: { type: Object, default: {} },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    orderId: { type: String, required: true },
+    paymentInfo: { type: Object, default: {}, required: true },
     products: {
       type: Object,
+      default: {},
       required: true,
     },
 
-    address: { type: String, require: true },
-    amount: { type: Number, require: true },
-    status: { type: String, default: "Initiated", require: true },
+    address: { type: Object, required: true },
+    amount: { type: Number, required: true },
+    status: { type: String, default: "Initiated", required: true },
+    trackingId: { type: String, default: "", unique: true },
   },
   { timestamps: true }
 );

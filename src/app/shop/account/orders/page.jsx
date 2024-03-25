@@ -15,7 +15,7 @@ export default async function Page() {
   async function getAddress() {
     "use server";
     await connectDb();
-    const order = await Order.find().lean();
+    const order = await Order.find({ status: "Paid" }).lean();
     return order ? order : [];
   }
 
@@ -42,6 +42,7 @@ export default async function Page() {
             <TableHead>Amount</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
           {data.map((doc) => {
             return (

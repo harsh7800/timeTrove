@@ -45,27 +45,15 @@ export const wishlist = create(
       wishlistCart: {},
       subTotal: 0,
       wishlistSubTotal: (subTotal) => set(() => ({ subTotal: subTotal })),
+      updateField: (fields) =>
+        set((state) => ({
+          wishlistCart: { ...state.user, ...fields },
+        })),
       clearCart: (wishlistCart) =>
         set(() => ({ wishlistCart: {}, subTotal: 0 })), // Clear user data on clearCart
     }),
     {
       name: "wishlistCart",
-      storage: createJSONStorage(() => localStorage),
-    }
-  )
-);
-
-export const useQuickBuy = create(
-  persist(
-    (set, get) => ({
-      QuickBuyCart: {},
-      subTotal: 0,
-      quickBuySubTotal: (subTotal) => set(() => ({ subTotal: subTotal })),
-      clearCart: (QuickBuyCart) =>
-        set(() => ({ QuickBuyCart: {}, subTotal: 0 })), // Clear user data on clearCart
-    }),
-    {
-      name: "QuickBuyCart",
       storage: createJSONStorage(() => localStorage),
     }
   )

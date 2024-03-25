@@ -22,7 +22,7 @@ import {
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import ProductCard from "./productCard";
-import { filter, useCart, useQuickBuy, wishlist } from "../store/zustandStore";
+import { filter, useCart, wishlist } from "../store/zustandStore";
 import {
   QuickBuy,
   addToCart,
@@ -41,6 +41,7 @@ export const GenderCategoryTabs = ({
   womenData,
 }) => {
   const [tabValue, setTabValue] = useState("all");
+
   //------------useCart-store------
   const cart = useCart((state) => state.cart);
   const updateSubTotal = useCart((state) => state.updateSubTotal);
@@ -48,11 +49,6 @@ export const GenderCategoryTabs = ({
   //------------wishlist-store------
   const wishlistCart = wishlist((state) => state.wishlistCart);
   const wishlistSubTotal = wishlist((state) => state.wishlistSubTotal);
-
-  //------------useQuickBuy-store------
-  const QuickBuyCart = useQuickBuy((state) => state.QuickBuyCart);
-  const quickBuySubTotal = useQuickBuy((state) => state.quickBuySubTotal);
-  const clearCart = useQuickBuy((state) => state.clearCart);
 
   //------------filter-store------
   const filterData = filter(useShallow((state) => state.filterData));
@@ -78,47 +74,10 @@ export const GenderCategoryTabs = ({
     );
   };
   return (
-    <Tabs defaultValue="all" className="w-full">
-      <TabsList className="flex w-full gap-2 justify-between border-b-2 h-20 rounded-none px-5">
+    <Tabs defaultValue="all" className="w-full  scroll">
+      <TabsList className="flex w-full gap-2 justify-between border-b-2 h-[20%] max-h-20 rounded-none px-5">
         <h1 className="font-semibold text-md lg:text-3xl">{section}</h1>
-        <div className="flex md:hidden items-center gap-2">
-          <TabsTrigger
-            onClick={() => setTabValue("all")}
-            value="all"
-            className={`${
-              tabValue == "all"
-                ? "bg-purple text-white"
-                : "bg-grey hover:bg-grey.200"
-            }  transition-colors h-10 rounded-2xl px-5`}
-          >
-            {/* <Layers size={15} /> */}
-            All
-          </TabsTrigger>
-          <TabsTrigger
-            onClick={() => setTabValue("men")}
-            value="men"
-            className={`${
-              tabValue == "men"
-                ? "bg-purple text-white"
-                : "bg-grey hover:bg-grey.200"
-            }  transition-colors h-10 rounded-2xl px-4`}
-          >
-            {/* <MdBoy size={25} /> */}
-            Men
-          </TabsTrigger>
-          <TabsTrigger
-            onClick={() => setTabValue("women")}
-            value="women"
-            className={`${
-              tabValue == "women"
-                ? "bg-purple text-white"
-                : "bg-grey hover:bg-grey.200"
-            }  transition-colors h-10 rounded-2xl px-3`}
-          >
-            {/* <MdGirl size={25} /> */}
-            Women
-          </TabsTrigger>
-        </div>
+
         <div className="hidden md:flex items-center gap-2">
           <TabsTrigger
             onClick={() => setTabValue("all")}
@@ -161,166 +120,170 @@ export const GenderCategoryTabs = ({
       </TabsList>
       <TabsContent
         value="all"
-        className=" w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
+        className={`${
+          tabValue == "all" && "h-[80dvh]"
+        }  overflow-scroll scroll w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-start`}
       >
-        {allData
-          ?.filter((data) => filterProductData(data, filterData))
+        {Object.keys(allData)
+          // ?.filter((data) => filterProductData(data, filterData))
           .map((data, index) => {
             return (
               <ProductCard
                 index={index}
-                availableQty={data.availableQty}
-                addToCart={() => {
-                  addToCart(
-                    cart,
-                    data.slug,
-                    1,
-                    data.price,
-                    data.title,
-                    data.size,
-                    data.color,
-                    data.img,
-                    updateSubTotal
-                  );
-                }}
+                availableQty={allData[data].availableQty}
                 addToWishlist={() =>
                   addToWishlist(
                     wishlistCart,
-                    data.slug,
+                    allData[data].slug,
                     1,
-                    data.price,
-                    data.title,
-                    data.size,
-                    data.color,
-                    data.img,
+                    allData[data].price,
+                    allData[data].title,
+                    allData[data].size[0],
+                    allData[data].color[0],
+                    allData[data].img,
                     wishlistSubTotal
                   )
                 }
                 removeFromWishlist={() =>
                   removeFromWishlist(
                     wishlistCart,
-                    data.slug,
+                    allData[data].slug,
                     1,
                     wishlistSubTotal
                   )
                 }
                 removeFromCart={() =>
-                  removeFromCart(cart, data.slug, 1, updateSubTotal)
+                  removeFromCart(cart, allData[data].slug, 1, updateSubTotal)
                 }
-                key={data._id}
-                category={data.subCategory}
-                ImageURL={data.img}
-                size={data.size}
-                color={data.color}
-                price={data.price}
-                title={data.title}
-                slug={data.slug}
+                key={allData[data]._id}
+                category={allData[data].subCategory}
+                ImageURL={allData[data].img}
+                size={allData[data].size}
+                color={allData[data].color}
+                price={allData[data].price}
+                title={allData[data].title}
+                slug={allData[data].slug}
               />
             );
           })}
       </TabsContent>
       <TabsContent
         value="men"
-        className="w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
+        className={`${
+          tabValue == "men" && "h-[80dvh]"
+        }  overflow-scroll scroll w-full px-1 sm:px-5 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-start`}
       >
-        {menData?.map((data, index) => {
+        {Object.keys(menData)?.map((data, index) => {
           return (
             <ProductCard
               index={index}
-              availableQty={data.availableQty}
-              addToCart={() =>
+              availableQty={menData[data].availableQty}
+              addToCart={() => {
                 addToCart(
                   cart,
-                  data.slug,
+                  menData[data].slug,
                   1,
-                  data.price,
-                  data.title,
-                  data.size,
-                  data.color,
-                  data.img,
+                  menData[data].price,
+                  menData[data].title,
+                  menData[data].size,
+                  menData[data].color,
+                  menData[data].img,
                   updateSubTotal
-                )
-              }
+                );
+              }}
               addToWishlist={() =>
                 addToWishlist(
                   wishlistCart,
-                  data.slug,
+                  menData[data].slug,
                   1,
-                  data.price,
-                  data.title,
-                  data.size,
-                  data.color,
-                  data.img,
+                  menData[data].price,
+                  menData[data].title,
+                  menData[data].size,
+                  menData[data].color,
+                  menData[data].img,
                   wishlistSubTotal
                 )
               }
               removeFromWishlist={() =>
-                removeFromWishlist(wishlistCart, data.slug, 1, wishlistSubTotal)
+                removeFromWishlist(
+                  wishlistCart,
+                  menData[data].slug,
+                  1,
+                  wishlistSubTotal
+                )
               }
               removeFromCart={() =>
-                removeFromCart(cart, data.slug, 1, updateSubTotal)
+                removeFromCart(cart, menData[data].slug, 1, updateSubTotal)
               }
-              key={data._id}
-              category={data.subCategory}
-              ImageURL={data.img}
-              size={data.size}
-              color={data.color}
-              price={data.price}
-              title={data.title}
-              slug={data.slug}
+              key={menData[data]._id}
+              category={menData[data].subCategory}
+              ImageURL={menData[data].img}
+              size={menData[data].size}
+              color={menData[data].color}
+              price={menData[data].price}
+              title={menData[data].title}
+              slug={menData[data].slug}
             />
           );
         })}
       </TabsContent>
       <TabsContent
         value="women"
-        className="w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-center "
+        className={`${
+          tabValue == "women" && "h-[80dvh]"
+        }  overflow-scroll scroll w-full px-1 sm:px-5 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-start`}
       >
-        {womenData?.map((data, index) => {
+        {Object.keys(womenData)?.map((data, index) => {
           return (
             <ProductCard
               index={index}
-              availableQty={data.availableQty}
-              addToCart={() =>
+              availableQty={womenData[data].availableQty}
+              addToCart={() => {
+                console.log(cart);
                 addToCart(
                   cart,
-                  data.slug,
+                  womenData[data].slug,
                   1,
-                  data.price,
-                  data.title,
-                  data.size,
-                  data.color,
-                  data.img,
+                  womenData[data].price,
+                  womenData[data].title,
+                  womenData[data].size,
+                  allwomenDataData[data].color,
+                  womenData[data].img,
                   updateSubTotal
-                )
-              }
+                );
+              }}
               addToWishlist={() =>
                 addToWishlist(
                   wishlistCart,
-                  data.slug,
+                  womenData[data].slug,
                   1,
-                  data.price,
-                  data.title,
-                  data.size,
-                  data.color,
-                  data.img,
+                  womenData[data].price,
+                  womenData[data].title,
+                  womenData[data].size,
+                  womenData[data].color,
+                  womenData[data].img,
                   wishlistSubTotal
                 )
               }
               removeFromWishlist={() =>
-                removeFromWishlist(wishlistCart, data.slug, 1, wishlistSubTotal)
+                removeFromWishlist(
+                  wishlistCart,
+                  womenData[data].slug,
+                  1,
+                  wishlistSubTotal
+                )
               }
               removeFromCart={() =>
-                removeFromCart(cart, data.slug, 1, updateSubTotal)
+                removeFromCart(cart, allData[data].slug, 1, updateSubTotal)
               }
-              key={data._id}
-              category={data.subCategory}
-              ImageURL={data.img}
-              size={data.size}
-              color={data.color}
-              price={data.price}
-              title={data.title}
-              slug={data.slug}
+              key={womenData[data]._id}
+              category={womenData[data].subCategory}
+              ImageURL={womenData[data].img}
+              size={womenData[data].size}
+              color={womenData[data].color}
+              price={womenData[data].price}
+              title={womenData[data].title}
+              slug={womenData[data].slug}
             />
           );
         })}

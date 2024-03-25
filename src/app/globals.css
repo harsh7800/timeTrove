@@ -11,6 +11,7 @@
     serif;
 }
 
+
 .scroll {
   overflow-y: scroll;
 }
@@ -28,6 +29,23 @@
 .scroll::-webkit-scrollbar-track {
   background-color: #f1f1f1;
   /* Color of the track */
+}
+
+.fade .relative:hover .absolute {
+  opacity: 1;
+  animation: slideIn 0.2s ease-in forwards
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(2em);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .noto {

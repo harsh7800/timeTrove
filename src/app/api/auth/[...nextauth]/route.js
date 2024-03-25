@@ -12,6 +12,7 @@ const handler = NextAuth({
   ],
   callbacks: {
     async session({ session }) {
+      console.log(session);
       return session;
     },
     async signIn({ profile }) {

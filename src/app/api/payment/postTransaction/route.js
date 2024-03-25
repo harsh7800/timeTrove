@@ -6,9 +6,12 @@ const RazorPay = require("razorpay");
 const crypto = require("crypto");
 
 export async function PATCH(req, { params }) {
+  const prefix = "TRACK";
+  const uniqueIdentifier = Math.floor(Math.random() * 1000000);
+  const trackId = `${prefix}-${uniqueIdentifier}`;
   try {
     let order;
-    const { response, amount, currency } = await req.json();
+    const { response } = await req.json();
     await connectDb();
 
     let generatedSignature = crypto
@@ -18,10 +21,20 @@ export async function PATCH(req, { params }) {
     let isSignatureValid = generatedSignature == response.razorpay_signature;
 
     if (isSignatureValid) {
+      console.log(response);
       var instance = new RazorPay({
         key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
         key_secret: process.env.NEXT_PUBLIC_RAZORPAY_SECRECT_KEY,
       });
+      console.log(instance);
+      // let authorised = await instance.payments.edit(
+      //   response.razorpay_payment_id,
+      //   {
+      //     notes: {
+      //       key1: "payment_success",
+      //     },
+      //   }
+      // );
       let authorised = await instance.payments.edit(
         response.razorpay_payment_id,
         {
@@ -34,10 +47,11 @@ export async function PATCH(req, { params }) {
       if (authorised.status == "captured") {
         order = await Order.findOneAndUpdate(
           { orderId: response.razorpay_order_id },
-          { status: "Paid", paymentInfo: authorised }
+          { status: "Paid", paymentInfo: authorised, trackingId: trackId },
+          { upsert: true, new: true }
         );
-
         let products = order.products;
+
         for (let slug in products) {
           await Product.findOneAndUpdate(
             { slug: slug },
@@ -61,6 +75,7 @@ export async function PATCH(req, { params }) {
           { status: 404 }
         );
       }
+      // }
     } else {
       return NextResponse.json(
         {

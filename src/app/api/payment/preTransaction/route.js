@@ -13,7 +13,6 @@ export async function POST(request, { params }) {
     sumtotal += cart[item].price * cart[item].qty;
     let product = await Product.findOne({ slug: item });
     if (product.availableQty < cart[item].qty) {
-      console.log(1);
       return NextResponse.json(
         {
           success: false,
@@ -23,8 +22,6 @@ export async function POST(request, { params }) {
       );
     }
     if (product.price != cart[item].price) {
-      console.log(product.price, cart[item].price);
-      console.log(1);
       return NextResponse.json(
         {
           success: false,
@@ -53,7 +50,6 @@ export async function POST(request, { params }) {
 
   // Create an order -> generate the OrderID -> Send it to the Front-end
   const payment_capture = 1;
-  const amount = subTotal;
   const currency = "INR";
   const options = {
     amount: parseInt(subTotal) * 100,
@@ -63,24 +59,34 @@ export async function POST(request, { params }) {
   };
   try {
     const response = await razorpay.orders.create(options);
-    let order = await Order.create({
-      email: email,
-      phone: userData.phone,
-      orderId: response.id,
-      paymentInfo: { card: {} },
-      products: cart,
-      address: userData.address,
-      amount: subTotal,
-      status: response.status,
-    });
 
-    return NextResponse.json({
-      id: response.id,
-      currency: response.currency,
-      response: response,
-      amount: response.amount,
-      success: true,
+    let existingOrder = await Order.findOne({
+      orderId: response.id,
+      status: "Pending",
     });
+    if (existingOrder) {
+      console.log(1);
+      console.log(response);
+    } else {
+      let order = await Order.create({
+        email: email,
+        phone: userData.phoneNum,
+        orderId: response.id,
+        paymentInfo: { card: {} },
+        products: cart,
+        address: userData,
+        amount: subTotal,
+        status: response.status,
+      });
+
+      return NextResponse.json({
+        id: response.id,
+        currency: response.currency,
+        response: response,
+        amount: response.amount,
+        success: true,
+      });
+    }
   } catch (err) {
     console.log(err);
     return NextResponse.json(

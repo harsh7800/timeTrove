@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -28,6 +29,7 @@ export default function CartSheet() {
   const clearCart = useCart(useShallow((state) => state.clearCart));
   const Router = useRouter();
   const path = usePathname();
+  console.log(cart);
   return (
     <Sheet>
       <SheetTrigger>
@@ -54,6 +56,8 @@ export default function CartSheet() {
                 {Object.keys(cart).map((data, index) => {
                   return (
                     <QuickBuyProductCard
+                      variant={cart[data].size}
+                      colour={cart[data].variant}
                       key={index}
                       img={cart[data].img}
                       productTitle={cart[data].name}
