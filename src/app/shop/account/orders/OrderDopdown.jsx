@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { Copy } from "lucide-react";
+import { Copy, Info } from "lucide-react";
 import { useRouter } from "next-nprogress-bar";
 import React from "react";
 
@@ -18,7 +18,7 @@ const OrderDopdown = ({ orderID }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Copy size={20} className="cursor-pointer" />
+        <Info size={20} className="cursor-pointer" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[150px] space-y-1 shadow-shadow-2  py-2 rounded-lg border text-start bg-white">
         <DropdownMenuLabel className="font-semibold mx-2">

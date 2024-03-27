@@ -11,7 +11,15 @@ export async function POST(request, { params }) {
   let sumtotal = 0;
   for (let item in cart) {
     sumtotal += cart[item].price * cart[item].qty;
-    let product = await Product.findOne({ slug: item });
+
+    let parts = item.split("-");
+    let originalItemCode = parts.slice(0, -2).join("-");
+
+    let product = await Product.findOne({
+      slug: originalItemCode,
+      size: cart[item].size,
+      color: cart[item].color,
+    }).lean();
     if (product.availableQty < cart[item].qty) {
       return NextResponse.json(
         {

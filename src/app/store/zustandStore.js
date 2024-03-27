@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { useShallow } from "zustand/react/shallow";
+
 export const useStore = create(
   persist(
     (set, get) => ({
@@ -47,10 +47,17 @@ export const wishlist = create(
       wishlistSubTotal: (subTotal) => set(() => ({ subTotal: subTotal })),
       updateField: (fields) =>
         set((state) => ({
-          wishlistCart: { ...state.user, ...fields },
+          wishlistCart: { ...state.wishlistCart, ...fields },
         })),
-      clearCart: (wishlistCart) =>
-        set(() => ({ wishlistCart: {}, subTotal: 0 })), // Clear user data on clearCart
+      updateItem: (slug, updatedData) => {
+        if (get().wishlistCart[slug]) {
+          set((state) => (get().wishlistCart[slug] = updatedData));
+        }
+      },
+
+      clearCart: () => {
+        set(() => ({ wishlistCart: {}, subTotal: 0 }));
+      },
     }),
     {
       name: "wishlistCart",

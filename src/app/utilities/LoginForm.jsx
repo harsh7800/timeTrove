@@ -255,7 +255,7 @@ export default function LoginForm({ setToggle }) {
         >
           Sign In
         </button>
-        <button
+        {/* <button
           className="border w-[80svw] sm:w-2/3 min-w-[150px] py-1.5 rounded-lg bg-white capitalize flex justify-center items-center gap-2 hover:bg-grey transition-all font-bold"
           onClick={async (e) => {
             let res = await signIn("google", {
@@ -264,7 +264,7 @@ export default function LoginForm({ setToggle }) {
           }}
         >
           <FcGoogle size={30} /> Sign In With google
-        </button>
+        </button> */}
       </div>
       <p className="font-semibold text-sm mt-5">
         Don&apos;t Have a Account?{" "}

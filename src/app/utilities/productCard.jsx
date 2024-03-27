@@ -82,34 +82,6 @@ const ProductCard = ({
           {category}
         </h3>
         <h3 className="font-semibold truncate w-5/6 text-sm">{title}</h3>
-
-        {/* <div className="flex gap-1">
-          {size.map((size, i) => (
-            <Button
-              key={i}
-              className="w-8 h-8 rounded-lg border-[3px]"
-              style={{ background: color }}
-            >
-              {size}
-            </Button>
-          ))}
-        </div> */}
-        {/* <div className="flex items-center gap-2">
-        <h3 className="font-semibold ">XS</h3>
-        <h3 className="font-semibold ">S</h3>
-        <h3 className="font-semibold ">M</h3>
-        <h3 className="font-semibold ">L</h3>
-        <h3 className="font-semibold ">Xl</h3>
-        <h3 className="font-semibold ">XXl</h3>
-      </div> */}
-        {/* <div className="flex items-center gap-2">
-        <div className="w-5 bg-black h-5 rounded-full border-grey.200 border-[3px]"></div>
-        <div className="w-5 bg-grey h-5 rounded-full border-grey.200 border-[3px]"></div>
-        <div className="w-5 bg-[#e60000] h-5 rounded-full border-grey.200 border-[3px]"></div>
-        <div className="w-5 bg-[#29a329] h-5 rounded-full border-grey.200 border-[3px]"></div>
-        <div className="w-5 bg-[#1a1aff] h-5 rounded-full border-grey.200 border-[3px]"></div>
-        <div className="w-5 bg-[#fff] h-5 rounded-full border-grey.200 border-[3px]"></div>
-      </div> */}
         <h3 className="font-bold text-sm">Rs {price}</h3>
       </div>
       {availableQty !== 0 ? (
@@ -159,7 +131,7 @@ const ProductCard = ({
       {/* <div className="bg-purple absolute top-5 right-5 p-1 rounded-full"> */}
       <div
         onClick={() => {
-          wishlistCart[slug] ? removeFromWishlist() : addToWishlist();
+          wishlistCart[title] ? removeFromWishlist() : addToWishlist();
           router.refresh();
         }}
         className="z-50 absolute top-5 right-5 border rounded-full p-1 bg-grey.200"
@@ -167,7 +139,7 @@ const ProductCard = ({
         <FaHeart
           size={20}
           className={`cursor-pointer ${
-            wishlistCart[slug] ? "text-[#e60073]" : "text-white"
+            wishlistCart[title] ? "text-[#e60073]" : "text-white"
           } `}
         />
       </div>
@@ -275,9 +247,10 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
                   <div className="w-full sm:w-[80%] mt-1 flex items-center text-xl justify-between">
                     <p className="mt-2 font-semibold">Total</p>
                     <p className="mt-2 font-bold">
-                      {cart[slug]?.qty != 0
-                        ? cart[slug]?.qty * cart[slug]?.price
-                        : 0}
+                      {cart[Object.keys(cart)]?.qty != 0
+                        ? cart[Object.keys(cart)]?.qty *
+                          cart[Object.keys(cart)]?.price
+                        : 0 || cart[Object.keys(cart)].price}
                     </p>
                   </div>
                 </div>
@@ -294,15 +267,18 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
                     address?.map((addr, i) => {
                       return (
                         <div
-                          className="flex items-center space-x-2 space-y-2"
+                          className="flex items-center cursor-pointer space-x-2 space-y-2"
                           key={i}
                         >
                           <RadioGroupItem
                             value={addr}
-                            id={addr._id}
+                            id={i}
                             className="accent-purple text-purple"
                           />
-                          <Label htmlFor={addr._id} className="leading-5">
+                          <Label
+                            htmlFor={i}
+                            className="leading-5 cursor-pointer"
+                          >
                             {addr.pincode}, {addr.addressName}, {addr.landmark},
                             &nbsp;{addr.city}, <br /> {addr.state}
                           </Label>
@@ -328,10 +304,10 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
                     "animate-shimmer"
                   } inline-flex h-12 items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white-400 focus:ring-offset-2 focus:ring-offset-white-50`}
                   onClick={async () => {
-                    // console.log(cart);
                     let total =
-                      cart[slug]?.qty != 0
-                        ? cart[slug]?.qty * cart[slug]?.price
+                      cart[Object.keys(cart)]?.qty != 0
+                        ? cart[Object.keys(cart)]?.qty *
+                          cart[Object.keys(cart)]?.price
                         : 0;
                     await Checkout(
                       total,
@@ -351,9 +327,10 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
                     <Loader2 className="animate-spin mr-1" size={20} />
                   )}{" "}
                   Pay{" "}
-                  {cart[slug]?.qty != 0
-                    ? cart[slug]?.qty * cart[slug]?.price
-                    : 0}
+                  {cart[Object.keys(cart)]?.qty != 0
+                    ? cart[Object.keys(cart)]?.qty *
+                      cart[Object.keys(cart)]?.price
+                    : 0 || cart[Object.keys(cart)].price}
                   /-
                 </Button>
               </div>
@@ -419,10 +396,10 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
 };
 
 export const QuickBuyProductCard = ({
+  clr,
+  siz,
   setCart,
   addToCart,
-  variant,
-  colour,
   removeFromCart,
   img,
   qty,
@@ -435,6 +412,7 @@ export const QuickBuyProductCard = ({
   const [productData, setProductData] = useState({});
   const [size, setsize] = useState("");
   const [color, setcolor] = useState("");
+  const [productSlug, setProductSlug] = useState(slug);
   const [image, setImage] = useState(img);
   useEffect(() => {
     const fetchData = async () => {
@@ -444,14 +422,16 @@ export const QuickBuyProductCard = ({
         setcolor(data.product.color);
         setsize(data.product.size);
         setCart({
-          [slug]: {
+          [`${data.variants[data.product.color][data.product.size].slug}-${
+            data.product.size
+          }-${data.product.color}`]: {
             qty: 1,
-            price: productData.product.price,
-            name: productData.product.name,
-            size,
-            color,
-            img: productData.product.img,
-            slug,
+            price: data.product.price,
+            name: data.product.title,
+            size: data.product.size,
+            color: data.product.color,
+            img: data.product.img,
+            slug: data.variants[data.product.color][data.product.size].slug,
           },
         });
       } catch (error) {
@@ -459,7 +439,7 @@ export const QuickBuyProductCard = ({
       }
     };
     fetchData();
-  }, [slug]);
+  }, []);
 
   return (
     <div
@@ -485,7 +465,7 @@ export const QuickBuyProductCard = ({
             {!dropDown ? (
               <div
                 className="border-2 w-4 h-4 rounded-full"
-                style={{ background: color || colour }}
+                style={{ background: color || clr }}
               ></div>
             ) : Object.keys(productData?.variants || {}).length === 0 ? (
               <Loader2 className="animate-spin" size={20} />
@@ -503,6 +483,23 @@ export const QuickBuyProductCard = ({
                           setImage(
                             productData?.variants[variantColor][size]?.img
                           );
+                          setProductSlug(
+                            productData.variants[variantColor][size].slug
+                          );
+                          setCart({
+                            [`${productData.variants[variantColor][size].slug}-${size}-${variantColor}`]:
+                              {
+                                qty: 1,
+                                price: productData.product.price,
+                                name: productData.product.title,
+                                size,
+                                color: variantColor,
+                                img: productData?.variants[variantColor][size]
+                                  ?.img,
+                                slug: productData.variants[variantColor][size]
+                                  .slug,
+                              },
+                          });
                         }
                       }}
                       style={{ background: variantColor }}
@@ -519,7 +516,7 @@ export const QuickBuyProductCard = ({
           </div>
           <div className="flex gap-1 items-center">
             {!dropDown ? (
-              <p className="text-[#999999] text-sm">Size {size || variant} </p>
+              <p className="text-[#999999] text-sm">Size {size || siz} </p>
             ) : (
               <div className="text-[#999999] text-sm flex items-center gap-1  ">
                 {Object.keys(productData?.variants || {}).length === 0 ? (
@@ -531,6 +528,23 @@ export const QuickBuyProductCard = ({
                       onClick={() => {
                         setsize(buttonSize);
                         setImage(productData?.variants[color][buttonSize]?.img);
+                        setProductSlug(
+                          productData.variants[color][buttonSize].slug
+                        );
+                        setCart({
+                          [`${productData.variants[color][buttonSize].slug}-${buttonSize}-${color}`]:
+                            {
+                              qty: 1,
+                              price: productData.product.price,
+                              name: productData.product.title,
+                              size: buttonSize,
+                              color,
+                              img: productData?.variants[color][buttonSize]
+                                ?.img,
+                              slug: productData.variants[color][buttonSize]
+                                .slug,
+                            },
+                        });
                       }}
                       className={`${
                         size == buttonSize

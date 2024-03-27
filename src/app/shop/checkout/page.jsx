@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2, X } from "lucide-react";
 import { useRouter } from "next-nprogress-bar";
@@ -38,7 +37,7 @@ const Page = () => {
         </p>
       </div>
       <div className="w-full flex md:flex-row flex-col-reverse item-center gap-4">
-        <div className="w-full md:w-1/2 p-4 rounded-lg mt-5">
+        <div className="w-full md:w-1/2 p-0 sm:p-4 rounded-lg mt-5">
           {Object.keys(cart).length > 0 ? (
             <h3 className="font-bold w-full text-start">Your Order</h3>
           ) : (
@@ -124,7 +123,9 @@ const Cart = () => {
               />
               {/* </Suspense> */}
               <div>
-                <h3 className="font-bold w-full">{cart[data].name}</h3>
+                <h3 className="font-bold text-sm lg:text-md w-full">
+                  {cart[data].name}
+                </h3>
                 <div className="flex gap-1 items-center font-semibold ">
                   <div className="flex gap-1 items-center">
                     <p className="text-[#999999] text-sm">
@@ -136,7 +137,7 @@ const Cart = () => {
                     <p className="text-[#999999] text-sm">Color </p>
                     <div
                       className="rounded-full w-5 h-5 border-[3px]"
-                      style={{ background: cart[data].variant }}
+                      style={{ background: cart[data].color }}
                     ></div>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                   </div>

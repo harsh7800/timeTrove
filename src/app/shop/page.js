@@ -1,10 +1,12 @@
-import { Suspense } from "react";
 import { GenderCategoryTabs } from "../utilities/GenderCategoryTabs";
 import Product from "../models/Product";
+import connectDb from "@/lib/mongoose";
 
-export default async function ShopPage() {
+export default async function Page() {
+  "use server";
   async function getData(productFor = "") {
     const query = productFor ? { productFor } : {};
+    await connectDb();
     const products = await Product.find(query).lean();
     let items = {};
 
@@ -29,8 +31,6 @@ export default async function ShopPage() {
         }
       }
     }
-    console.log(items);
-
     return items;
   }
 

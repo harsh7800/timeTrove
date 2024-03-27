@@ -13,6 +13,7 @@ import {
 import { useStore } from "../../store/zustandStore";
 import Image from "next/image";
 import { useShallow } from "zustand/react/shallow";
+import { fetchUserOrders } from "@/app/helpers/action";
 
 export const AsideNav = ({ mobile }) => {
   const router = useRouter();
@@ -26,28 +27,23 @@ export const AsideNav = ({ mobile }) => {
   const [data, setData] = useState([]);
   const email = useStore(useShallow((state) => state.user.email));
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_HOST}/api/account/${email}`, {
-      cache: "reload",
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Server error: ${res.status} - ${res.statusText}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setData(data.orders);
-      })
-      .catch((error) => {
-        console.error("Fetch error:", error);
-      });
+    const fetchOrders = async () => {
+      try {
+        const data = await fetchUserOrders(email);
+        const plainData = JSON.parse(JSON.stringify(data));
+        setData(plainData);
+      } catch (error) {
+        console.log("Error fetching data", error);
+      }
+    };
+    fetchOrders();
   }, [email]);
 
   return (
     <aside
-      className={`flex ${mobile ? "border-none" : "border-2"} ${
-        mobile ? "min-w-[250px]" : "min-w-[300px]"
-      } flex-col ${mobile ? "items-start" : "items-center"} max-w-[400px] ${
+      className={`flex ${mobile ? "min-w-[250px]" : "min-w-[300px]"} flex-col ${
+        mobile ? "items-start" : "items-center"
+      } max-w-[400px] ${
         mobile ? "justify-start gap-[100px]" : "justify-between"
       } h-full py-5`}
     >
@@ -127,26 +123,22 @@ export const AsideNav = ({ mobile }) => {
         <div className="w-[80%] flex flex-col items-center justify-center border-t space-y-3 pt-5">
           <h4 className="text-sm sm:text-md font-semibold opacity-80 w-full text-left">
             Total orders{" "}
-            <span className="font-bold pop">{data.length || 0}</span>
+            <span className="font-bold pop">{data?.totalOrders || 0}</span>
           </h4>
-          {data
-            ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Replace 'createdAt' with the actual property representing the order creation time
-            .slice(0, 3)
-            .filter((order) => Object.keys(order.products).length === 1)
-            .map((order, i) => {
-              return (
-                // <Suspense
-                //   key={i}
-                //   fallback={<Loader2 size={20} className="animate-spin" />}
-                // >
-                <HoverCardOrder key={i} order={order} />
-                // </Suspense>
-              );
-            })}
-          {data.length == 0 && (
+          {data.items?.map((order, i) => {
+            return (
+              // <Suspense
+              //   key={i}
+              //   fallback={<Loader2 size={20} className="animate-spin" />}
+              // >
+              <HoverCardOrder key={i} order={order} />
+              // </Suspense>
+            );
+          })}
+          {data?.totalOrders == 0 && (
             <p className="font-semibold text-[14px]">No Order Recorded</p>
           )}
-          {data.length > 3 && (
+          {data?.totalOrders > 3 && (
             <p
               className="text-sm font-semibold cursor-pointer"
               onClick={() => router.push("/shop/account/orders")}
@@ -163,7 +155,7 @@ export const AsideNav = ({ mobile }) => {
             router.push("/authentication");
             logout();
           }}
-          className="w-30 bg-white text-black text-md hover:bg-white"
+          className="w-30 hover:text-purple  bg-white text-black text-md hover:bg-white"
         >
           <LogOut /> &nbsp;&nbsp; Log Out
         </Button>
@@ -177,19 +169,20 @@ export function HoverCardOrder({ order }) {
   const router = useRouter();
   return (
     <HoverCard openDelay={100} closeDelay={100}>
-      <HoverCardTrigger asChild>
-        <div className="flex gap-2 text-sm sm:text-md items-center w-[90%]">
+      <HoverCardTrigger asChild className="hover:text-purple">
+        <div
+          onClick={() => router.push(`/shop/account/${order.orderId}`)}
+          className="cursor-pointer flex gap-2 text-sm sm:text-md items-center w-[90%]"
+        >
           {/* <div className="w-7 h-7 border-black border-2 rounded-lg"></div> */}
           <Image
             className="rounded-lg border"
             width={50}
             height={50}
-            src={order.products[orderSlug]?.img}
-            alt={order.products[orderSlug]?.name}
+            src={order.products?.img}
+            alt={order.products?.name}
           />
-          <p className="font-semibold truncate ">
-            {order.products[orderSlug]?.name}
-          </p>
+          <p className="font-semibold truncate ">{order.products?.name}</p>
         </div>
       </HoverCardTrigger>
       <HoverCardContent
@@ -200,29 +193,31 @@ export function HoverCardOrder({ order }) {
           className="rounded-lg"
           width={100}
           height={100}
-          src={order.products[orderSlug]?.img}
-          alt={order.products[orderSlug]?.name}
+          src={order.products?.img}
+          alt={order.products?.name}
         />
-        <div className="items-center w-[90%] font-poppins">
-          <p className="font-semibold truncate ">
-            {order.products[orderSlug]?.name}
-          </p>
-          <p className="font-semibold truncate ">
-            Rs {order.products[orderSlug]?.price}/-
-          </p>
-          <p className="font-semibold truncate ">
-            Size: {order.products[orderSlug]?.size}
-          </p>
-          <div className="flex items-center gap-2 font-semibold">
-            <p>Color :</p>
-            <div
-              className={`w-5 h-5 rounded-full border-2`}
-              style={{
-                background:
-                  order?.products[orderSlug]?.color ||
-                  order?.products[orderSlug]?.variant,
-              }}
-            ></div>
+        <div className="items-center w-[90%] gap-[30px] text-sm">
+          <div className="space-y-1">
+            <h3 className="font-bold truncate ">{order.products?.name}</h3>
+            <div className="flex gap-2 text-[#999999]">
+              <div className="flex items-center gap-2 font-semibold">
+                <p>Color :</p>
+                <div
+                  className={`w-5 h-5 rounded-full border-2`}
+                  style={{
+                    background:
+                      order?.products?.color || order?.products?.variant,
+                  }}
+                ></div>
+              </div>
+              <p className="font-semibold text-[#999999] text-sm truncate ">
+                Size: {order.products?.size}
+              </p>
+            </div>
+          </div>
+          <div className="flex font-semibold gap-[30px]">
+            <p className=" truncate font-bold">Rs {order?.amount}</p>
+            <p className="truncate text-[#999999]">Qty {order.products?.qty}</p>
           </div>
         </div>
       </HoverCardContent>

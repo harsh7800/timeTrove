@@ -1,3 +1,4 @@
+import Order from "@/app/models/Order";
 import User from "@/app/models/User";
 import connectDb from "@/lib/mongoose";
 import CryptoJS from "crypto-js";
@@ -29,6 +30,7 @@ export async function POST(request) {
           },
           { new: true, useFindAndModify: true }
         );
+        await Order.updateMany({ email: updatedEmail });
 
         return NextResponse.json(
           {
@@ -62,7 +64,7 @@ export async function POST(request) {
           process.env.AES_SECRET_KEY
         ).toString();
 
-        // Update the password using await
+        // Update the password 
         await User.updateOne({ email }, { password: encryptedNewPassword });
 
         return NextResponse.json(

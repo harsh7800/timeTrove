@@ -7,7 +7,7 @@ export async function updateAccountCred(
 ) {
   // states.newEmail = newEmail;
   let values = {
-    email: states.email,
+    email: states.email?.toString(),
     updatedEmail: newData.email,
     updatedUsername: newData.username,
     password: newData.password,

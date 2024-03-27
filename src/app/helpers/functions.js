@@ -1,4 +1,4 @@
-import { Check, Cross, Loader2, X } from "lucide-react";
+import { BadgeCheck, Check, Cross, Loader2, X } from "lucide-react";
 
 const jwt = require("jsonwebtoken");
 
@@ -21,20 +21,37 @@ export async function addToCart(
   router
 ) {
   let newCart = IniCart;
+  // Generate a unique identifier for the item considering size and variant
   if (itemCode in IniCart) {
-    console.log(itemCode);
-    // console.log(newCart[itemCode]);
-    newCart[itemCode].qty = IniCart[itemCode].qty + qty;
+    if (newCart[itemCode].size != size) {
+      const uniqueItemId = `${itemCode}-${size}-${variant}`;
+      newCart[uniqueItemId] = {
+        qty: 1,
+        price,
+        name,
+        size,
+        color: variant,
+        img,
+      };
+    } else {
+      // Item with the same code, size, and variant exists, update quantity
+      newCart[itemCode].qty += qty;
+    }
   } else {
-    newCart[itemCode] = { qty: 1, price, name, size, variant, img };
-    console.log(itemCode);
+    const uniqueItemId = `${itemCode}-${size}-${variant}`;
+    // Item with the given code, size, and variant doesn't exist, add as a new item
+    newCart[uniqueItemId] = { qty: 1, price, name, size, color: variant, img };
   }
+
+  // Calculate subtotal
   let subt = 0;
   let key = Object.keys(newCart);
   for (let i = 0; i < key.length; i++) {
     subt += newCart[key[i]].price * newCart[key[i]].qty;
   }
   updateSubTotal(subt);
+
+  // Refresh router if available
   router?.refresh();
 }
 
@@ -107,10 +124,18 @@ export async function addToWishlist(
 ) {
   let newCart = IniCart;
   if (itemCode in IniCart) {
-    // console.log(newCart[itemCode]);
-    newCart[itemCode].qty = IniCart[itemCode].qty + qty;
+    console.log(itemCode);
+    newCart[name].qty = IniCart[itemCode].qty + qty;
   } else {
-    newCart[itemCode] = { qty: 1, price, name, size, variant, img };
+    newCart[name] = {
+      qty: 1,
+      price,
+      name,
+      size,
+      color: variant,
+      img,
+      slug: itemCode,
+    };
   }
   let subt = 0;
   let key = Object.keys(newCart);
@@ -148,29 +173,32 @@ export async function addToCartFromWishlist(
   wishlistItems,
   updateSubTotal
 ) {
-  console.log(IniCart);
-  let newCart = IniCart;
+  let newCart = IniCart; // Make a shallow copy of IniCart
+  let subt = 0;
 
   for (const itemCode in wishlistItems) {
     const item = wishlistItems[itemCode];
+    const uniqueItemId = `${item.slug}-${item.size}-${item.color}`;
 
-    if (itemCode in newCart) {
+    if (item.slug in newCart) {
       // If item is already in the cart, increment quantity
-      newCart[itemCode].qty += item.qty;
-      console.log(newCart[itemCode]);
+      newCart[item.slug].qty += item.qty;
     } else {
       // If item is not in the cart, add it
-      newCart[itemCode] = item;
-      console.log(newCart);
+      newCart[uniqueItemId] = item;
     }
   }
 
-  let subt = 0;
-  let key = Object.keys(newCart);
-  for (let i = 0; i < key.length; i++) {
-    subt += newCart[key[i]].price * newCart[key[i]].qty;
+  // Calculate subtotal
+  for (const itemId in newCart) {
+    subt += newCart[itemId].price * newCart[itemId].qty;
   }
+
+  // Update subtotal
   updateSubTotal(subt);
+
+  console.log(newCart);
+  return newCart; // Return the updated cart
 }
 
 export async function Checkout(
@@ -237,7 +265,7 @@ export async function Checkout(
                     <p>Payment Cancelled</p>
                   </div>
                 ),
-                duration: 1500, // Adjust the duration as needed
+                duration: "1000", // Adjust the duration as needed
                 className: "bg-white",
               });
             }
@@ -261,16 +289,15 @@ export async function Checkout(
               clearCart();
             }
             setloading(false);
-            router.refresh();
             router.push(`/shop/account/${data.id}`);
             toast({
               title: (
                 <div className="flex items-center gap-3 text-black text-md">
-                  <Check className="text-[green]" />
+                  <BadgeCheck strokeWidth={2.25} className="text-[green]" />
                   <p>payment Success</p>
                 </div>
               ),
-              duration: 1500, // Adjust the duration as needed
+              duration: "1500", // Adjust the duration as needed
               className: "bg-white",
             });
           }
@@ -296,7 +323,7 @@ export async function Checkout(
             <p>Something Went Wrong Try Again</p>
           </div>
         ),
-        duration: 10000, // Adjust the duration as needed
+        duration: "2000", // Adjust the duration as needed
         className: "bg-white",
       });
     }
@@ -309,7 +336,7 @@ export async function Checkout(
           <p>Payment Failed</p>
         </div>
       ),
-      duration: 10000, // Adjust the duration as needed
+      duration: "2000", // Adjust the duration as needed
       className: "bg-white",
     });
     console.log(error);

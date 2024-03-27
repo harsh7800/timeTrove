@@ -23,17 +23,17 @@ const Page = async ({ params }) => {
   }
   let data = await getProduct();
 
-  let cart = {
-    [params.product]: {
-      qty: 1,
-      price: data.product.price,
-      name: data.product.title,
-      size: data.product.size,
-      color: data.product.color,
-      img: data.product.img,
-      slug: params.product,
-    },
-  };
+  // let cart = {
+  //   [params.product]: {
+  //     qty: 1,
+  //     price: data.product.price,
+  //     name: data.product.title,
+  //     size: data.product.size,
+  //     color: data.product.color,
+  //     img: data.product.img,
+  //     slug: params.product,
+  //   },
+  // };
   return (
     <section className="border h-[90dvh] text-gray-600 body-font overflow-scroll scroll">
       <div className="w-full flex justify-center lg:justify-around xl:justify-center py-[50px] flex-wrap gap-7">

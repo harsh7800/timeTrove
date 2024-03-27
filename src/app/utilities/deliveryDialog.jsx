@@ -59,13 +59,19 @@ export function DeliveryDialog({
     }),
     phoneNum: z
       .string()
-      .min(12, {
-        message: "Phone Number must be at least 12 characters.",
-      })
-      .refine((value) => /^\+\d{1,3}\d+$/.test(value), {
+      .min(10, {
         message:
-          "Invalid Phone Number format. It should start with a country code and contain only digits.",
-      }),
+          "Phone Number must be at least 10 digits (excluding country code).",
+      })
+      .max(15, {
+        message:
+          "Phone Number must not exceed 15 digits (including country code).",
+      })
+      .refine((value) => /^\d+$/.test(value), {
+        // Ensure only digits
+        message: "Phone Number must contain only digits.",
+      })
+      .optional(),
 
     state: z.string().min(2, {
       message: "State must be at least 2 characters.",

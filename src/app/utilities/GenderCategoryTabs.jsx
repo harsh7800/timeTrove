@@ -147,7 +147,7 @@ export const GenderCategoryTabs = ({
                 removeFromWishlist={() =>
                   removeFromWishlist(
                     wishlistCart,
-                    allData[data].slug,
+                    allData[data].title,
                     1,
                     wishlistSubTotal
                   )
@@ -173,59 +173,48 @@ export const GenderCategoryTabs = ({
           tabValue == "men" && "h-[80dvh]"
         }  overflow-scroll scroll w-full px-1 sm:px-5 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-start`}
       >
-        {Object.keys(menData)?.map((data, index) => {
-          return (
-            <ProductCard
-              index={index}
-              availableQty={menData[data].availableQty}
-              addToCart={() => {
-                addToCart(
-                  cart,
-                  menData[data].slug,
-                  1,
-                  menData[data].price,
-                  menData[data].title,
-                  menData[data].size,
-                  menData[data].color,
-                  menData[data].img,
-                  updateSubTotal
-                );
-              }}
-              addToWishlist={() =>
-                addToWishlist(
-                  wishlistCart,
-                  menData[data].slug,
-                  1,
-                  menData[data].price,
-                  menData[data].title,
-                  menData[data].size,
-                  menData[data].color,
-                  menData[data].img,
-                  wishlistSubTotal
-                )
-              }
-              removeFromWishlist={() =>
-                removeFromWishlist(
-                  wishlistCart,
-                  menData[data].slug,
-                  1,
-                  wishlistSubTotal
-                )
-              }
-              removeFromCart={() =>
-                removeFromCart(cart, menData[data].slug, 1, updateSubTotal)
-              }
-              key={menData[data]._id}
-              category={menData[data].subCategory}
-              ImageURL={menData[data].img}
-              size={menData[data].size}
-              color={menData[data].color}
-              price={menData[data].price}
-              title={menData[data].title}
-              slug={menData[data].slug}
-            />
-          );
-        })}
+        {Object.keys(menData)
+          // ?.filter((data) => filterProductData(data, filterData))
+          .map((data, index) => {
+            return (
+              <ProductCard
+                index={index}
+                availableQty={menData[data].availableQty}
+                addToWishlist={() =>
+                  addToWishlist(
+                    wishlistCart,
+                    menData[data].slug,
+                    1,
+                    menData[data].price,
+                    menData[data].title,
+                    menData[data].size[0],
+                    menData[data].color[0],
+                    menData[data].img,
+                    wishlistSubTotal
+                  )
+                }
+                removeFromWishlist={() =>
+                  removeFromWishlist(
+                    wishlistCart,
+                    menData[data].title,
+                    1,
+                    wishlistSubTotal
+                  )
+                }
+                removeFromCart={() =>
+                  removeFromCart(cart, menData[data].slug, 1, updateSubTotal)
+                }
+                key={menData[data]._id}
+                category={menData[data].subCategory}
+                ImageURL={menData[data].img}
+                size={menData[data].size}
+                color={menData[data].color}
+                price={menData[data].price}
+                title={menData[data].title}
+                slug={menData[data].slug}
+              />
+            );
+          })}
       </TabsContent>
       <TabsContent
         value="women"
@@ -233,60 +222,48 @@ export const GenderCategoryTabs = ({
           tabValue == "women" && "h-[80dvh]"
         }  overflow-scroll scroll w-full px-1 sm:px-5 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-start`}
       >
-        {Object.keys(womenData)?.map((data, index) => {
-          return (
-            <ProductCard
-              index={index}
-              availableQty={womenData[data].availableQty}
-              addToCart={() => {
-                console.log(cart);
-                addToCart(
-                  cart,
-                  womenData[data].slug,
-                  1,
-                  womenData[data].price,
-                  womenData[data].title,
-                  womenData[data].size,
-                  allwomenDataData[data].color,
-                  womenData[data].img,
-                  updateSubTotal
-                );
-              }}
-              addToWishlist={() =>
-                addToWishlist(
-                  wishlistCart,
-                  womenData[data].slug,
-                  1,
-                  womenData[data].price,
-                  womenData[data].title,
-                  womenData[data].size,
-                  womenData[data].color,
-                  womenData[data].img,
-                  wishlistSubTotal
-                )
-              }
-              removeFromWishlist={() =>
-                removeFromWishlist(
-                  wishlistCart,
-                  womenData[data].slug,
-                  1,
-                  wishlistSubTotal
-                )
-              }
-              removeFromCart={() =>
-                removeFromCart(cart, allData[data].slug, 1, updateSubTotal)
-              }
-              key={womenData[data]._id}
-              category={womenData[data].subCategory}
-              ImageURL={womenData[data].img}
-              size={womenData[data].size}
-              color={womenData[data].color}
-              price={womenData[data].price}
-              title={womenData[data].title}
-              slug={womenData[data].slug}
-            />
-          );
-        })}
+        {Object.keys(womenData)
+          // ?.filter((data) => filterProductData(data, filterData))
+          .map((data, index) => {
+            return (
+              <ProductCard
+                index={index}
+                availableQty={womenData[data].availableQty}
+                addToWishlist={() =>
+                  addToWishlist(
+                    wishlistCart,
+                    womenData[data].slug,
+                    1,
+                    womenData[data].price,
+                    womenData[data].title,
+                    womenData[data].size[0],
+                    womenData[data].color[0],
+                    womenData[data].img,
+                    wishlistSubTotal
+                  )
+                }
+                removeFromWishlist={() =>
+                  removeFromWishlist(
+                    wishlistCart,
+                    womenData[data].title,
+                    1,
+                    wishlistSubTotal
+                  )
+                }
+                removeFromCart={() =>
+                  removeFromCart(cart, womenData[data].slug, 1, updateSubTotal)
+                }
+                key={womenData[data]._id}
+                category={womenData[data].subCategory}
+                ImageURL={womenData[data].img}
+                size={womenData[data].size}
+                color={womenData[data].color}
+                price={womenData[data].price}
+                title={womenData[data].title}
+                slug={womenData[data].slug}
+              />
+            );
+          })}
       </TabsContent>
     </Tabs>
   );

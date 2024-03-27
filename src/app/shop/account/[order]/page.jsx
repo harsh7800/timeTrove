@@ -97,13 +97,13 @@ const Page = async ({ params }) => {
         </div>
       </div>
 
-      <div className="p-3 mt-[50px] w-full lg:w-[80%] divide-y-2 space-y-2">
+      <div className="p-3 mt-[30px]  w-full lg:w-[80%] divide-y-2 space-y-2">
         {Object.keys(data.products).map((product) => {
           return (
             <div key={product} className="flex justify-between py-3">
-              <div className="flex gap-3">
+              <div className="flex gap-3 text-sm sm:text-md">
                 <Image
-                  className="border rounded-lg bg-grey"
+                  className="border w-[60px] sm:w-[100px] rounded-lg bg-grey"
                   src={data.products[product].img}
                   width={100}
                   height={100}
@@ -129,7 +129,7 @@ const Page = async ({ params }) => {
                   </div>
                 </div>
               </div>
-              <div className="font-semibold">
+              <div className="font-semibold  text-sm sm:text-md w-[80px] text-end sm:w-fit">
                 <h3>Rs {data.products[product].price}</h3>
                 <h3 className="capitalize opacity-50">
                   Qty: {data.products[product]?.qty}

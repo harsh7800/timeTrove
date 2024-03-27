@@ -26,6 +26,7 @@ import { FaPlus } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa";
 import Image from "next/image";
 import { ProductVariants } from "../helpers/action";
+import { Cagliostro } from "next/font/google";
 
 export default function WishlistSheet() {
   const wishlistCart = wishlist(useShallow((state) => state.wishlistCart));
@@ -35,7 +36,7 @@ export default function WishlistSheet() {
   );
   const updateSubTotal = useCart(useShallow((state) => state.updateSubTotal));
   const subTotal = wishlist(useShallow((state) => state.subTotal));
-  const clearCart = wishlist(useShallow((state) => state.clearCart));
+  const clearCart = wishlist((state) => state.clearCart);
   const router = useRouter();
 
   return (
@@ -62,9 +63,9 @@ export default function WishlistSheet() {
               </h3>
               <div className="space-y-6 max-h-[70dvh] overflow-x-visible overflow-y-scroll bg-white scroll mt-2">
                 {Object.keys(wishlistCart).map((data, index) => {
+                  console.log(wishlistCart);
                   return (
                     <WishListProductCard
-                      // dropDown
                       key={index}
                       slug={data}
                       img={wishlistCart[data].img}
@@ -109,11 +110,14 @@ export default function WishlistSheet() {
                 <DrawerClose asChild>
                   <Button
                     className="w-1/2 bg-black text-white"
-                    onClick={() => {
-                      addToCartFromWishlist(cart, wishlistCart, updateSubTotal);
+                    onClick={async () => {
+                      await addToCartFromWishlist(
+                        cart,
+                        wishlistCart,
+                        updateSubTotal
+                      );
                       clearCart();
                       router.refresh();
-                      console.log(wishlistCart);
                     }}
                   >
                     Move to Cart
@@ -146,12 +150,13 @@ const WishListProductCard = ({
   price,
 }) => {
   const [productData, setProductData] = useState({});
-  const [image, setImage] = useState(img);
+  const [image, setImage] = useState("");
   const [size, setsize] = useState("");
   const [colour, setColour] = useState("");
+  const [title, setTitle] = useState(slug);
   const wishlistCart = wishlist(useShallow((state) => state.wishlistCart));
-  const updateField = wishlist(useShallow((state) => state.updateField));
-
+  const updateItem = wishlist(useShallow((state) => state.updateItem));
+  const router = useRouter();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -159,8 +164,15 @@ const WishListProductCard = ({
         const firstColor = Object.keys(data[productTitle])[0];
         const firstSize = Object.keys(data[productTitle][firstColor])[0];
         setProductData(data);
-        setColour(firstColor);
-        setsize(firstSize);
+        if (wishlistCart[productTitle]) {
+          setsize(wishlistCart[productTitle].size);
+          setColour(wishlistCart[productTitle].color);
+          setImage(wishlistCart[productTitle].img);
+        } else {
+          setsize(firstSize);
+          setColour(firstColor);
+          setImage(data[Object.keys(data)][firstColor][firstSize].img);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -177,15 +189,17 @@ const WishListProductCard = ({
     });
   });
 
-  const updateSizeAndColor = (buttonSize, buttonColor, img) => {
-    updateField({
-      [slug]: {
-        ...wishlistCart[slug], // Keep other fields unchanged
-        size: buttonSize,
-        variant: buttonColor,
-        img: img,
-      },
-    });
+  const updateSizeAndColor = (slug, title, buttonSize, buttonColor, img) => {
+    let newData = {
+      qty,
+      price,
+      name: productTitle,
+      size: buttonSize,
+      color: buttonColor,
+      img: img,
+      slug,
+    };
+    updateItem(title, newData);
   };
 
   return (
@@ -195,18 +209,19 @@ const WishListProductCard = ({
       <Image
         className="w-[60px] sm:w-[90px] rounded-lg border"
         src={image}
-        width={60}
-        height={90}
+        width={70}
+        height={110}
         alt="product"
       />
 
       <div className="space-y-2">
-        <h3 className="font-bold truncate w-full cursor-pointer">
+        <h3 className="font-bold truncate w-[80%] cursor-pointer">
           {productTitle}
         </h3>
         <div className={`font-semibold `}>
           <div className="flex gap-1 items-center">
             {Object.keys(productData).map((title) => {
+              // console.log(productData[title][colour][size]?.slug);
               return Object.keys(productData[title]).map((color) => {
                 return (
                   Object.keys(productData[title][color]).includes(size) && (
@@ -214,8 +229,15 @@ const WishListProductCard = ({
                       key={color}
                       onClick={() => {
                         setColour(color);
+                        setTitle(title);
                         setImage(productData[title][color][size]?.img);
-                        updateSizeAndColor(size, color,image);
+                        updateSizeAndColor(
+                          productData[title][color][size]?.slug,
+                          title,
+                          size,
+                          color,
+                          productData[title][color][size]?.img
+                        );
                       }}
                       style={{ background: color }}
                       className={`border-[3px] ${
@@ -231,22 +253,32 @@ const WishListProductCard = ({
           </div>
 
           <div className="flex gap-1 items-center">
-            {Array.from(uniqueSizes).map((buttonSize) => (
-              <Button
-                key={buttonSize}
-                onClick={() => {
-                  setsize(buttonSize);
-                  updateSizeAndColor(buttonSize, colour,image);
-                }}
-                className={`${
-                  size == buttonSize
-                    ? "bg-purple text-white"
-                    : "bg-grey text-black"
-                } border mt-2 rounded-lg w-7 h-7`}
-              >
-                {buttonSize}
-              </Button>
-            ))}
+            {Array.from(uniqueSizes).map((buttonSize) => {
+              console.log(buttonSize);
+              console.log(wishlistCart[productTitle]);
+              return (
+                <Button
+                  key={buttonSize}
+                  onClick={() => {
+                    setsize(buttonSize);
+                    updateSizeAndColor(
+                      productData[productTitle][colour][buttonSize]?.slug,
+                      title,
+                      buttonSize,
+                      colour,
+                      productData[productTitle][colour][buttonSize]?.img
+                    );
+                  }}
+                  className={`${
+                    size == buttonSize
+                      ? "bg-purple text-white"
+                      : "bg-grey text-black"
+                  } border mt-2 rounded-lg w-7 h-7`}
+                >
+                  {buttonSize}
+                </Button>
+              );
+            })}
           </div>
         </div>
         <p className="font-bold flex items-center gap-2 text-sm sm:text-md">

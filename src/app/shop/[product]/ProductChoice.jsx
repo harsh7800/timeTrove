@@ -20,9 +20,11 @@ const ProductChoice = ({
   const Router = useRouter();
   const updateSubTotal = useCart((state) => state.updateSubTotal);
   const cart = useCart((state) => state.cart);
+  const uniqueItemId = `${slug}-${size}-${color}`;
   const BuyNow = async () => {
     try {
-      if (!cart[slug]) {
+      if (!cart[uniqueItemId] || cart[uniqueItemId].size != size) {
+        console.log(1);
         await addToCart(
           cart,
           slug,
@@ -81,7 +83,7 @@ const ProductChoice = ({
                 size == buttonSize
                   ? "bg-purple text-white"
                   : "bg-grey text-black"
-              } border rounded-lg`}
+              } border rounded-lg hover:bg-[#f2e6ff]  hover:text-purple`}
             >
               {buttonSize}
             </Button>
@@ -90,16 +92,20 @@ const ProductChoice = ({
       </div>
       <div className="flex gap-3">
         <Button
+          disabled={cart[uniqueItemId] && cart[uniqueItemId].size == size}
           onClick={async () => {
             await BuyNow();
             Router.refresh();
           }}
           className={`bg-black rounded-3xl text-white w-1/2 sm:w-2/5 ${
-            cart[slug] &&
-            "bg-[#f2e6ff] border text-purple hover:bg-[#f2e6ff] hover:text-purple"
+            cart[uniqueItemId] && cart[uniqueItemId].size === size
+              ? "bg-[#f2e6ff] border text-purple hover:bg-[#f2e6ff] hover:text-purple"
+              : ""
           }`}
         >
-          {cart[slug] ? "Added To Cart" : "Add To Cart"}
+          {cart[uniqueItemId] && cart[uniqueItemId].size == size
+            ? "Added To Cart"
+            : "Add To Cart"}
         </Button>
         <Button
           onClick={async () => {

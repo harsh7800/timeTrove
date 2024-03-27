@@ -7,14 +7,10 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(request, { params }) {
   let { order_id } = await request.json();
-  console.log(order_id);
   await connectDb();
 
   try {
-    await Order.findOneAndUpdate(
-      { orderId: order_id, status: "created" },
-      { status: "Pending", paymentInfo: {} }
-    );
+    await Order.findOneAndDelete({ orderId: order_id, status: "created" });
     return NextResponse.json(
       {
         message: "Payment Cancelled",

@@ -29,7 +29,6 @@ export default function CartSheet() {
   const clearCart = useCart(useShallow((state) => state.clearCart));
   const Router = useRouter();
   const path = usePathname();
-  console.log(cart);
   return (
     <Sheet>
       <SheetTrigger>
@@ -56,30 +55,31 @@ export default function CartSheet() {
                 {Object.keys(cart).map((data, index) => {
                   return (
                     <QuickBuyProductCard
-                      variant={cart[data].size}
-                      colour={cart[data].variant}
                       key={index}
-                      img={cart[data].img}
-                      productTitle={cart[data].name}
-                      price={cart[data].price}
-                      qty={cart[data].qty}
+                      clr={cart[data]?.color}
+                      siz={cart[data]?.size}
+                      img={cart[data]?.img}
+                      productTitle={cart[data]?.name}
+                      price={cart[data]?.price}
+                      qty={cart[data]?.qty}
                       totalAmount={subTotal}
                       addToCart={() =>
                         addToCart(
                           cart,
                           data,
                           1,
-                          cart[data].price,
-                          cart[data].title,
-                          cart[data].size,
-                          cart[data].color,
-                          cart[data].img,
+                          cart[data]?.price,
+                          cart[data]?.title,
+                          cart[data]?.size,
+                          cart[data]?.color,
+                          cart[data]?.img,
                           updateSubTotal
                         )
                       }
-                      removeFromCart={() =>
-                        removeFromCart(cart, data, 1, updateSubTotal)
-                      }
+                      removeFromCart={() => {
+                        removeFromCart(cart, data, 1, updateSubTotal);
+                        Router.refresh();
+                      }}
                     />
                   );
                 })}

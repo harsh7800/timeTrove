@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,13 +20,15 @@ import { updateAccountCred } from "@/app/helpers/updateAccountCred";
 import { Loader2 } from "lucide-react";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
+import { useRouter } from "next-nprogress-bar";
+import { changeUsernameAndEmail, updatePassword } from "@/app/helpers/action";
 
 export default function Page() {
   const state = useStore((state) => state.user);
+  console.log(state);
   const updateField = useStore((state) => state.updateField);
-
   const { toast } = useToast();
-
+  const router = useRouter();
   const userDetailsformSchema = z.object({
     username: z.string().min(2, {
       message: "Username must be at least 2 characters.",
@@ -156,20 +157,21 @@ export default function Page() {
                 duration: 10000, // Adjust the duration as needed
                 className: "bg-white",
               });
-              let data = await updateAccountCred(
-                true,
-                false,
-                userDetailsForm.getValues(),
-                state
+              let data = await changeUsernameAndEmail(
+                userDetailsForm.getValues().username,
+                state.email,
+                userDetailsForm.getValues().email,
+                state.token
               );
-              updateField({ email: data.email, username: data.username });
+              updateField({ email: data.newEmail, username: data.username });
               toast({
                 title: (
                   <div className="flex items-center gap-2">
-                    <FaCircleCheck size={15} color="#2eb82e" /> {data.message}
+                    <FaCircleCheck size={15} color="#2eb82e" /> Account Details
+                    Updated
                   </div>
                 ),
-                duration: "3000",
+                duration: "1000",
                 className: "bg-white",
                 variant: "success",
               });
@@ -264,13 +266,11 @@ export default function Page() {
                 duration: 10000, // Adjust the duration as needed
                 className: "bg-white",
               });
-              let data = await updateAccountCred(
-                false,
-                true,
-                passwordForm.getValues(),
-                state
+              let data = await updatePassword(
+                passwordForm.getValues().password,
+                passwordForm.getValues().newPassword,
+                state.email
               );
-              console.log(data.success);
               toast({
                 title: (
                   <div className="flex items-center gap-2">
@@ -286,7 +286,7 @@ export default function Page() {
                 className: "bg-white",
                 variant: "success",
                 onSwipeEnd: () => {
-                  router.push("/shop");
+                  router.refresh();
                 },
               });
               data.success && passwordForm.reset();
