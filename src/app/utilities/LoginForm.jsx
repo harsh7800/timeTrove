@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import ForgotPass from "../utilities/forgotPass";
 import { useRouter } from "next-nprogress-bar";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useStore } from "../store/zustandStore";
@@ -151,111 +151,118 @@ export default function LoginForm({ setToggle }) {
     // ✅ This will be type-safe and validated.
   }
   return (
-    <div className=" bg-white rounded-lg lg:rounded-none lg:bg-transparent relative lg:shadow-none w-full h-full max-h-[550px] flex flex-col justify-center items-center gap-4">
-      <div className="w-full text-center">
-        <h1 className="text-2xl lg:text-4xl font-noto_serif_display font-medium noto">
-          Welcome Back
-        </h1>
-        <p className="capitalize font-semibold text-xs lg:text-sm mt-3 opacity-80">
-          enter your email and password to access to account
+    <Suspense
+      fallback={
+        <p>
+          <Loader2 className="animate-spina" size={20} />
         </p>
-      </div>
+      }
+    >
+      <div className=" bg-white rounded-lg lg:rounded-none lg:bg-transparent relative lg:shadow-none w-full h-full max-h-[550px] flex flex-col justify-center items-center gap-4">
+        <div className="w-full text-center">
+          <h1 className="text-2xl lg:text-4xl font-noto_serif_display font-medium noto">
+            Welcome Back
+          </h1>
+          <p className="capitalize font-semibold text-xs lg:text-sm mt-3 opacity-80">
+            enter your email and password to access to account
+          </p>
+        </div>
 
-      <div className="w-[80svw] sm:w-2/3 min-w-[150px]">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="email">Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      id="email"
-                      className="placeholder:font-medium opacity-80 placeholder-shown:font-medium"
-                      placeholder="Enter Your Email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem className="relative">
-                  <FormLabel htmlFor="password">Password</FormLabel>
-                  <FormControl>
-                    <div className="w-full relative flex items-center justify-around">
+        <div className="w-[80svw] sm:w-2/3 min-w-[150px]">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="email">Email</FormLabel>
+                    <FormControl>
                       <Input
-                        name="password"
-                        id="password"
-                        type={togglePassword ? "text" : "password"}
-                        className="placeholder:font-medium opacity-80"
-                        placeholder="Enter Your Password"
+                        id="email"
+                        className="placeholder:font-medium opacity-80 placeholder-shown:font-medium"
+                        placeholder="Enter Your Email"
                         {...field}
                       />
-                      <div
-                        className="text-voilet absolute right-2 cursor-pointer"
-                        onClick={() => setTogglePassword(!togglePassword)}
-                      >
-                        {togglePassword ? (
-                          <FaEye color="#d633ff" />
-                        ) : (
-                          <FaEyeSlash color="grey" />
-                        )}
-                      </div>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <FormField
-                  control={form.control}
-                  name="remember_me"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="relative">
+                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <FormControl>
+                      <div className="w-full relative flex items-center justify-around">
                         <Input
-                          id="remember_me"
-                          type="checkbox"
-                          className="placeholder:font-medium w-[17px] opacity-80 cursor-pointer"
+                          name="password"
+                          id="password"
+                          type={togglePassword ? "text" : "password"}
+                          className="placeholder:font-medium opacity-80"
                           placeholder="Enter Your Password"
                           {...field}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormLabel htmlFor="remember_me" className="cursor-pointer">
-                  Remember me
-                </FormLabel>
+                        <div
+                          className="text-voilet absolute right-2 cursor-pointer"
+                          onClick={() => setTogglePassword(!togglePassword)}
+                        >
+                          {togglePassword ? (
+                            <FaEye color="#d633ff" />
+                          ) : (
+                            <FaEyeSlash color="grey" />
+                          )}
+                        </div>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <FormField
+                    control={form.control}
+                    name="remember_me"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            id="remember_me"
+                            type="checkbox"
+                            className="placeholder:font-medium w-[17px] opacity-80 cursor-pointer"
+                            placeholder="Enter Your Password"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormLabel htmlFor="remember_me" className="cursor-pointer">
+                    Remember me
+                  </FormLabel>
+                </div>
+                <ForgotPass email={email} />
               </div>
-              <ForgotPass email={email} />
-            </div>
-          </form>
-        </Form>
-      </div>
-      <div className="w-full flex flex-col justify-center items-center font-poppins gap-2 font-medium">
-        <button
-          disabled={!form.formState.isValid}
-          className={`w-[80svw] sm:w-2/3 min-w-[150px] py-2 rounded-lg bg-black ${
-            !form.formState.isValid ? "opacity-50" : "opacity-100"
-          } text-white hover:opacity-70 transition-all`}
-          onClick={onSubmit}
-          // onClick={() => console.log(process)}
-          type="submit"
-        >
-          Sign In
-        </button>
-        {/* <button
+            </form>
+          </Form>
+        </div>
+        <div className="w-full flex flex-col justify-center items-center font-poppins gap-2 font-medium">
+          <button
+            disabled={!form.formState.isValid}
+            className={`w-[80svw] sm:w-2/3 min-w-[150px] py-2 rounded-lg bg-black ${
+              !form.formState.isValid ? "opacity-50" : "opacity-100"
+            } text-white hover:opacity-70 transition-all`}
+            onClick={onSubmit}
+            // onClick={() => console.log(process)}
+            type="submit"
+          >
+            Sign In
+          </button>
+          {/* <button
           className="border w-[80svw] sm:w-2/3 min-w-[150px] py-1.5 rounded-lg bg-white capitalize flex justify-center items-center gap-2 hover:bg-grey transition-all font-bold"
           onClick={async (e) => {
             let res = await signIn("google", {
@@ -265,16 +272,17 @@ export default function LoginForm({ setToggle }) {
         >
           <FcGoogle size={30} /> Sign In With google
         </button> */}
+        </div>
+        <p className="font-semibold text-sm mt-5">
+          Don&apos;t Have a Account?{" "}
+          <span
+            className="text-purple cursor-pointer hover:underline"
+            onClick={() => setToggle(true)}
+          >
+            Sign Up
+          </span>
+        </p>
       </div>
-      <p className="font-semibold text-sm mt-5">
-        Don&apos;t Have a Account?{" "}
-        <span
-          className="text-purple cursor-pointer hover:underline"
-          onClick={() => setToggle(true)}
-        >
-          Sign Up
-        </span>
-      </p>
-    </div>
+    </Suspense>
   );
 }
