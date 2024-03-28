@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { GenderCategoryTabs } from "../../utilities/GenderCategoryTabs";
 import Product from "@/app/models/Product";
 import connectDb from "@/lib/mongoose";
@@ -9,14 +9,14 @@ export default async function Page() {
   const womenData = await fetchData("winterwear", "women");
 
   return (
-    <>
+    <Suspense>
       <GenderCategoryTabs
         section="Winterwears"
         allData={allData}
         menData={menData}
         womenData={womenData}
       />
-    </>
+    </Suspense>
   );
 }
 
