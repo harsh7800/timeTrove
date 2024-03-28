@@ -237,7 +237,7 @@ export async function Checkout(
     const data = await response.json();
     if (data.success) {
       var options = {
-        key: process.env.NEXT_RAZORPAY_KEY,
+        key: process.env.RAZORPAY_KEY,
         // Enter the Key ID generated from the Dashboard
         name: "TimeTrove Pvt Ltd",
         currency: data.currency,

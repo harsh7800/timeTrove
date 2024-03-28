@@ -23,8 +23,8 @@ export async function PATCH(req, { params }) {
     if (isSignatureValid) {
       console.log(response);
       var instance = new RazorPay({
-        key_id: process.env.NEXT_RAZORPAY_KEY,
-        key_secret: process.env.NEXT_RAZORPAY_SECRECT_KEY,
+        key_id: process.env.RAZORPAY_KEY,
+        key_secret: process.env.RAZORPAY_SECRECT_KEY,
       });
       console.log(instance);
       // let authorised = await instance.payments.edit(
