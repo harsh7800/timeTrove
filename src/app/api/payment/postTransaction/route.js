@@ -15,7 +15,7 @@ export async function PATCH(req, { params }) {
     await connectDb();
 
     let generatedSignature = crypto
-      .createHmac("SHA256", process.env.NEXT_PUBLIC_RAZORPAY_SECRECT_KEY)
+      .createHmac("SHA256", process.env.NEXT_RAZORPAY_SECRECT_KEY)
       .update(response.razorpay_order_id + "|" + response.razorpay_payment_id)
       .digest("hex");
     let isSignatureValid = generatedSignature == response.razorpay_signature;
@@ -23,8 +23,8 @@ export async function PATCH(req, { params }) {
     if (isSignatureValid) {
       console.log(response);
       var instance = new RazorPay({
-        key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
-        key_secret: process.env.NEXT_PUBLIC_RAZORPAY_SECRECT_KEY,
+        key_id: process.env.NEXT_RAZORPAY_KEY,
+        key_secret: process.env.NEXT_RAZORPAY_SECRECT_KEY,
       });
       console.log(instance);
       // let authorised = await instance.payments.edit(

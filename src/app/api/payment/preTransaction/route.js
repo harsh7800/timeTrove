@@ -52,8 +52,8 @@ export async function POST(request, { params }) {
 
   // Initialize razorpay object
   const razorpay = new RazorPay({
-    key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
-    key_secret: process.env.NEXT_PUBLIC_RAZORPAY_SECRECT_KEY,
+    key_id: process.env.NEXT_RAZORPAY_KEY,
+    key_secret: process.env.NEXT_RAZORPAY_SECRECT_KEY,
   });
 
   // Create an order -> generate the OrderID -> Send it to the Front-end
