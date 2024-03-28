@@ -9,14 +9,12 @@ export default async function Page() {
   const womenData = await fetchData("winterwear", "women");
 
   return (
-    <Suspense>
       <GenderCategoryTabs
         section="Winterwears"
         allData={allData}
         menData={menData}
         womenData={womenData}
       />
-    </Suspense>
   );
 }
 
