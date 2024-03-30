@@ -24,7 +24,6 @@ async function fetchData(productFor = "") {
   await connectDb();
   const query = productFor ? { productFor } : {};
   const products = await Product.find(query).lean();
-  console.log(productFor);
   // Sort products array by creation date in descending order
   products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
