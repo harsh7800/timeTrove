@@ -14,6 +14,7 @@ import { useStore } from "../../store/zustandStore";
 import Image from "next/image";
 import { useShallow } from "zustand/react/shallow";
 import { fetchUserOrders } from "@/app/helpers/action";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const AsideNav = ({ mobile }) => {
   const router = useRouter();
@@ -126,21 +127,27 @@ export const AsideNav = ({ mobile }) => {
             Total orders{" "}
             <span className="font-bold pop">{data?.totalOrders || 0}</span>
           </h4>
-          {data.items?.map((order, i) => {
-            console.log(order);
-            return (
-              // <Suspense
-              //   key={i}
-              //   fallback={<Loader2 size={20} className="animate-spin" />}
-              // >
+          {!data?.items || data.items.length === 0 ? (
+            <>
+              <div className="w-full flex gap-2 justify-start items-center">
+                <Skeleton className="w-[60px] h-[70px] bg-grey.200"></Skeleton>
+                <Skeleton className="w-[70%] h-[20px] bg-grey.200"></Skeleton>
+              </div>
+              <div className="w-full flex gap-2 justify-start items-center">
+                <Skeleton className="w-[60px] h-[70px] bg-grey.200"></Skeleton>
+                <Skeleton className="w-[70%] h-[20px] bg-grey.200"></Skeleton>
+              </div>
+            </>
+          ) : (
+            data.items.map((order, i) => (
               <HoverCardOrder key={i} order={order} />
-              // </Suspense>
-            );
-          })}
+            ))
+          )}
+
           {data?.totalOrders == 0 && (
             <p className="font-semibold text-[14px]">No Order Recorded</p>
           )}
-          {data?.totalOrders > 2 && (
+          {data?.totalOrders >= 2 && (
             <p
               className="text-sm font-semibold cursor-pointer"
               onClick={() => router.push("/shop/account/orders")}

@@ -16,7 +16,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Loader2, X } from "lucide-react";
 import { useRouter } from "next-nprogress-bar";
 import Image from "next/image";
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import { useShallow } from "zustand/react/shallow";
 const Page = () => {
@@ -28,8 +28,9 @@ const Page = () => {
   const email = useStore(useShallow((state) => state.user.email));
   const router = useRouter();
   const { toast } = useToast();
+
   return (
-    <div className="w-full  px-5">
+    <div className="w-full px-5">
       <div>
         <h1 className="font-bold text-2xl"> Checkout</h1>
         <p className="text-[#b3b3b3] text-md font-semibold">

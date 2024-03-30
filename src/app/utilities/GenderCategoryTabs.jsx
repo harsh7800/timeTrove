@@ -402,7 +402,7 @@ const PopOverFilter = () => {
                 </RadioGroup>
               )}
 
-              {!pathname.includes("winterwear") && (
+              {/* {!pathname.includes("winterwear") && (
                 <RadioGroup
                   id="color"
                   defaultValue={filterData.color}
@@ -435,7 +435,7 @@ const PopOverFilter = () => {
                       </div>
                     ))}
                 </RadioGroup>
-              )}
+              )} */}
             </>
           )}
           {(pathname == "/shop" || pathname == "/shop/new-arrivals") && (

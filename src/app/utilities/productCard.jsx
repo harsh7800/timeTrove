@@ -140,7 +140,7 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   return (
-    <Drawer className="bg-white overflow-scroll">
+    <Drawer className="bg-white scroll">
       <DrawerTrigger asChild className="hidden sm:block">
         <Button
           className="w-1/2 bg-black text-white hover:bg-white hover:text-black hover:border"
@@ -167,7 +167,7 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
           Buy
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="bg-white min-h-[500px]">
+      <DrawerContent className="bg-white h-[95dvh] scroll sm:h-fit overflow-visible">
         <DrawerHeader className="text-left pl-[15px] sm:pl-[50px]">
           <DrawerTitle className="font-bold text-2xl">
             Quick Buy Cart
@@ -176,9 +176,9 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
             This is a quick buy option where you can buy the product in a snap
           </DrawerDescription>
         </DrawerHeader>
-        <div className="flex justify-center items-start gap-5 ">
+        <div className="flex justify-center items-start gap-5 h-fit scroll overflow-scroll">
           {cart[slug]?.qty != 0 && cart[slug]?.qty != 0 ? (
-            <div className="w-[90%] sm:w-[500px] my-5 shadow-md  p-4 rounded-lg space-y-6">
+            <div className="w-[90%] sm:w-[500px] my-5 shadow-md  p-4 rounded-lg space-y-2 sm:space-y-6">
               <h3 className="font-bold w-full text-start">Your Order</h3>
               {Object.keys(cart).map((product, i) => {
                 return (
@@ -236,7 +236,7 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
                   </div>
                 </div>
               )}
-              <div className="block lg:hidden border-1 shadow-lg rounded-lg px-7 py-3 w-[full] space-y-4">
+              <div className="block lg:hidden border-1 sm:shadow-lg rounded-lg px-7 py-3 w-[full] space-y-4">
                 <h3 className="font-bold">Shipping Address</h3>
                 <RadioGroup
                   defaultValue={deliveryAddress}
