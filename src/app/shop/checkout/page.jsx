@@ -153,10 +153,8 @@ const Cart = () => {
                 {" "}
                 <span className="flex items-center gap-1 sm:gap-3 text-purple font-bold select-none">
                   <FaMinus
+                    disabled={cart[data].qty == 1}
                     onClick={() => {
-                      if (cart[data].qty <= 1) {
-                        router.refresh();
-                      }
                       if (cart[data].qty > 1) {
                         removeFromCart(cart, data, 1, updateSubTotal);
                       }

@@ -17,10 +17,10 @@ export const DropDownMenu = () => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar className="border-none bg-[#f2f2f2] hover:bg-grey.200 border-2 text-black font-bold cursor-pointer select-none transition-colors">
-          <AvatarImage
+          {/* <AvatarImage
             src="https://lh3.googleusercontent.com/a/ACg8ocIwXKjuDN7gFtM-0wIETQDRJz42gOyp3B350wCepEW7yw=s96-c"
             alt="@shadcn"
-          />
+          /> */}
           <AvatarFallback>
             <User />
           </AvatarFallback>

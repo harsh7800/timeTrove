@@ -23,8 +23,13 @@ import { Suspense, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useStore } from "../store/zustandStore";
+import { NextURL } from "next/dist/server/web/next-url";
+import { useSearchParams } from "next/navigation";
 export default function LoginForm({ setToggle }) {
   // const session = getServerSession();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
+
   const [togglePassword, setTogglePassword] = useState(false);
   const login = useStore((state) => state.login);
   const router = useRouter();
@@ -106,11 +111,19 @@ export default function LoginForm({ setToggle }) {
           className: "bg-white",
           variant: "success",
           onSwipeEnd: () => {
-            router.push("/shop");
+            if (redirect == "checkout") {
+              router.push("/shop/checkout");
+            } else {
+              router.push("/shop");
+            }
           },
         });
         setTimeout(() => {
-          router.push("/shop");
+          if (redirect == "checkout") {
+            router.push("/shop/checkout");
+          } else {
+            router.push("/shop");
+          }
         }, 1500);
         // router.push("/");
         // let verifiedData = await verifyJWT(
@@ -260,7 +273,7 @@ export default function LoginForm({ setToggle }) {
             // onClick={() => console.log(process)}
             type="submit"
           >
-            Sign In
+            Login
           </button>
           {/* <button
           className="border w-[80svw] sm:w-2/3 min-w-[150px] py-1.5 rounded-lg bg-white capitalize flex justify-center items-center gap-2 hover:bg-grey transition-all font-bold"

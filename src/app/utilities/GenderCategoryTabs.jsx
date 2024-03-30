@@ -19,13 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import ProductCard from "./productCard";
 import { filter, useCart, wishlist } from "../store/zustandStore";
 import {
-  QuickBuy,
-  addToCart,
   addToWishlist,
   removeFromCart,
   removeFromWishlist,
@@ -34,6 +32,11 @@ import { usePathname } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { useRouter } from "next-nprogress-bar";
+import {
+  FetchAllCategory,
+  FetchAllColors,
+  FetchAllSubCategory,
+} from "../helpers/action";
 export const GenderCategoryTabs = ({
   section,
   allData,
@@ -54,27 +57,26 @@ export const GenderCategoryTabs = ({
   const filterData = filter(useShallow((state) => state.filterData));
 
   const filterProductData = (data, filterData) => {
-    const { budget, size, color, brand, category, subCategory } = filterData;
+    const { budget, size, color, category, subCategory } = filterData;
 
     const isPriceInRange = data.price >= budget[0] && data.price <= budget[1];
-    const isSizeMatch = size === "" || data.size === size;
-    const isColorMatch = color === "" || data.color === color;
-    const isBrandMatch = brand === "" || data.brand === brand;
+    const isSizeMatch = size === "" || data.size.includes(size);
+
+    const isColorMatch = color === "" || data.color.includes(color);
     const isCategoryMatch = category === "" || data.category === category;
     const isSubCategoryMatch =
       subCategory === "" || data.subCategory === subCategory;
 
     return (
       isPriceInRange &&
-      isSizeMatch &&
-      isColorMatch &&
-      isBrandMatch &&
+      isSubCategoryMatch &&
       isCategoryMatch &&
-      isSubCategoryMatch
+      isSizeMatch &&
+      isColorMatch
     );
   };
   return (
-    <Tabs defaultValue="all" className="w-full  scroll">
+    <Tabs defaultValue="all" className="w-full scroll">
       <TabsList className="flex w-full gap-2 justify-between border-b-2 h-[20%] max-h-20 rounded-none px-5">
         <h1 className="font-semibold text-md lg:text-3xl">{section}</h1>
 
@@ -125,7 +127,9 @@ export const GenderCategoryTabs = ({
         }  overflow-scroll scroll w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-start`}
       >
         {Object.keys(allData)
-          // ?.filter((data) => filterProductData(data, filterData))
+          ?.filter((data) => {
+            return filterProductData(allData[data], filterData);
+          })
           .map((data, index) => {
             return (
               <ProductCard
@@ -167,6 +171,7 @@ export const GenderCategoryTabs = ({
             );
           })}
       </TabsContent>
+
       <TabsContent
         value="men"
         className={`${
@@ -174,48 +179,51 @@ export const GenderCategoryTabs = ({
         }  overflow-scroll scroll w-full px-1 sm:px-5 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-start`}
       >
         {Object.keys(menData)
-          // ?.filter((data) => filterProductData(data, filterData))
+          ?.filter((data) => {
+            return filterProductData(allData[data], filterData);
+          })
           .map((data, index) => {
             return (
               <ProductCard
                 index={index}
-                availableQty={menData[data].availableQty}
+                availableQty={allData[data].availableQty}
                 addToWishlist={() =>
                   addToWishlist(
                     wishlistCart,
-                    menData[data].slug,
+                    allData[data].slug,
                     1,
-                    menData[data].price,
-                    menData[data].title,
-                    menData[data].size[0],
-                    menData[data].color[0],
-                    menData[data].img,
+                    allData[data].price,
+                    allData[data].title,
+                    allData[data].size[0],
+                    allData[data].color[0],
+                    allData[data].img,
                     wishlistSubTotal
                   )
                 }
                 removeFromWishlist={() =>
                   removeFromWishlist(
                     wishlistCart,
-                    menData[data].title,
+                    allData[data].title,
                     1,
                     wishlistSubTotal
                   )
                 }
                 removeFromCart={() =>
-                  removeFromCart(cart, menData[data].slug, 1, updateSubTotal)
+                  removeFromCart(cart, allData[data].slug, 1, updateSubTotal)
                 }
-                key={menData[data]._id}
-                category={menData[data].subCategory}
-                ImageURL={menData[data].img}
-                size={menData[data].size}
-                color={menData[data].color}
-                price={menData[data].price}
-                title={menData[data].title}
-                slug={menData[data].slug}
+                key={allData[data]._id}
+                category={allData[data].subCategory}
+                ImageURL={allData[data].img}
+                size={allData[data].size}
+                color={allData[data].color}
+                price={allData[data].price}
+                title={allData[data].title}
+                slug={allData[data].slug}
               />
             );
           })}
       </TabsContent>
+
       <TabsContent
         value="women"
         className={`${
@@ -223,44 +231,46 @@ export const GenderCategoryTabs = ({
         }  overflow-scroll scroll w-full px-1 sm:px-5 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-start`}
       >
         {Object.keys(womenData)
-          // ?.filter((data) => filterProductData(data, filterData))
+          ?.filter((data) => {
+            return filterProductData(allData[data], filterData);
+          })
           .map((data, index) => {
             return (
               <ProductCard
                 index={index}
-                availableQty={womenData[data].availableQty}
+                availableQty={allData[data].availableQty}
                 addToWishlist={() =>
                   addToWishlist(
                     wishlistCart,
-                    womenData[data].slug,
+                    allData[data].slug,
                     1,
-                    womenData[data].price,
-                    womenData[data].title,
-                    womenData[data].size[0],
-                    womenData[data].color[0],
-                    womenData[data].img,
+                    allData[data].price,
+                    allData[data].title,
+                    allData[data].size[0],
+                    allData[data].color[0],
+                    allData[data].img,
                     wishlistSubTotal
                   )
                 }
                 removeFromWishlist={() =>
                   removeFromWishlist(
                     wishlistCart,
-                    womenData[data].title,
+                    allData[data].title,
                     1,
                     wishlistSubTotal
                   )
                 }
                 removeFromCart={() =>
-                  removeFromCart(cart, womenData[data].slug, 1, updateSubTotal)
+                  removeFromCart(cart, allData[data].slug, 1, updateSubTotal)
                 }
-                key={womenData[data]._id}
-                category={womenData[data].subCategory}
-                ImageURL={womenData[data].img}
-                size={womenData[data].size}
-                color={womenData[data].color}
-                price={womenData[data].price}
-                title={womenData[data].title}
-                slug={womenData[data].slug}
+                key={allData[data]._id}
+                category={allData[data].subCategory}
+                ImageURL={allData[data].img}
+                size={allData[data].size}
+                color={allData[data].color}
+                price={allData[data].price}
+                title={allData[data].title}
+                slug={allData[data].slug}
               />
             );
           })}
@@ -274,19 +284,26 @@ const PopOverFilter = () => {
   const updateField = filter(useShallow((state) => state.updateField));
   const filterData = filter(useShallow((state) => state.filterData));
   const resetFilter = filter(useShallow((state) => state.resetFilter));
+  const [colors, setColors] = useState({});
+  const [category, setCategory] = useState([]);
+  const [subCategory, setSubCategory] = useState([]);
+
   const router = useRouter();
 
-  let category = [
-    "popular-products",
-    "winterwears",
-    "footwears",
-    "anime",
-    "new-arrivals",
-  ];
-  let subCategory = ["Hoodies", "Tshirts", "Sneaker", "Sandal"];
-  const handleRedirect = (path) => {
-    router.push(`/shop/${path}`);
+  const useFetchData = (fetchFunction, setterFunction) => {
+    useEffect(() => {
+      const fetchData = async () => {
+        const data = await fetchFunction();
+        setterFunction(data);
+      };
+      fetchData();
+    }, []);
   };
+
+  useFetchData(FetchAllColors, setColors);
+  useFetchData(FetchAllCategory, setCategory);
+  useFetchData(FetchAllSubCategory, setSubCategory);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -316,62 +333,119 @@ const PopOverFilter = () => {
             step={100}
           />
 
-          {pathname != "/shop" && (
-            <RadioGroup
-              id="size"
-              defaultValue={filterData.size}
-              onValueChange={(e) => {
-                updateField("size", e);
-              }}
-              className="flex gap-2 flex-wrap items-center pt-8 relative"
-            >
-              <Label htmlFor="size" className="absolute top-2">
-                Size
-              </Label>
-              <div className="flex items-center space-x-2 bg-grey px-2 py-2 rounded-lg cursor-pointer">
-                <RadioGroupItem value="XS" id="1" className="bg-white" />
-                <Label htmlFor="1">XS</Label>
-              </div>
-              <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
-                <RadioGroupItem value="S" id="2" className="bg-white" />
-                <Label htmlFor="2">S</Label>
-              </div>
-              <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
-                <RadioGroupItem value="M" id="3" className="bg-white" />
-                <Label htmlFor="3">M</Label>
-              </div>
-              <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
-                <RadioGroupItem value="L" id="4" className="bg-white" />
-                <Label htmlFor="4">L</Label>
-              </div>
-              <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
-                <RadioGroupItem value="XL" id="5" className="bg-white" />
-                <Label htmlFor="5">Xl</Label>
-              </div>
-            </RadioGroup>
+          {pathname != "/shop" && pathname != "/shop/new-arrival" && (
+            <>
+              {!pathname.includes("footwears") && (
+                <RadioGroup
+                  id="size"
+                  defaultValue={filterData.size}
+                  onValueChange={(e) => {
+                    updateField("size", e);
+                  }}
+                  className="flex gap-2 flex-wrap items-center pt-8 relative"
+                >
+                  <Label htmlFor="size" className="absolute top-2">
+                    Size
+                  </Label>
+
+                  <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                    <RadioGroupItem value="S" id="2" className="bg-white" />
+                    <Label htmlFor="2">S</Label>
+                  </div>
+                  <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                    <RadioGroupItem value="M" id="3" className="bg-white" />
+                    <Label htmlFor="3">M</Label>
+                  </div>
+                  <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                    <RadioGroupItem value="L" id="4" className="bg-white" />
+                    <Label htmlFor="4">L</Label>
+                  </div>
+                  <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                    <RadioGroupItem value="XL" id="5" className="bg-white" />
+                    <Label htmlFor="5">Xl</Label>
+                  </div>
+                </RadioGroup>
+              )}
+
+              {pathname.includes("footwears") && (
+                <RadioGroup
+                  id="size"
+                  defaultValue={filterData.size}
+                  onValueChange={(e) => {
+                    updateField("size", e);
+                  }}
+                  className="flex gap-2 flex-wrap items-center pt-8 relative"
+                >
+                  <Label htmlFor="size" className="absolute top-2">
+                    Size
+                  </Label>
+                  <div className="flex items-center space-x-2 bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                    <RadioGroupItem value="6" id="1" className="bg-white" />
+                    <Label htmlFor="1">6</Label>
+                  </div>
+                  <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                    <RadioGroupItem value="7" id="2" className="bg-white" />
+                    <Label htmlFor="2">7</Label>
+                  </div>
+                  <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                    <RadioGroupItem value="8" id="3" className="bg-white" />
+                    <Label htmlFor="3">8</Label>
+                  </div>
+                  <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                    <RadioGroupItem value="9" id="4" className="bg-white" />
+                    <Label htmlFor="4">9</Label>
+                  </div>
+                  <div className="flex items-center space-x-2  bg-grey px-2 py-2 rounded-lg cursor-pointer">
+                    <RadioGroupItem value="10" id="5" className="bg-white" />
+                    <Label htmlFor="5">10</Label>
+                  </div>
+                </RadioGroup>
+              )}
+
+              {!pathname.includes("winterwear") && (
+                <RadioGroup
+                  id="color"
+                  defaultValue={filterData.color}
+                  onValueChange={(e) => {
+                    updateField("color", e);
+                  }}
+                  className="flex gap-2 flex-wrap items-center pt-8 relative"
+                >
+                  <Label htmlFor="color" className="absolute top-2">
+                    Color
+                  </Label>
+                  {colors.length !== 0 &&
+                    Array.isArray(colors) &&
+                    colors.map((color, i) => (
+                      <div
+                        key={`${color}-${i}`}
+                        className="flex items-center space-x-2 bg-grey px-2 py-2 rounded-lg cursor-pointer"
+                      >
+                        <RadioGroupItem
+                          value={color}
+                          id={color}
+                          className="bg-white"
+                        ></RadioGroupItem>
+                        <Label htmlFor={color}>
+                          <div
+                            className="w-5 h-5 rounded-full border-2"
+                            style={{ background: color }}
+                          ></div>
+                        </Label>
+                      </div>
+                    ))}
+                </RadioGroup>
+              )}
+            </>
           )}
-          {pathname != "/shop" && (
-            <DropDown
-              name="Color"
-              value="s"
-              updateField={(e) => updateField("color", e)}
-            />
-          )}
-          <DropDown
-            name="Brand"
-            value="s"
-            updateField={(e) => updateField("brand", e)}
-          />
-          {/* {(pathname == "/shop" ||
-            pathname == "/shop/popular-products" ||
-            pathname == "/shop/new-arrivals") && (
+          {(pathname == "/shop" || pathname == "/shop/new-arrivals") && (
             <DropDown
               name="Category"
               value="Winterwear"
               data={category}
               updateField={(e) => updateField("category", e)}
             />
-          )} */}
+          )}
 
           <DropDown
             name="Subcategory"

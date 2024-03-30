@@ -68,9 +68,7 @@ export const removeFromCart = (
     newCart[itemCode].qty = newCart[itemCode].qty - qty;
 
     if (newCart[itemCode].qty <= 0) {
-      console.log("Before deletion:", newCart);
       delete newCart[itemCode];
-      console.log("After deletion:", newCart);
     }
   }
 
@@ -124,8 +122,7 @@ export async function addToWishlist(
 ) {
   let newCart = IniCart;
   if (itemCode in IniCart) {
-    console.log(itemCode);
-    newCart[name].qty = IniCart[itemCode].qty + qty;
+    newCart[itemCode].qty = IniCart[itemCode].qty + qty;
   } else {
     newCart[name] = {
       qty: 1,
@@ -149,7 +146,8 @@ export const removeFromWishlist = (
   IniCart,
   itemCode,
   qty,
-  wishlistSubTotal
+  wishlistSubTotal,
+  router
 ) => {
   let newCart = IniCart; // Create a shallow copy of the original cart
 
@@ -166,6 +164,7 @@ export const removeFromWishlist = (
     subt += newCart[key[i]].price * newCart[key[i]].qty;
   }
   wishlistSubTotal(subt);
+  router?.refresh();
 };
 
 export async function addToCartFromWishlist(
@@ -237,7 +236,7 @@ export async function Checkout(
     const data = await response.json();
     if (data.success) {
       var options = {
-        key: process.env.RAZORPAY_KEY,
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
         // Enter the Key ID generated from the Dashboard
         name: "TimeTrove Pvt Ltd",
         currency: data.currency,
@@ -316,16 +315,28 @@ export async function Checkout(
       paymentObject.open();
     } else {
       setloading(false);
-      toast({
-        title: (
-          <div className="flex items-center gap-3 text-black text-md">
-            <X className="text-[red]" />
-            <p>Something Went Wrong Try Again</p>
-          </div>
-        ),
-        duration: "2000", // Adjust the duration as needed
-        className: "bg-white",
-      });
+      let cancellation = await fetch(
+        `${process.env.NEXT_PUBLIC_HOST}/api/payment/handleCancellation`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            order_id: data.id,
+          }),
+        }
+      );
+      if (cancellation.status == 201) {
+        setloading(false);
+        toast({
+          title: (
+            <div className="flex items-center gap-3 text-black text-md">
+              <X className="text-[red]" />
+              <p>Payment Failed</p>
+            </div>
+          ),
+          duration: "1000", // Adjust the duration as needed
+          className: "bg-white",
+        });
+      }
     }
   } catch (error) {
     setloading(false);

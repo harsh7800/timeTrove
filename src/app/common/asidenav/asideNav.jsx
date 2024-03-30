@@ -1,5 +1,5 @@
 "use client";
-import { Loader2, LogOut, TrendingUp, Zap } from "lucide-react";
+import { Home, Loader2, LogOut, TrendingUp, Zap } from "lucide-react";
 import { PiHoodie, PiSneaker } from "react-icons/pi";
 import React, { Suspense, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -41,33 +41,34 @@ export const AsideNav = ({ mobile }) => {
 
   return (
     <aside
-      className={`flex ${mobile ? "min-w-[250px]" : "min-w-[300px]"} flex-col ${
-        mobile ? "items-start" : "items-center"
-      } max-w-[400px] ${
+      className={`sm:py-5 flex ${
+        mobile ? "min-w-[250px]" : "min-w-[300px]"
+      } flex-col ${mobile ? "items-start" : "items-center"} max-w-[400px] ${
         mobile ? "justify-start gap-[100px]" : "justify-between"
-      } h-full py-5`}
+      } h-full`}
     >
       <div
         className=" w-[80%] relative cursor-pointer"
         onClick={() => router.push("/")}
       >
-        <h1 className="font-mono capitalize font-semibold text-xl sm:text-xl xl:text-2xl  ">
+        <h1 className="font-mono capitalize font-bold text-xl sm:text-xl xl:text-2xl  ">
           TimeTrove
         </h1>
         <div className="absolute left-[10%] sm:left-[20%] bg-purple rounded-xl w-[15%] h-[4px]"></div>
       </div>
 
-      <div className="capitalize space-y-4 text-sm sm:text-md font-semibold w-[80%]">
-        {/* <h3
+      <div className="capitalize space-y-1 text-sm sm:text-[13px] font-semibold w-[80%]">
+        <h3
           className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
-            path.includes("popular-products")
+            path == "/shop"
               ? "bg-purple text-white"
               : "hover:bg-purple hover:text-white"
           } transition-colors cursor-pointer`}
-          onClick={() => handleRedirect("popular-products")}
+          onClick={() => handleRedirect("/")}
         >
-          <TrendingUp /> popular products
-        </h3> */}
+          <Home size={25} /> Home
+        </h3>
+
         <h3
           className={`py-3 px-4 rounded-2xl flex items-center gap-3 ${
             path.includes("winterwears")
@@ -126,6 +127,7 @@ export const AsideNav = ({ mobile }) => {
             <span className="font-bold pop">{data?.totalOrders || 0}</span>
           </h4>
           {data.items?.map((order, i) => {
+            console.log(order);
             return (
               // <Suspense
               //   key={i}
@@ -138,7 +140,7 @@ export const AsideNav = ({ mobile }) => {
           {data?.totalOrders == 0 && (
             <p className="font-semibold text-[14px]">No Order Recorded</p>
           )}
-          {data?.totalOrders > 3 && (
+          {data?.totalOrders > 2 && (
             <p
               className="text-sm font-semibold cursor-pointer"
               onClick={() => router.push("/shop/account/orders")}

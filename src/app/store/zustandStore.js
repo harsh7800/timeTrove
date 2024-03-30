@@ -82,7 +82,7 @@ export const filter = create((set) => ({
   resetFilter: () =>
     set({
       filterData: {
-        budget: [500, 2000],
+        budget: [500, 5000],
         size: "",
         color: "",
         brand: "",

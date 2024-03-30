@@ -68,7 +68,7 @@ export async function POST(request, { params }) {
   try {
     const response = await razorpay.orders.create(options);
 
-    let existingOrder = await Order.findOne({
+    let existingOrder = await Order.findOneAndDelete({
       orderId: response.id,
       status: "Pending",
     });

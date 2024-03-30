@@ -7,7 +7,7 @@ import connectDb from "@/lib/mongoose";
 export default async function Page() {
   let allData = await fetchData("anime");
   let menData = await fetchData("anime", "men");
-  let womenData = await fetchData("anime", "women");
+  let womenData = await fetchData("anime", "men");
 
   return (
     <GenderCategoryTabs

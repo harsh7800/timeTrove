@@ -6,7 +6,7 @@ import Product from "@/app/models/Product";
 export default async function Page() {
   let allData = await fetchData("footwear");
   let menData = await fetchData("footwear", "men");
-  let womenData = await fetchData("footwear", "women");
+  let womenData = await fetchData("footwear", "men");
 
   return (
     <GenderCategoryTabs

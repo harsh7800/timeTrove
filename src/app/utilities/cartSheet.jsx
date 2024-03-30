@@ -11,19 +11,19 @@ import {
 import { ShoppingCart } from "lucide-react";
 
 import React from "react";
-import { useCart } from "../store/zustandStore";
+import { useCart, useStore } from "../store/zustandStore";
 import { useShallow } from "zustand/react/shallow";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { DrawerClose } from "@/components/ui/drawer";
 import { QuickBuyProductCard } from "./productCard";
 import { Checkout, addToCart, removeFromCart } from "../helpers/functions";
-import { useStore } from "zustand";
 import { useRouter } from "next-nprogress-bar";
 import { usePathname } from "next/navigation";
 
 export default function CartSheet() {
   const cart = useCart(useShallow((state) => state.cart));
+  const user = useStore(useShallow((state) => state.user));
   const updateSubTotal = useCart(useShallow((state) => state.updateSubTotal));
   const subTotal = useCart(useShallow((state) => state.subTotal));
   const clearCart = useCart(useShallow((state) => state.clearCart));
@@ -111,7 +111,11 @@ export default function CartSheet() {
                 <DrawerClose asChild>
                   <Button
                     className="w-1/2 bg-black text-white"
-                    onClick={() => Router.push("/shop/checkout")}
+                    onClick={() => {
+                      if (user.token) {
+                        Router.push("/shop/checkout");
+                      } else [Router.push("/authentication?redirect=checkout")];
+                    }}
                   >
                     Checkout
                   </Button>

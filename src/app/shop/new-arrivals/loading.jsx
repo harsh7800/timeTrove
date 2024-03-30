@@ -3,8 +3,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <div className="w-full px-5 flex flex-wrap gap-3">
-      <div className="flex items-center w-full gap-2 justify-between border-b-2 h-20 rounded-none ">
+    <div className="w-full px-0 flex flex-wrap gap-3">
+      <div className="px-5 flex items-center w-full gap-2 justify-between border-b-2 h-20 rounded-none ">
         <Skeleton className="h-10 w-[150px] bg-grey.200" />
         <div className="flex gap-2">
           <Skeleton className="h-10 w-[100px] bg-grey.200" />

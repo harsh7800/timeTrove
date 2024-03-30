@@ -21,6 +21,7 @@ export async function POST(request) {
           process.env.AES_SECRET_KEY
         );
 
+
         let decryptedData = bytes.toString(CryptoJS.enc.Utf8);
 
         if (password === decryptedData) {

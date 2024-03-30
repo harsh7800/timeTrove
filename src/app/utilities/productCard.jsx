@@ -96,32 +96,13 @@ const ProductCard = ({
             slug={slug}
           />
           <Button
-            className={`hidden bg-purple text-white hover:bg-white hover:text-black hover:border sm:block w-1/2 ${
+            className={` bg-purple text-white hover:bg-white hover:text-black hover:border block w-1/2 ${
               availableQty == 0 && "opacity-70 cursor-not-allowed"
             }`}
             onClick={() => router.push(`/shop/${slug}`)}
           >
             View
           </Button>
-          {cart[slug] ? (
-            <CheckCheck
-              size={40}
-              className={`block  sm:hidden w-1/2 text-[20px] rounded-lg h-[35px] bg-black   ${
-                cart[slug] && "bg-white border text-purple.200 hover:bg-white"
-              }`}
-            />
-          ) : (
-            <LiaCartPlusSolid
-              onClick={() => {
-                if (availableQty !== 0) {
-                  router.refresh();
-                }
-                addToCart();
-              }}
-              className="block sm:hidden w-1/2 rounded-lg h-[35px] bg-black text-white"
-              size={40}
-            />
-          )}
         </div>
       ) : (
         <h1 className="font-semibold text-center py-2">
@@ -173,20 +154,20 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
           Quick Buy
         </Button>
       </DrawerTrigger>
-      <DrawerTrigger
-        asChild
-        className="block sm:hidden bg-grey rounded-lg w-1/2 h-[35px]"
-      >
-        <LiaCartArrowDownSolid
+      <DrawerTrigger asChild className="block sm:hidden">
+        <Button
+          className="w-1/2 bg-black text-white hover:bg-white hover:text-black hover:border"
           onClick={() => {
             router.refresh();
             setCart({
               [slug]: { qty: 1, price, name, size, color, img, slug },
             });
           }}
-        />
+        >
+          Buy
+        </Button>
       </DrawerTrigger>
-      <DrawerContent className="bg-white min-h-[500px] h-fit overflow-scroll">
+      <DrawerContent className="bg-white min-h-[500px]">
         <DrawerHeader className="text-left pl-[15px] sm:pl-[50px]">
           <DrawerTitle className="font-bold text-2xl">
             Quick Buy Cart
@@ -298,41 +279,43 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
                   </Button>
                 </DrawerClose>
 
-                <Button
-                  className={`w-1/2 bg-black text-white ${
-                    Object.keys(deliveryAddress).length != 0 &&
-                    "animate-shimmer"
-                  } inline-flex h-12 items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white-400 focus:ring-offset-2 focus:ring-offset-white-50`}
-                  onClick={async () => {
-                    let total =
-                      cart[Object.keys(cart)]?.qty != 0
-                        ? cart[Object.keys(cart)]?.qty *
-                          cart[Object.keys(cart)]?.price
-                        : 0;
-                    await Checkout(
-                      total,
-                      email,
-                      cart,
-                      deliveryAddress,
-                      router,
-                      setLoading,
-                      toast
-                    );
-                  }}
-                  disabled={
-                    Object.keys(deliveryAddress).length == 0 && !loading
-                  }
-                >
-                  {loading && (
-                    <Loader2 className="animate-spin mr-1" size={20} />
-                  )}{" "}
-                  Pay{" "}
-                  {cart[Object.keys(cart)]?.qty != 0
-                    ? cart[Object.keys(cart)]?.qty *
-                      cart[Object.keys(cart)]?.price
-                    : 0 || cart[Object.keys(cart)].price}
-                  /-
-                </Button>
+                <DrawerTrigger asChild>
+                  <Button
+                    className={`w-1/2 bg-black text-white ${
+                      Object.keys(deliveryAddress).length != 0 &&
+                      "animate-shimmer"
+                    } inline-flex h-12 items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white-400 focus:ring-offset-2 focus:ring-offset-white-50`}
+                    onClick={async () => {
+                      let total =
+                        cart[Object.keys(cart)]?.qty != 0
+                          ? cart[Object.keys(cart)]?.qty *
+                            cart[Object.keys(cart)]?.price
+                          : 0;
+                      await Checkout(
+                        total,
+                        email,
+                        cart,
+                        deliveryAddress,
+                        router,
+                        setLoading,
+                        toast
+                      );
+                    }}
+                    disabled={
+                      Object.keys(deliveryAddress).length == 0 && !loading
+                    }
+                  >
+                    {loading && (
+                      <Loader2 className="animate-spin mr-1" size={20} />
+                    )}{" "}
+                    Pay{" "}
+                    {cart[Object.keys(cart)]?.qty != 0
+                      ? cart[Object.keys(cart)]?.qty *
+                        cart[Object.keys(cart)]?.price
+                      : 0 || cart[Object.keys(cart)].price}
+                    /-
+                  </Button>
+                </DrawerTrigger>
               </div>
             </div>
           ) : (

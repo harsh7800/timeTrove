@@ -12,31 +12,33 @@ import CartSheet from "../../utilities/cartSheet";
 import WishlistSheet from "../../utilities/wishlistSheet";
 import { useRouter } from "next-nprogress-bar";
 import Image from "next/image";
+import { FetchAllCategory, GetProducts } from "@/app/helpers/action";
 export const TopNav = () => {
   const user = useStore(useShallow((state) => state.user));
   const cart = useCart(useShallow((state) => state.cart));
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [show, setShow] = useState(false);
   return (
-    <div className="relative w-full px-2 md:px-5 py-5 flex justify-between items-center">
+    <div className="relative w-full px-2 md:px-5 py-5 flex justify-between items-center gap-4">
       <SideSheet />
       <div className="relative w-[60%] lg:w-[50%] flex items-center gap-2">
         <Input
-          placeholder=" Search for products by subcategory (e.g. hoodies, t-shirts) or brand name"
+          placeholder=" Search for products by subcategory (e.g. hoodies, t-shirts)"
           className="outline-none"
           onFocus={(e) => {
             setShow(true);
           }}
-          onBlur={(e) => setShow(false)}
+          onBlur={(e) => setTimeout(() => setShow(false), 200)}
           onChange={(e) => setSearch(e.target.value)}
         />
         {show && search.length != 0 && (
-          <div className="bg-white w-[80svw] sm:w-[95%] h-[fit] max-h-[400px] scroll overflow-scroll z-10 shadow-shadow rounded-lg absolute top-[100%] left-2 flex justify-center py-4">
+          <div className="bg-white w-[90svw] sm:w-[95%] h-[fit] max-h-[500px] scroll overflow-scroll z-10 shadow-shadow rounded-lg absolute top-[100%] left-0 sm:left-2 flex justify-center py-4">
             <Products search={search} />
           </div>
         )}
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-1 sm:gap-4">
         <CartSheet />
         <WishlistSheet />
         {user.token ? (
@@ -48,7 +50,10 @@ export const TopNav = () => {
             </p>
           </div>
         ) : (
-          <Button className="bg-black text-white hover:bg-white hover:text-black transition-all font-bold rounded-xl">
+          <Button
+            className="bg-black text-white hover:bg-white hover:text-black transition-all font-bold rounded-xl"
+            onClick={() => router.push("/authentication")}
+          >
             Login
           </Button>
         )}
@@ -59,22 +64,21 @@ export const TopNav = () => {
 
 const Products = ({ search }) => {
   const [data, setData] = useState([]);
+
   const router = useRouter();
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_HOST}/api/products/getProduct`, {
-      cache: "reload",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
-      });
-  }, []);
+    const fetchProducts = async () => {
+      let products = await GetProducts();
+      setData(products);
+    };
+    fetchProducts();
+  }, [search]);
 
   return (
     <Suspense fallback={<Loader2 className="animate-spin" />}>
       {data.length != 0 ? (
-        <div className="space-y-4 h-full">
+        <div className="space-y-4 w-full h-full flex flex-col ">
           {data
             .filter((item) => {
               const searchText = search.toLowerCase();
@@ -90,9 +94,11 @@ const Products = ({ search }) => {
             })
             .map((item, i) => (
               <div
-                onClick={() => router.push(`/shop/product/${item.slug}`)}
+                onClick={(e) => {
+                  router.push(`/shop/${item.slug}`);
+                }}
                 key={i}
-                className="w-full sm:w-auto flex items-center gap-2 hover:cursor-pointer hover:border px-4 py-3 rounded-md"
+                className="w-full sm:w-auto flex justify-start items-center gap-2 hover:cursor-pointer px-4 py-3 rounded-md"
               >
                 <Image
                   width={200}
@@ -102,15 +108,16 @@ const Products = ({ search }) => {
                   alt="product"
                 />
                 <div>
-                  <h3 className="font-bold">{item.title}</h3>
-                  <h3 className="font-bold">Rs {item.price}</h3>
+                  <h3 className="font-semibold hover:text-purple">
+                    {item.title}
+                  </h3>
+                  <h3 className="font-semibold">Rs {item.price}</h3>
                 </div>
               </div>
             ))}
           {data.filter((item) => {
             const searchText = search.toLowerCase();
             return (
-              item.brand?.toLowerCase().includes(searchText) ||
               item.title?.toLowerCase().includes(searchText) ||
               item.subCategory?.toLowerCase().includes(searchText)
             );

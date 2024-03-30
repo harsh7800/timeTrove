@@ -13,10 +13,16 @@ const Page = async ({ params }) => {
     let colourSizeSlug = {};
     for (let item of variants) {
       if (Object.keys(colourSizeSlug).includes(item.color)) {
-        colourSizeSlug[item.color][item.size] = { slug: item.slug };
+        colourSizeSlug[item.color][item.size] = {
+          slug: item.slug,
+          availableQty: item.availableQty,
+        };
       } else {
         colourSizeSlug[item.color] = {};
-        colourSizeSlug[item.color][item.size] = { slug: item.slug };
+        colourSizeSlug[item.color][item.size] = {
+          slug: item.slug,
+          availableQty: item.availableQty,
+        };
       }
     }
     return colourSizeSlug ? { variants: colourSizeSlug, product: product } : [];
@@ -49,7 +55,7 @@ const Page = async ({ params }) => {
 
         <div className="w-[90%] sm:w-[80%] lg:w-3/4 xl:max-w-[600px]">
           <h2 className="text-sm font-bold text-gray-500 tracking-widest">
-            BRAND NAME
+            PRODUCT NAME
           </h2>
           <h1 className="text-gray-900 text-2xl sm:text-3xl font-semibold mb-3 capitalize">
             {data.product.title}
@@ -57,7 +63,7 @@ const Page = async ({ params }) => {
           <span className="font-medium text-xl text-gray">
             Rs {data.product.price}.00
           </span>
-          <div className="flex mb-4">
+          {/* <div className="flex mb-4">
             <span className="flex items-center">
               <svg
                 fill="currentColor"
@@ -121,13 +127,12 @@ const Page = async ({ params }) => {
               <TwitterIcon size={20} className="text-purple" />
               <Instagram size={20} className="text-purple" />
             </span>
-          </div>
+          </div> */}
           <p className="leading-relaxed font-noto_serif_display">
-            Fam locavore kickstarter distillery. Mixtape chillwave tumeric
-            sriracha taximy chia microdosing tilde DIY. XOXO fam indxgo
-            juiceramps cornhole raw denim forage brooklyn. Everyday carry +1
-            seitan poutine tumeric. Gastropub blue bottle austin listicle
-            pour-over, neutra jean shorts keytar banjo tattooed umami cardigan.
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione
+            obcaecati nulla sit quia nam culpa soluta provident reiciendis
+            corrupti voluptatum! Earum quo exercitationem maiores molestiae
+            commodi esse non animi eaque architecto debitis, perferendis est.
           </p>
 
           <ProductChoice
@@ -139,6 +144,7 @@ const Page = async ({ params }) => {
             price={data.product.price}
             title={data.product.title}
             img={data.product.img}
+            category={data.product.category}
           />
         </div>
       </div>

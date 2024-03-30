@@ -86,14 +86,15 @@ export default function WishlistSheet() {
                           wishlistSubTotal
                         )
                       }
-                      removeFromCart={() =>
+                      removeFromCart={() => {
                         removeFromWishlist(
                           wishlistCart,
                           data,
                           1,
                           wishlistSubTotal
-                        )
-                      }
+                        );
+                        router.refresh();
+                      }}
                     />
                   );
                 })}
@@ -241,7 +242,7 @@ const WishListProductCard = ({
                       }}
                       style={{ background: color }}
                       className={`border-[3px] ${
-                        colour === color && "border-black border-[3px]"
+                        colour === color && "border-black border-1"
                       }  ml-1 rounded-full ${
                         colour === color ? "w-6 h-6" : "w-5 h-5"
                       } focus:outline-none`}
@@ -254,8 +255,6 @@ const WishListProductCard = ({
 
           <div className="flex gap-1 items-center">
             {Array.from(uniqueSizes).map((buttonSize) => {
-              console.log(buttonSize);
-              console.log(wishlistCart[productTitle]);
               return (
                 <Button
                   key={buttonSize}

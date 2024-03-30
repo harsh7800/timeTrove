@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 const RazorPay = require("razorpay");
 const crypto = require("crypto");
 
-export async function PATCH(req, { params }) {
+export async function PATCH(req) {
   const prefix = "TRACK";
   const uniqueIdentifier = Math.floor(Math.random() * 1000000);
   const trackId = `${prefix}-${uniqueIdentifier}`;
@@ -15,18 +15,16 @@ export async function PATCH(req, { params }) {
     await connectDb();
 
     let generatedSignature = crypto
-      .createHmac("SHA256", process.env.NEXT_RAZORPAY_SECRECT_KEY)
+      .createHmac("SHA256", process.env.RAZORPAY_SECRECT_KEY)
       .update(response.razorpay_order_id + "|" + response.razorpay_payment_id)
       .digest("hex");
     let isSignatureValid = generatedSignature == response.razorpay_signature;
 
     if (isSignatureValid) {
-      console.log(response);
       var instance = new RazorPay({
         key_id: process.env.RAZORPAY_KEY,
         key_secret: process.env.RAZORPAY_SECRECT_KEY,
       });
-      console.log(instance);
       // let authorised = await instance.payments.edit(
       //   response.razorpay_payment_id,
       //   {
@@ -53,9 +51,11 @@ export async function PATCH(req, { params }) {
         let products = order.products;
 
         for (let slug in products) {
-          await Product.findOneAndUpdate(
-            { slug: slug },
-            { $inc: { availableQty: -products[slug].qty } }
+          let parts = slug.split("-");
+          let originalItemCode = parts.slice(0, -2).join("-");
+          let substraction = await Product.findOneAndUpdate(
+            { slug: originalItemCode },
+            { $inc: { availableQty: -parseInt(products[slug].qty) } }
           );
         }
         return NextResponse.json(

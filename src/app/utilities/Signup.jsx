@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,13 +17,15 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
-import { Loader2, X } from "lucide-react";
+import { BadgeAlert, Check, Loader2, ShieldCheck, X } from "lucide-react";
 import { useStore } from "../store/zustandStore";
 
 export default function Signup({ setToggle }) {
   const { toast } = useToast();
   const router = useRouter();
   const login = useStore((state) => state.login);
+  const [password, setPassword] = useState("");
+  const [confirm, setconfirmPassword] = useState("");
   const formSchema = z.object({
     username: z.string().min(4, {
       message: "Username must be at least 4 characters.",
@@ -202,9 +204,13 @@ export default function Signup({ setToggle }) {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription className="text-xs">
-                      Min 8 letters required
-                    </FormDescription>
+                    {form.getValues()?.password?.length < 8 &&
+                      form.getValues()?.password?.length != 0 && (
+                        <FormDescription className="text-sm text-[#EB4647] font-semibold flex gap-1">
+                          <BadgeAlert color="#df3a3a" />
+                          Min 8 letters required
+                        </FormDescription>
+                      )}
 
                     <FormMessage />
                   </FormItem>
@@ -224,6 +230,22 @@ export default function Signup({ setToggle }) {
                         {...field}
                       />
                     </FormControl>
+                    {console.log(form.getValues().confirm_password.length)}
+                    {form.getValues().password ===
+                      form.getValues().confirm_password &&
+                    form.getValues().confirm_password?.length > 0 ? (
+                      <FormDescription className="text-sm text-[#40dd5a] font-semibold flex gap-1">
+                        <ShieldCheck color="#40dd5a" /> Passwords Match
+                      </FormDescription>
+                    ) : (
+                      form.getValues().confirm_password?.length > 0 && (
+                        <FormDescription className="text-sm text-[#df3a3a] font-semibold flex gap-1 items-center">
+                          <BadgeAlert color="#df3a3a" /> Passwords Don&apos;t
+                          Match
+                        </FormDescription>
+                      )
+                    )}
+
                     <FormMessage />
                   </FormItem>
                 )}
