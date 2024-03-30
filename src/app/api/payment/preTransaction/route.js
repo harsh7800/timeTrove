@@ -5,7 +5,7 @@ import shortid from "shortid";
 import Product from "@/app/models/Product";
 import { NextResponse } from "next/server";
 
-export async function POST(request, { params }) {
+export async function POST(request) {
   let { subTotal, email, cart, userData } = await request.json();
   await connectDb();
   let sumtotal = 0;
@@ -65,36 +65,35 @@ export async function POST(request, { params }) {
     receipt: shortid.generate(),
     payment_capture,
   };
+
   try {
     const response = await razorpay.orders.create(options);
 
-    let existingOrder = await Order.findOneAndDelete({
+    // let existingOrder = await Order.findOneAndDelete({
+    //   orderId: response.id,
+    //   status: "Pending",
+    // });
+    // if (existingOrder) {
+    // } else {
+    let order = await Order.create({
+      email: email,
+      phone: userData.phoneNum,
       orderId: response.id,
-      status: "Pending",
+      paymentInfo: { card: {} },
+      products: cart,
+      address: userData,
+      amount: subTotal,
+      status: response.status,
     });
-    if (existingOrder) {
-      console.log(1);
-      console.log(response);
-    } else {
-      let order = await Order.create({
-        email: email,
-        phone: userData.phoneNum,
-        orderId: response.id,
-        paymentInfo: { card: {} },
-        products: cart,
-        address: userData,
-        amount: subTotal,
-        status: response.status,
-      });
 
-      return NextResponse.json({
-        id: response.id,
-        currency: response.currency,
-        response: response,
-        amount: response.amount,
-        success: true,
-      });
-    }
+    return NextResponse.json({
+      id: response.id,
+      currency: response.currency,
+      response: response,
+      amount: response.amount,
+      success: true,
+    });
+    // }
   } catch (err) {
     console.log(err);
     return NextResponse.json(
