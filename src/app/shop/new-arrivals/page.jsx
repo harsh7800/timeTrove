@@ -19,12 +19,12 @@ export default async function Page() {
   );
 }
 
-async function fetchData(category = "", productFor = "") {
+async function fetchData(productFor = "") {
   "use server";
   await connectDb();
   const query = productFor ? { productFor } : {};
   const products = await Product.find(query).lean();
-
+  console.log(productFor);
   // Sort products array by creation date in descending order
   products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
