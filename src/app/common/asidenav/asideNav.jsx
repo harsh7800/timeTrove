@@ -127,7 +127,7 @@ export const AsideNav = ({ mobile }) => {
             Total orders{" "}
             <span className="font-bold pop">{data?.totalOrders || 0}</span>
           </h4>
-          {!data?.items || data.items.length === 0 ? (
+          {!data?.items ? (
             <>
               <div className="w-full flex gap-2 justify-start items-center">
                 <Skeleton className="w-[60px] h-[70px] bg-grey.200"></Skeleton>
