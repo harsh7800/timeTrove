@@ -32,6 +32,8 @@ export const AsideNav = ({ mobile }) => {
       try {
         const data = await fetchUserOrders(email);
         const plainData = JSON.parse(JSON.stringify(data));
+        console.log(plainData.items.length);
+        console.log(plainData);
         setData(plainData);
       } catch (error) {
         console.log("Error fetching data", error);
@@ -125,7 +127,7 @@ export const AsideNav = ({ mobile }) => {
         <div className="w-[80%] flex flex-col items-center justify-center border-t space-y-3 pt-5">
           <h4 className="text-sm sm:text-md font-semibold opacity-80 w-full text-left">
             Total orders{" "}
-            <span className="font-bold pop">{data?.totalOrders || 0}</span>
+            <span className="font-bold pop">{data?.items?.length || 0}</span>
           </h4>
           {!data?.items ? (
             <>

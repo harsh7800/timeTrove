@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import OrderDopdown from "./OrderDopdown";
 import { useEffect, useState } from "react";
-import { getOrder } from "@/app/helpers/action";
+import { fetchUserOrders, getOrder } from "@/app/helpers/action";
 import { useStore } from "@/app/store/zustandStore";
 import { useShallow } from "zustand/react/shallow";
 
@@ -49,20 +49,34 @@ export default function Page() {
         </TableHeader>
 
         <TableBody>
-          {data.map((doc) => {
-            return (
-              <TableRow key={doc._id}>
-                <TableCell className="font-medium">{doc.orderId}</TableCell>
-                <TableCell>{doc.status}</TableCell>
-                <TableCell>{doc?.paymentInfo?.method}</TableCell>
-                <TableCell>{Object.keys(doc.products).length}</TableCell>
-                <TableCell>Rs {doc.amount}</TableCell>
-                <TableCell className="text-right w-[100px]">
-                  <OrderDopdown orderID={doc.orderId} />
+          {data ? (
+            data.length > 0 ? (
+              data.map((doc) => (
+                <TableRow key={doc._id}>
+                  <TableCell className="font-medium">{doc.orderId}</TableCell>
+                  <TableCell>{doc.status}</TableCell>
+                  <TableCell>{doc?.paymentInfo?.method}</TableCell>
+                  <TableCell>{Object.keys(doc.products).length}</TableCell>
+                  <TableCell>Rs {doc.amount}</TableCell>
+                  <TableCell className="text-right w-[100px]">
+                    <OrderDopdown orderID={doc.orderId} />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center">
+                  No data available
                 </TableCell>
               </TableRow>
-            );
-          })}
+            )
+          ) : (
+            <TableRow>
+              <TableCell colSpan={6} className="text-center">
+                Loading...
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </div>
