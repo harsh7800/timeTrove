@@ -11,7 +11,7 @@ export async function POST(request) {
   try {
     const { email, password } = await request.json();
     // Searching the User based on details given
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email: email.toLowerCase() });
 
     if (user.registrationMethod == "Email&Password") {
       if (user && user.email === email.toLowerCase().trim()) {
@@ -20,7 +20,6 @@ export async function POST(request) {
           user.password,
           process.env.AES_SECRET_KEY
         );
-
 
         let decryptedData = bytes.toString(CryptoJS.enc.Utf8);
 
