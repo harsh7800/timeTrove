@@ -241,3 +241,9 @@ export async function GetProducts() {
     return []; // Return empty array in case of error
   }
 }
+
+export async function getOrder(email) {
+  await connectDb();
+  const order = await Order.find({ email: email, status: "Paid" }).lean();
+  return order ? order : [];
+}

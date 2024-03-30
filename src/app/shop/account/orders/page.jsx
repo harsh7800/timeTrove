@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -8,18 +9,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import OrderDopdown from "./OrderDopdown";
-import connectDb from "@/lib/mongoose";
-import Order from "@/app/models/Order";
+import { useEffect, useState } from "react";
+import { getOrder } from "@/app/helpers/action";
+import { useStore } from "@/app/store/zustandStore";
+import { useShallow } from "zustand/react/shallow";
 
-export default async function Page() {
-  async function getAddress() {
-    "use server";
-    await connectDb();
-    const order = await Order.find({ status: "Paid" }).lean();
-    return order ? order : [];
-  }
+export default function Page() {
+  const [data, setData] = useState([]);
+  const email = useStore(useShallow((state) => state.user.email));
+  useEffect(() => {
+    const fetchOrder = async () => {
+      let order = await getOrder(email);
+      setData(order);
+    };
+    fetchOrder();
+  }, []);
 
-  let data = await getAddress();
   return (
     <div className=" w-full px-4 sm:px-[20px] max-h-[90vh] scroll min-h-[500px] overflow-scroll  sm:py-[30px] py-0 space-y-5">
       <div className=" w-full border-b pb-3 relative ">
