@@ -15,6 +15,7 @@ import Image from "next/image";
 import { useShallow } from "zustand/react/shallow";
 import { fetchUserOrders } from "@/app/helpers/action";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Sheet, SheetClose, SheetContent } from "@/components/ui/sheet";
 
 export const AsideNav = ({ mobile }) => {
   const router = useRouter();
@@ -32,8 +33,6 @@ export const AsideNav = ({ mobile }) => {
       try {
         const data = await fetchUserOrders(email);
         const plainData = JSON.parse(JSON.stringify(data));
-        console.log(plainData.items.length);
-        console.log(plainData);
         setData(plainData);
       } catch (error) {
         console.log("Error fetching data", error);

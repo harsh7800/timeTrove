@@ -196,7 +196,6 @@ export async function addToCartFromWishlist(
   // Update subtotal
   updateSubTotal(subt);
 
-  console.log(newCart);
   return newCart; // Return the updated cart
 }
 
@@ -350,6 +349,5 @@ export async function Checkout(
       duration: "2000", // Adjust the duration as needed
       className: "bg-white",
     });
-    console.log(error);
   }
 }

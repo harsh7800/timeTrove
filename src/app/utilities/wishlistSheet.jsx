@@ -42,7 +42,7 @@ export default function WishlistSheet() {
   return (
     <Sheet>
       <SheetTrigger>
-        <div className="relative">
+        <div className="relative z-10">
           <Heart />
           {Object.keys(wishlistCart).length != 0 && (
             <p className="absolute top-[-45%] bg-purple text-xs px-2 text-white p-1 rounded-full right-[-40%] font-bold">
@@ -63,7 +63,6 @@ export default function WishlistSheet() {
               </h3>
               <div className="space-y-6 max-h-[70dvh] overflow-x-visible overflow-y-scroll bg-white scroll mt-2">
                 {Object.keys(wishlistCart).map((data, index) => {
-                  console.log(wishlistCart);
                   return (
                     <WishListProductCard
                       key={index}

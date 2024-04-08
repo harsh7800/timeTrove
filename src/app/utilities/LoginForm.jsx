@@ -153,7 +153,6 @@ export default function LoginForm({ setToggle }) {
         });
       }
     } catch (error) {
-      console.log(error);
       toast({
         title: "An error occurred.",
         duration: 3000,
@@ -270,7 +269,6 @@ export default function LoginForm({ setToggle }) {
               !form.formState.isValid ? "opacity-50" : "opacity-100"
             } text-white hover:opacity-70 transition-all`}
             onClick={onSubmit}
-            // onClick={() => console.log(process)}
             type="submit"
           >
             Login

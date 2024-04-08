@@ -137,6 +137,7 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
   const [deliveryAddress, setdeliveryAddress] = useState({});
   const address = useStore((state) => state.user.billingAddress);
   const email = useStore((state) => state.user.email);
+  const user = useStore((state) => state.user);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   return (
@@ -237,86 +238,104 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
                 </div>
               )}
               <div className="block lg:hidden border-1 sm:shadow-lg rounded-lg px-7 py-3 w-[full] space-y-4">
-                <h3 className="font-bold">Shipping Address</h3>
-                <RadioGroup
-                  defaultValue={deliveryAddress}
-                  onValueChange={(value) => {
-                    setdeliveryAddress(value);
-                  }}
-                >
-                  {address &&
-                    address?.map((addr, i) => {
-                      return (
-                        <div
-                          className="flex items-center cursor-pointer space-x-2 space-y-2"
-                          key={i}
-                        >
-                          <RadioGroupItem
-                            value={addr}
-                            id={i}
-                            className="accent-purple text-purple"
-                          />
-                          <Label
-                            htmlFor={i}
-                            className="leading-5 cursor-pointer"
-                          >
-                            {addr.pincode}, {addr.addressName}, {addr.landmark},
-                            &nbsp;{addr.city}, <br /> {addr.state}
-                          </Label>
-                        </div>
-                      );
-                    })}
-                </RadioGroup>
-              </div>
-
-              <div className="w-full flex justify-center items-center gap-2">
-                <DrawerClose asChild>
-                  <Button
-                    className="w-1/2 bg-grey text-black font-bold hover:bg-grey.200"
-                    onClick={() => setCart({})}
-                  >
-                    Cancel
-                  </Button>
-                </DrawerClose>
-
-                <DrawerTrigger asChild>
-                  <Button
-                    className={`w-1/2 bg-black text-white ${
-                      Object.keys(deliveryAddress).length != 0 &&
-                      "animate-shimmer"
-                    } inline-flex h-12 items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white-400 focus:ring-offset-2 focus:ring-offset-white-50`}
-                    onClick={async () => {
-                      let total =
-                        cart[Object.keys(cart)]?.qty != 0
-                          ? cart[Object.keys(cart)]?.qty *
-                            cart[Object.keys(cart)]?.price
-                          : 0;
-                      await Checkout(
-                        total,
-                        email,
-                        cart,
-                        deliveryAddress,
-                        router,
-                        setLoading,
-                        toast
-                      );
+                {user && user.token && (
+                  <h3 className="font-bold">Shipping Address</h3>
+                )}
+                {address && address.length !== 0 ? (
+                  <RadioGroup
+                    defaultValue={deliveryAddress}
+                    onValueChange={(value) => {
+                      setdeliveryAddress(value);
                     }}
-                    disabled={
-                      Object.keys(deliveryAddress).length == 0 && !loading
-                    }
                   >
-                    {loading && (
-                      <Loader2 className="animate-spin mr-1" size={20} />
-                    )}{" "}
-                    Pay{" "}
-                    {cart[Object.keys(cart)]?.qty != 0
-                      ? cart[Object.keys(cart)]?.qty *
-                        cart[Object.keys(cart)]?.price
-                      : 0 || cart[Object.keys(cart)].price}
-                    /-
-                  </Button>
-                </DrawerTrigger>
+                    {address &&
+                      address?.map((addr, i) => {
+                        return (
+                          <div
+                            className="flex items-center cursor-pointer space-x-2 space-y-2"
+                            key={i}
+                          >
+                            <RadioGroupItem
+                              value={addr}
+                              id={i}
+                              className="accent-purple text-purple"
+                            />
+                            <Label
+                              htmlFor={i}
+                              className="leading-5 cursor-pointer"
+                            >
+                              {addr.pincode}, {addr.addressName},{" "}
+                              {addr.landmark}, &nbsp;{addr.city}, <br />{" "}
+                              {addr.state}
+                            </Label>
+                          </div>
+                        );
+                      })}
+                  </RadioGroup>
+                ) : null}
               </div>
+
+              {user && user.token ? (
+                <div className="w-full flex justify-center items-center gap-2">
+                  <DrawerClose asChild>
+                    <Button
+                      className="w-1/2 bg-grey text-black font-bold hover:bg-grey.200"
+                      onClick={() => setCart({})}
+                    >
+                      Cancel
+                    </Button>
+                  </DrawerClose>
+
+                  <DrawerTrigger asChild>
+                    <Button
+                      className={`w-1/2 bg-black text-white ${
+                        Object.keys(deliveryAddress).length != 0 &&
+                        "animate-shimmer"
+                      } inline-flex h-12 items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white-400 focus:ring-offset-2 focus:ring-offset-white-50`}
+                      onClick={async () => {
+                        let total =
+                          cart[Object.keys(cart)]?.qty != 0
+                            ? cart[Object.keys(cart)]?.qty *
+                              cart[Object.keys(cart)]?.price
+                            : 0;
+                        await Checkout(
+                          total,
+                          email,
+                          cart,
+                          deliveryAddress,
+                          router,
+                          setLoading,
+                          toast
+                        );
+                      }}
+                      disabled={
+                        Object.keys(deliveryAddress).length == 0 && !loading
+                      }
+                    >
+                      {loading && (
+                        <Loader2 className="animate-spin mr-1" size={20} />
+                      )}{" "}
+                      Pay{" "}
+                      {cart[Object.keys(cart)]?.qty != 0
+                        ? cart[Object.keys(cart)]?.qty *
+                          cart[Object.keys(cart)]?.price
+                        : 0 || cart[Object.keys(cart)].price}
+                      /-
+                    </Button>
+                  </DrawerTrigger>
+                </div>
+              ) : (
+                <div className="w-full">
+                  <DrawerClose asChild>
+                    <Button
+                      className="w-full bg-black text-white font-bold hover:bg-grey.200"
+                      onClick={() => router.push("/authentication")}
+                    >
+                      Login to Checkout
+                    </Button>
+                  </DrawerClose>
+                </div>
+              )}
             </div>
           ) : (
             <h1 className="font-bold">Please add a product to continue</h1>
@@ -335,9 +354,13 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
                   <h3 className="font-bold">No Address Found</h3>
                   <Button
                     className="font-bold bg-black text-white"
-                    onClick={() =>
-                      router.push(`/shop/account/billing/${email}`)
-                    }
+                    onClick={() => {
+                      if (email) {
+                        router.push(`/shop/account/billing/${email}`);
+                      } else {
+                        router.push(`/authentication`);
+                      }
+                    }}
                   >
                     Add Address
                   </Button>
@@ -372,7 +395,6 @@ const BuyNowDrawer = ({ price, name, size, color, img, slug }) => {
             </div>
           )}
         </div>
-        <DrawerFooter className="pt-2"></DrawerFooter>
       </DrawerContent>
     </Drawer>
   );

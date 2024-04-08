@@ -38,7 +38,7 @@ export const TopNav = () => {
           </div>
         )}
       </div>
-      <div className="flex items-center gap-1 sm:gap-4">
+      <div className="flex items-center gap-3 sm:gap-4">
         <CartSheet />
         <WishlistSheet />
         {user.token ? (
@@ -85,9 +85,9 @@ const Products = ({ search }) => {
               if (searchText === "") {
                 return []; // include all items when search is empty
               } else if (
-                item.brand?.toLowerCase().includes(searchText) ||
-                item.title?.toLowerCase().includes(searchText) ||
-                item.subCategory?.toLowerCase().includes(searchText)
+                item.brand?.toLowerCase().startsWith(searchText) ||
+                item.title?.toLowerCase().startsWith(searchText) ||
+                item.subCategory?.toLowerCase().startsWith(searchText)
               ) {
                 return item;
               }
@@ -118,8 +118,8 @@ const Products = ({ search }) => {
           {data.filter((item) => {
             const searchText = search.toLowerCase();
             return (
-              item.title?.toLowerCase().includes(searchText) ||
-              item.subCategory?.toLowerCase().includes(searchText)
+              item.title?.toLowerCase().startsWith(searchText) ||
+              item.subCategory?.toLowerCase().startsWith(searchText)
             );
           }).length === 0 && <p>No results found.</p>}
         </div>

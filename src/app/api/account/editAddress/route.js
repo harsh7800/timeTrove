@@ -44,7 +44,7 @@ export async function POST(request) {
       { status: 404 }
     );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return NextResponse.json(
       {
         message: "Server Error",

@@ -25,7 +25,6 @@ import { changeUsernameAndEmail, updatePassword } from "@/app/helpers/action";
 
 export default function Page() {
   const state = useStore((state) => state.user);
-  console.log(state);
   const updateField = useStore((state) => state.updateField);
   const { toast } = useToast();
   const router = useRouter();

@@ -24,7 +24,6 @@ export async function verifyJWT(token, secretKey) {
 
 export async function CreateUser(name, email, picture) {
   const login = useStore((state) => state.login);
-  console.log({ name, email, picture });
   try {
     let data;
     await connectDb();

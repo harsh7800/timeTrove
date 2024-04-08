@@ -25,7 +25,6 @@ const ProductChoice = ({
   const uniqueItemId = `${slug}-${size}-${color}`;
   const user = useStore(useShallow((state) => state.user));
 
-  console.log(variants[color][size].availableQty);
 
   const BuyNow = async () => {
     try {

@@ -123,7 +123,7 @@ export const GenderCategoryTabs = ({
       <TabsContent
         value="all"
         className={`${
-          tabValue == "all" && "h-[80dvh]"
+          tabValue == "all" && "h-screen"
         }  overflow-scroll scroll w-full px-1 sm:px-5 pt-2 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-start`}
       >
         {Object.keys(allData)
@@ -175,7 +175,7 @@ export const GenderCategoryTabs = ({
       <TabsContent
         value="men"
         className={`${
-          tabValue == "men" && "h-[80dvh]"
+          tabValue == "men" && "h-screen"
         }  overflow-scroll scroll w-full px-1 sm:px-5 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-start`}
       >
         {Object.keys(menData)
@@ -227,7 +227,7 @@ export const GenderCategoryTabs = ({
       <TabsContent
         value="women"
         className={`${
-          tabValue == "women" && "h-[80dvh]"
+          tabValue == "women" && "h-screen"
         }  overflow-scroll scroll w-full px-1 sm:px-5 grid grid-cols-2 sm:flex gap-2 flex-nowrap sm:flex-wrap justify-center lg:justify-normal items-start`}
       >
         {Object.keys(womenData)

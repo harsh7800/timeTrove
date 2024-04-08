@@ -36,7 +36,6 @@ export async function getProductData(slug) {
 export async function ProductVariants(title, wishlistCart) {
   // if (!wishlistCart[title]) {
   await connectDb();
-  console.log(title);
   const products = await Product.find({ title: title }).lean();
 
   let productMap = {};
@@ -53,7 +52,6 @@ export async function ProductVariants(title, wishlistCart) {
     };
   }
 
-  console.log(productMap);
   return productMap ? productMap : [];
   // }
 }
@@ -86,7 +84,7 @@ export async function fetchUserOrders(email) {
 
     return simplifiedOrders ? { items: simplifiedOrders, totalOrders } : [];
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 
@@ -111,7 +109,7 @@ export async function changeUsernameAndEmail(username, email, newEmail, token) {
     }
     return { newEmail, username };
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 

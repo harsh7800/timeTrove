@@ -29,7 +29,7 @@ const Page = async ({ params }) => {
           </span>
         </h1>
         <p className="font-semibold text-sm">
-          Date: {data?.createdAt.toLocaleDateString("en-GB", options)}
+          Date: {data?.createdAt?.toLocaleDateString("en-GB", options)}
         </p>
       </div>
 

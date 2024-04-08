@@ -6,6 +6,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { DrawerClose } from "@/components/ui/drawer";
 
 export const SideSheet = () => {
   return (

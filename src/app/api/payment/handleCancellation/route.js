@@ -19,7 +19,7 @@ export async function PATCH(request, { params }) {
       { status: 201 }
     );
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     return NextResponse.json(
       {
         error: err,

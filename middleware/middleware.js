@@ -3,7 +3,6 @@ import { NextRequest } from "next/server";
 
 export function middleware(request) {
   //: string | URL | undefined
-  console.log(1);
   const tokenValue = request.cookies.get("token"); // for auth token check
   async function isAuthCheck() {
     try {
@@ -15,7 +14,7 @@ export function middleware(request) {
         return NextResponse.redirect(new URL("/login", request.url));
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }

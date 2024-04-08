@@ -40,7 +40,7 @@ export async function POST(request) {
     }
   }
   if (sumtotal != subTotal) {
-    console.log(sumtotal, subTotal);
+    // console.log(sumtotal, subTotal);
     return NextResponse.json(
       {
         success: false,
@@ -95,7 +95,6 @@ export async function POST(request) {
     });
     // }
   } catch (err) {
-    console.log(err);
     return NextResponse.json(
       {
         error: err,

@@ -49,6 +49,5 @@ async function fetchData(category = "", productFor = "") {
     }
   }
 
-  console.log(items);
   return items;
 }

@@ -130,7 +130,7 @@ export default function Signup({ setToggle }) {
         });
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
@@ -230,7 +230,6 @@ export default function Signup({ setToggle }) {
                         {...field}
                       />
                     </FormControl>
-                    {console.log(form.getValues().confirm_password.length)}
                     {form.getValues().password ===
                       form.getValues().confirm_password &&
                     form.getValues().confirm_password?.length > 0 ? (

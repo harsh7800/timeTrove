@@ -51,6 +51,5 @@ async function fetchData(productFor = "") {
     }
   }
 
-  console.log(items);
   return items;
 }
